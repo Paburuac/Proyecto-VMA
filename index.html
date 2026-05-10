@@ -628,12 +628,49 @@
      5. validaciones.js → formularios y utilidades
      6. main.js       → inicialización y entry-point final
      ============================================================ -->
-<script src="assets/js/catalogo.js"></script>
+<!--
+     SCRIPTS – Con Vite, todos los módulos JS se cargan
+     a través de un único entry point (type="module").
+     Vite se encarga del bundling y del orden de carga.
+
+     Orden interno en src/app.js:
+       src/services/supabase.js       → cliente Supabase
+       src/services/productoService.js → consultas a BD
+       src/js/router.js               → navegación SPA
+       src/js/productos.js            → renderizado catálogo
+       src/js/carrito.js              → carrito de compras
+       src/js/validaciones.js         → formularios y utils
+       src/js/main-legacy.js          → init + renderCatGrid
+       src/app.js                     → orquestador principal
+-->
+
+<!-- Scripts legacy: router, productos, carrito, validaciones
+     Se cargan antes del entry point de Vite para que sus funciones
+     estén disponibles globalmente cuando app.js las llame. -->
+
+<!--
+  Shim de compatibilidad: los scripts legacy usan `catalogo` como variable
+  global directa. Este shim la mapea a window.catalogo (poblada por Supabase)
+  via un Proxy, sin modificar ningún archivo legacy.
+-->
+<script>
+  // `catalogo` usado en productos.js, main.js → lee window.catalogo
+  // que app.js popula después de cargar Supabase.
+  // Mientras no esté disponible, retorna un objeto vacío seguro.
+  Object.defineProperty(window, 'catalogo', {
+    get() { return window._catalogoData || {} },
+    set(v) { window._catalogoData = v },
+    configurable: true,
+  })
+</script>
 <script src="assets/js/router.js"></script>
 <script src="assets/js/productos.js"></script>
 <script src="assets/js/carrito.js"></script>
 <script src="assets/js/validaciones.js"></script>
 <script src="assets/js/main.js"></script>
+
+<!-- Entry point Vite: carga Supabase y reemplaza catalogo.js estático -->
+<script type="module" src="/src/app.js"></script>
 
 </body>
 </html>

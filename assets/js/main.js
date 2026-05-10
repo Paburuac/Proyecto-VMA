@@ -42,8 +42,10 @@ function goToCategoria(cat) {
 }
 
 /* -----------------------------------------------
-   INICIO – DOMContentLoaded
+   INICIO
+   La inicialización (renderCatGrid) ya NO ocurre
+   aquí en el DOMContentLoaded legacy.
+   src/app.js la llama DESPUÉS de que Supabase
+   haya cargado los datos y poblado window.catalogo.
 ----------------------------------------------- */
-document.addEventListener('DOMContentLoaded', () => {
-  renderCatGrid();
-});
+// Inicialización delegada a src/app.js → inicializarApp()
