@@ -17,6 +17,20 @@
 /* -----------------------------------------------
    CATEGORÍAS INICIO
 ----------------------------------------------- */
+const defaultIcon = '📦';
+
+const catIcons = {
+  'Gases': '🧪',
+  'Soldadura': '🔥',
+  'Herramientas': '🛠️',
+  'Seguridad': '🦺',
+  'Accesorios': '📦',
+  'Maquinaria': '⚙️',
+  'Consumibles': '🔩',
+  'Calzado': '🥾',
+  'Lubricantes': '🛢️',
+  'Equipos': '🏭'
+};
 function renderCatGrid() {
   const grid = document.getElementById('cat-grid-inicio');
   if (!grid) return;
