@@ -41,6 +41,10 @@ function goToCategoria(cat) {
   showPage('page-productos');
 }
 
+window.renderCatGrid = renderCatGrid;
+window.goToCategoria = goToCategoria;
+
+
 /* -----------------------------------------------
    INICIO
    La inicialización (renderCatGrid) ya NO ocurre
