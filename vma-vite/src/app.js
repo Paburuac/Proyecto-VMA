@@ -13,6 +13,11 @@
  */
 
 import { obtenerProductos, obtenerCategorias, construirCatalogo } from './services/productoService.js'
+import './js/router.js'
+import './js/productos.js'
+import './js/carrito.js'
+import './js/validaciones.js'
+import './js/main.js'
 
 // ─── Estado de la aplicación ────────────────
 let appState = {
