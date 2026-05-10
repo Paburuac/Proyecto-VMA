@@ -32,6 +32,14 @@ function renderCatGrid() {
   });
   grid.innerHTML = html;
 }
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 function goToCategoria(cat) {
   state.activeCat = cat;
