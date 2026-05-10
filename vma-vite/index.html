@@ -654,22 +654,17 @@
   via un Proxy, sin modificar ningún archivo legacy.
 -->
 <script>
-  // `catalogo` usado en productos.js, main.js → lee window.catalogo
-  // que app.js popula después de cargar Supabase.
-  // Mientras no esté disponible, retorna un objeto vacío seguro.
-  Object.defineProperty(window, 'catalogo', {
-    get() { return window._catalogoData || {} },
-    set(v) { window._catalogoData = v },
-    configurable: true,
-  })
+Object.defineProperty(window, 'catalogo', {
+  get() {
+    return window._catalogoData || {};
+  },
+  set(v) {
+    window._catalogoData = v;
+  },
+  configurable: true,
+});
 </script>
-<script src="assets/js/router.js"></script>
-<script src="assets/js/productos.js"></script>
-<script src="assets/js/carrito.js"></script>
-<script src="assets/js/validaciones.js"></script>
-<script src="assets/js/main.js"></script>
 
-<!-- Entry point Vite: carga Supabase y reemplaza catalogo.js estático -->
 <script type="module" src="/src/app.js"></script>
 
 </body>
