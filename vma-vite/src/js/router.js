@@ -34,3 +34,14 @@ function showPage(id) {
 document.querySelector('.hamburger').addEventListener('click', function () {
   document.querySelector('.nav-mobile').classList.toggle('open');
 });
+
+
+const state = {
+  activeCat: null,
+  activeSub: null,
+  filterCat: '',
+  filterSub: ''
+};
+
+window.showPage = showPage;
+window.state = state;
