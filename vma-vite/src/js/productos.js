@@ -10,14 +10,16 @@
 ----------------------------------------------- */
 /* La variable `catalogo` se carga desde catalogo.js */
 
-/* Estado de la vista de productos */
-const state = {
+/* Estado compartido global */
+const state = window.state || {
   activeCat: null,
   activeSub: null,
   search: '',
   filterCat: '',
   filterSub: ''
 };
+
+window.state = state;
 
 /* Iconos por categoría */
 const catIcons = {
@@ -340,3 +342,19 @@ function findProduct(codigo, cat, sub) {
   }
   return null;
 }
+
+
+window.initProductos = initProductos;
+window.renderSidebar = renderSidebar;
+window.renderProductos = renderProductos;
+window.initSearch = initSearch;
+window.initFilters = initFilters;
+window.updateSubFilter = updateSubFilter;
+window.filterByCat = filterByCat;
+window.filterBySub = filterBySub;
+window.renderProdCard = renderProdCard;
+window.toggleCat = toggleCat;
+window.toggleSub = toggleSub;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.findProduct = findProduct;
