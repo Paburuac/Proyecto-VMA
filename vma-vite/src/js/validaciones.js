@@ -79,15 +79,18 @@ document.getElementById('form-registro').addEventListener('submit', function (e)
 });
 
 /* -----------------------------------------------
-   FORMULARIO LOGIN
+   FORMULARIO LOGIN – conectado a Supabase Auth
+   La validación visual permanece; el submit real
+   delega a handleLogin() definido en src/js/auth.js
 ----------------------------------------------- */
-document.getElementById('form-login').addEventListener('submit', function (e) {
+document.getElementById('form-login').addEventListener('submit', async function (e) {
   e.preventDefault();
   let valid = true;
 
   const correo = document.getElementById('login-correo');
   const pass   = document.getElementById('login-pass');
 
+  // Validación visual básica antes de llamar a Supabase
   const errC = document.getElementById('err-login-correo');
   if (!isValidEmail(correo.value)) {
     errC.textContent = 'Ingrese un correo válido.'; errC.classList.add('show'); valid = false;
@@ -98,10 +101,13 @@ document.getElementById('form-login').addEventListener('submit', function (e) {
     errP.textContent = 'Ingrese su contraseña.'; errP.classList.add('show'); valid = false;
   } else { errP.classList.remove('show'); }
 
-  if (valid) {
-    document.getElementById('success-login').classList.add('show');
-    this.reset();
-    setTimeout(() => document.getElementById('success-login').classList.remove('show'), 4000);
+  if (!valid) return;
+
+  // Llamar a handleLogin() de auth.js (disponible en window)
+  if (typeof window.handleLogin === 'function') {
+    await window.handleLogin(correo.value.trim(), pass.value);
+  } else {
+    console.error('[VMA] handleLogin no disponible – verifica que auth.js está cargado');
   }
 });
 
