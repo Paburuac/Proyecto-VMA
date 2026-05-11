@@ -157,7 +157,9 @@ async function manejarSesion(user) {
 async function handleLogin(email, password) {
   limpiarLoginError()
   setLoginLoading(true)
-  authState._procesando = true   // bloquear onAuthStateChange durante este flujo
+  authState._procesando = false  // limpiar estado previo por si quedó sucio
+  await new Promise(r => setTimeout(r, 50))  // micro-pausa para que onAuthStateChange previo termine
+  authState._procesando = true
 
   const { data, error } = await login(email, password)
 
@@ -186,6 +188,7 @@ window.handleLogin = handleLogin
    handleLogout()
 ───────────────────────────────────────────── */
 async function handleLogout() {
+  authState._procesando = false  // limpiar antes de cerrar
   await logout()
 
   authState.loggedIn    = false
