@@ -13,25 +13,24 @@ import { supabase } from '../services/supabase.js'
    ESTADO GLOBAL DE AUTH
 ───────────────────────────────────────────── */
 const authState = {
-  loggedIn:       false,
-  user:           null,
-  perfil:         null,
-  rol:            null,
-  _procesando:    false,  // evita que handleLogin y onAuthStateChange se pisen
+  loggedIn: false,
+  user:     null,
+  perfil:   null,
+  rol:      null,
 }
 window.authState = authState
 
 /* ─────────────────────────────────────────────
    HELPERS DE ROL
 ───────────────────────────────────────────── */
-function isAdmin()       { return authState.rol === 'admin' }
-function isTrabajador()  { return authState.rol === 'trabajador' }
-function isCliente()     { return authState.rol === 'cliente' }
+function isAdmin()      { return authState.rol === 'admin' }
+function isTrabajador() { return authState.rol === 'trabajador' }
+function isCliente()    { return authState.rol === 'cliente' }
 
-window.isAdmin         = isAdmin
-window.isTrabajador    = isTrabajador
-window.isCliente       = isCliente
-window.registrarCliente = registrarCliente  // usado por validaciones.js
+window.isAdmin          = isAdmin
+window.isTrabajador     = isTrabajador
+window.isCliente        = isCliente
+window.registrarCliente = registrarCliente
 
 /* ─────────────────────────────────────────────
    ACTUALIZAR UI DEL HEADER
@@ -48,7 +47,6 @@ function actualizarHeaderUI() {
     const nombre = authState.perfil.nombre || authState.perfil.email
     const rol    = authState.rol || ''
 
-    // ── Desktop ──────────────────────────────
     if (btnLogin)    btnLogin.style.display    = 'none'
     if (btnRegistro) btnRegistro.style.display = 'none'
 
@@ -59,13 +57,10 @@ function actualizarHeaderUI() {
         <span class="nav-user-rol">${escHtmlSafe(rol)}</span>
         <button class="btn-logout" id="btn-cerrar-sesion">Cerrar sesión</button>
       `
-      // addEventListener en lugar de onclick inline — evita problemas
-      // cuando el botón se regenera dinámicamente
       document.getElementById('btn-cerrar-sesion')
         ?.addEventListener('click', handleLogout)
     }
 
-    // ── Móvil ─────────────────────────────────
     if (btnLoginMob) btnLoginMob.style.display = 'none'
     if (btnRegMob)   btnRegMob.style.display   = 'none'
 
@@ -80,11 +75,9 @@ function actualizarHeaderUI() {
     }
 
   } else {
-    // ── Sin sesión: restaurar botones normales ─
     if (btnLogin)    btnLogin.style.display    = ''
     if (btnRegistro) btnRegistro.style.display = ''
     if (userInfo)    userInfo.style.display    = 'none'
-
     if (btnLoginMob) btnLoginMob.style.display = ''
     if (btnRegMob)   btnRegMob.style.display   = ''
     if (userInfoMob) userInfoMob.style.display = 'none'
@@ -122,10 +115,10 @@ function setLoginLoading(loading) {
 
 /* ─────────────────────────────────────────────
    MANEJAR SESIÓN
-   Carga el perfil y actualiza el estado global.
+   Carga perfil y actualiza UI.
    Retorna true si todo salió bien.
 ───────────────────────────────────────────── */
-async function manejarSesion(user) {
+async function manejarSesion(user, itemsEnMemoria = []) {
   const { data: perfil, error, inactivo } = await cargarPerfil(user.id)
 
   if (inactivo) {
@@ -148,11 +141,8 @@ async function manejarSesion(user) {
   actualizarHeaderUI()
 
   // Cargar y fusionar carrito desde Supabase
-  // Capturamos los items en memoria ANTES de que se reemplacen
-  const itemsEnMemoriaAntes = window._cartSnapshot || []
-  window._cartSnapshot = null
   if (typeof window.cargarCarritoDesdeSupabase === 'function') {
-    await window.cargarCarritoDesdeSupabase(itemsEnMemoriaAntes)
+    await window.cargarCarritoDesdeSupabase(itemsEnMemoria)
   }
 
   return true
@@ -160,33 +150,28 @@ async function manejarSesion(user) {
 
 /* ─────────────────────────────────────────────
    handleLogin()
-   Llamado desde el submit del form-login.
-   Usa _procesando para evitar que onAuthStateChange
-   duplique la carga del perfil simultáneamente.
+   Fuente única de verdad para el login manual.
+   onAuthStateChange está desactivado para SIGNED_IN
+   — toda la lógica pasa por aquí.
 ───────────────────────────────────────────── */
 async function handleLogin(email, password) {
   limpiarLoginError()
   setLoginLoading(true)
-  authState._procesando = true   // bloquear onAuthStateChange durante este flujo
 
-  // Guardar snapshot del carrito en memoria antes de que el login lo reemplace
-  window._cartSnapshot = Array.isArray(window.cart)
-    ? [...window.cart]
-    : (typeof cart !== 'undefined' ? [...cart] : [])
+  // Snapshot del carrito en memoria antes del login
+  const itemsEnMemoria = typeof cart !== 'undefined' ? [...cart] : []
 
   const { data, error } = await login(email, password)
 
   if (error) {
-    authState._procesando = false
     setLoginLoading(false)
-    window._cartSnapshot = null
     mostrarLoginError(traducirErrorAuth(error.message))
     return
   }
 
-  const ok = await manejarSesion(data.user)
+  // Pasar los items en memoria directamente a manejarSesion
+  const ok = await manejarSesion(data.user, itemsEnMemoria)
 
-  authState._procesando = false
   setLoginLoading(false)
 
   if (ok) {
@@ -204,13 +189,11 @@ window.handleLogin = handleLogin
 async function handleLogout() {
   await logout()
 
-  authState.loggedIn    = false
-  authState.user        = null
-  authState.perfil      = null
-  authState.rol         = null
-  authState._procesando = false
+  authState.loggedIn = false
+  authState.user     = null
+  authState.perfil   = null
+  authState.rol      = null
 
-  // Limpiar carrito en memoria al cerrar sesión
   if (typeof window.limpiarCarritoLocal === 'function') {
     window.limpiarCarritoLocal()
   }
@@ -224,7 +207,7 @@ window.handleLogout = handleLogout
 /* ─────────────────────────────────────────────
    inicializarAuth()
    Verifica sesión existente al cargar la página.
-   Llamado desde src/app.js.
+   Llamado desde src/app.js ANTES de cargar catálogo.
 ───────────────────────────────────────────── */
 export async function inicializarAuth() {
   const { data, error } = await getSession()
@@ -234,36 +217,35 @@ export async function inicializarAuth() {
     return
   }
 
-  authState._procesando = true
-  await manejarSesion(data.session.user)
-  authState._procesando = false
+  // Hay sesión activa — cargar perfil sin items en memoria
+  // (al recargar no hay carrito en memoria todavía)
+  await manejarSesion(data.session.user, [])
 }
 
 /* ─────────────────────────────────────────────
    ESCUCHAR CAMBIOS DE SESIÓN EN TIEMPO REAL
-   Solo actúa si _procesando es false, para no
-   duplicar la carga del perfil cuando handleLogin
-   o inicializarAuth ya lo están haciendo.
+   Solo maneja SIGNED_OUT y TOKEN_REFRESHED.
+   SIGNED_IN lo maneja handleLogin directamente
+   para evitar doble ejecución de manejarSesion.
 ───────────────────────────────────────────── */
 supabase.auth.onAuthStateChange(async (event, session) => {
   console.log('[VMA Auth] onAuthStateChange →', event)
 
-  if (event === 'SIGNED_IN' && session?.user) {
-    // Si handleLogin o inicializarAuth ya están procesando, ignorar
-    if (authState._procesando) {
-      console.log('[VMA Auth] onAuthStateChange SIGNED_IN ignorado (ya procesando)')
-      return
-    }
-    // Solo llega aquí si el SIGNED_IN viene de otra pestaña o token refresh
-    await manejarSesion(session.user)
+  // SIGNED_IN lo ignora completamente — handleLogin e inicializarAuth
+  // ya lo manejan con control total del flujo
+  if (event === 'SIGNED_IN') {
+    console.log('[VMA Auth] SIGNED_IN ignorado — manejado por handleLogin/inicializarAuth')
+    return
   }
 
   if (event === 'SIGNED_OUT') {
-    authState.loggedIn    = false
-    authState.user        = null
-    authState.perfil      = null
-    authState.rol         = null
-    authState._procesando = false
+    authState.loggedIn = false
+    authState.user     = null
+    authState.perfil   = null
+    authState.rol      = null
+    if (typeof window.limpiarCarritoLocal === 'function') {
+      window.limpiarCarritoLocal()
+    }
     actualizarHeaderUI()
   }
 
