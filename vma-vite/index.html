@@ -484,9 +484,14 @@
           <textarea id="mensaje-c" placeholder="Describe tu consulta o solicitud de cotización..."></textarea>
           <div class="form-error" id="err-mensaje-c"></div>
         </div>
-        <button type="submit" class="btn-submit">📋 Enviar solicitud</button>
+        <!-- Productos del carrito adjuntos a la cotización -->
+        <div id="cotizacion-productos-info" style="display:none;margin-bottom:1rem;padding:0.8rem 1rem;background:rgba(132,189,0,0.08);border:1.5px solid var(--verde);border-radius:var(--radio);font-size:0.85rem;color:var(--azul)">
+          🛒 <strong>Productos del carrito incluidos en esta cotización:</strong>
+          <div id="cotizacion-productos-lista" style="margin-top:0.4rem;color:var(--gris-texto)"></div>
+        </div>
+        <button type="submit" id="btn-contacto-submit" class="btn-submit">📋 Enviar solicitud</button>
         <div class="success-msg" id="success-contacto">
-          ✅ ¡Mensaje enviado! Te contactaremos a la brevedad.
+          ✅ ¡Solicitud enviada! Te contactaremos a la brevedad.
         </div>
       </form>
     </div>
