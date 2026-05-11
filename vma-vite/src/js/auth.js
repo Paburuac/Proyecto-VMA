@@ -146,6 +146,15 @@ async function manejarSesion(user) {
   authState.rol      = perfil.roles?.nombre || null
 
   actualizarHeaderUI()
+
+  // Cargar y fusionar carrito desde Supabase
+  // Capturamos los items en memoria ANTES de que se reemplacen
+  const itemsEnMemoriaAntes = window._cartSnapshot || []
+  window._cartSnapshot = null
+  if (typeof window.cargarCarritoDesdeSupabase === 'function') {
+    await window.cargarCarritoDesdeSupabase(itemsEnMemoriaAntes)
+  }
+
   return true
 }
 
@@ -160,11 +169,17 @@ async function handleLogin(email, password) {
   setLoginLoading(true)
   authState._procesando = true   // bloquear onAuthStateChange durante este flujo
 
+  // Guardar snapshot del carrito en memoria antes de que el login lo reemplace
+  window._cartSnapshot = Array.isArray(window.cart)
+    ? [...window.cart]
+    : (typeof cart !== 'undefined' ? [...cart] : [])
+
   const { data, error } = await login(email, password)
 
   if (error) {
     authState._procesando = false
     setLoginLoading(false)
+    window._cartSnapshot = null
     mostrarLoginError(traducirErrorAuth(error.message))
     return
   }
@@ -194,6 +209,11 @@ async function handleLogout() {
   authState.perfil      = null
   authState.rol         = null
   authState._procesando = false
+
+  // Limpiar carrito en memoria al cerrar sesión
+  if (typeof window.limpiarCarritoLocal === 'function') {
+    window.limpiarCarritoLocal()
+  }
 
   actualizarHeaderUI()
   showPage('page-inicio')

@@ -12,7 +12,11 @@
  */
 
 import { obtenerProductos, obtenerCategorias, construirCatalogo } from './services/productoService.js'
+import * as carritoService from './services/carritoService.js'
 import { inicializarAuth } from './js/auth.js'
+
+// Exponer carritoService globalmente para que carrito.js pueda usarlo
+window.carritoService = carritoService
 import './js/router.js'
 import './js/productos.js'
 import './js/carrito.js'
