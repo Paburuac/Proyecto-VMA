@@ -4,15 +4,15 @@
  * Entry point de Vite para VMA Industrial.
  *
  * Responsabilidades:
- *  1. Cargar productos y categorías desde Supabase.
- *  2. Construir la variable global `catalogo` que
- *     esperan productos.js, carrito.js y main-legacy.js.
- *  3. Inicializar la app una vez los datos están listos.
- *  4. Mostrar estado de carga y errores al usuario.
+ *  1. Inicializar autenticación (sesión persistente).
+ *  2. Cargar productos y categorías desde Supabase.
+ *  3. Construir la variable global `catalogo`.
+ *  4. Mostrar estados de carga y error.
  * ─────────────────────────────────────────────
  */
 
 import { obtenerProductos, obtenerCategorias, construirCatalogo } from './services/productoService.js'
+import { inicializarAuth } from './js/auth.js'
 import './js/router.js'
 import './js/productos.js'
 import './js/carrito.js'
@@ -26,7 +26,7 @@ let appState = {
   data:    null,
 }
 
-// ─── Funciones de UI de carga ────────────────
+// ─── UI de carga ────────────────────────────
 function mostrarCargando() {
   const container = document.getElementById('productos-container')
   const sidebar   = document.getElementById('cat-sidebar')
@@ -68,13 +68,11 @@ function mostrarError(error) {
 async function cargarDatos() {
   mostrarCargando()
 
-  // Carga paralela: productos y categorías al mismo tiempo
   const [productosResult, categoriasResult] = await Promise.all([
     obtenerProductos(),
     obtenerCategorias(),
   ])
 
-  // Manejo de errores
   if (productosResult.error) {
     appState.loading = false
     appState.error   = productosResult.error
@@ -82,42 +80,32 @@ async function cargarDatos() {
     return
   }
 
-  const productos   = productosResult.data    // array plano de Supabase
-  const categorias  = categoriasResult.data   // array de categorías (puede ser null si hay error no crítico)
+  const productos  = productosResult.data
+  const categorias = categoriasResult.data
 
-  // Log de confirmación (prueba temporal visible en consola)
   console.log('[VMA] ✅ Productos cargados desde Supabase:', productos)
   console.log('[VMA] ✅ Categorías cargadas desde Supabase:', categorias)
   console.log(`[VMA] Total productos: ${productos.length}`)
 
-  // Construir la estructura anidada que espera el resto del frontend
   const catalogoDesdeSupabase = construirCatalogo(productos)
   console.log('[VMA] Catálogo construido:', catalogoDesdeSupabase)
 
-  // Exponer como variable global para compatibilidad con productos.js,
-  // carrito.js y main.js (que leen `catalogo` como global).
-  // El shim en index.html mapea `catalogo` → window._catalogoData via setter.
+  // Exponer como global — el shim en index.html intercepta el setter
   window.catalogo = catalogoDesdeSupabase
 
-  // Actualizar estado
   appState.loading = false
   appState.error   = null
   appState.data    = { productos, categorias, catalogo: catalogoDesdeSupabase }
 
-  // Inicializar la app con los datos listos
   inicializarApp()
 }
 
 // ─── Inicialización de la app ─────────────────
 function inicializarApp() {
-  // renderCatGrid() está definida en src/js/main.js (legacy)
-  // lee window.catalogo que ya está disponible
   if (typeof renderCatGrid === 'function') {
     renderCatGrid()
   }
 
-  // Si el usuario llegó directo a la página de productos,
-  // inicializar también ese módulo
   if (typeof initProductos === 'function') {
     const paginaProductos = document.getElementById('page-productos')
     if (paginaProductos?.classList.contains('active')) {
@@ -126,10 +114,13 @@ function inicializarApp() {
   }
 }
 
-// ─── Arrancar cuando el DOM esté listo ────────
-document.addEventListener('DOMContentLoaded', () => {
-  cargarDatos()
+// ─── Arrancar ────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Verificar sesión existente PRIMERO (antes de mostrar UI)
+  await inicializarAuth()
+
+  // 2. Luego cargar el catálogo
+  await cargarDatos()
 })
 
-// ─── Exportar estado para debugging ───────────
 export { appState }

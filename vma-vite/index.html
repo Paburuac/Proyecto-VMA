@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="assets/css/productos.css">
   <link rel="stylesheet" href="assets/css/formularios.css">
   <link rel="stylesheet" href="assets/css/footer.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
 </head>
 <body>
 
@@ -49,8 +50,11 @@
       <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;"         >Quiénes somos</a>
       <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;"        >Nuestros productos</a>
       <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;"         >Contáctenos</a>
-      <a href="#" data-page="page-registro"  onclick="showPage('page-registro');return false;"  class="btn-registro">Registrarse</a>
-      <a href="#" data-page="page-login"     onclick="showPage('page-login');return false;"     class="btn-login">Iniciar sesión</a>
+      <!-- Botones visibles cuando NO hay sesión -->
+      <a href="#" id="nav-btn-registro" data-page="page-registro" onclick="showPage('page-registro');return false;" class="btn-registro">Registrarse</a>
+      <a href="#" id="nav-btn-login"    data-page="page-login"    onclick="showPage('page-login');return false;"    class="btn-login">Iniciar sesión</a>
+      <!-- Info de usuario visible cuando SÍ hay sesión (auth.js la puebla) -->
+      <div id="nav-user-info" class="nav-user-info" style="display:none"></div>
     </nav>
 
     <!-- Botón carrito -->
@@ -71,8 +75,11 @@
     <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;">Quiénes somos</a>
     <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;">Nuestros productos</a>
     <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;">Contáctenos</a>
-    <a href="#" data-page="page-registro"  onclick="showPage('page-registro');return false;">Registrarse</a>
-    <a href="#" data-page="page-login"     onclick="showPage('page-login');return false;">Iniciar sesión</a>
+    <!-- Sin sesión -->
+    <a href="#" id="nav-btn-registro-mob" data-page="page-registro" onclick="showPage('page-registro');return false;">Registrarse</a>
+    <a href="#" id="nav-btn-login-mob"    data-page="page-login"    onclick="showPage('page-login');return false;">Iniciar sesión</a>
+    <!-- Con sesión (auth.js la puebla) -->
+    <div id="nav-user-info-mob" style="display:none"></div>
   </nav>
 </header>
 
@@ -547,18 +554,20 @@
         <p>Accede a tu cuenta para ver precios y gestionar pedidos</p>
       </div>
       <div class="form-body">
-        <form id="form-login">
+        <form id="form-login" autocomplete="on">
           <div class="form-row">
             <label for="login-correo">Correo electrónico *</label>
-            <input type="email" id="login-correo" placeholder="correo@empresa.cl">
+            <input type="email" id="login-correo" placeholder="correo@empresa.cl" autocomplete="email">
             <div class="form-error" id="err-login-correo"></div>
           </div>
           <div class="form-row">
             <label for="login-pass">Contraseña *</label>
-            <input type="password" id="login-pass" placeholder="Tu contraseña">
+            <input type="password" id="login-pass" placeholder="Tu contraseña" autocomplete="current-password">
             <div class="form-error" id="err-login-pass"></div>
           </div>
-          <button type="submit" class="btn-submit">Ingresar</button>
+          <!-- Mensaje de error de Supabase Auth (auth.js lo puebla) -->
+          <div id="login-error-msg" class="login-error-msg" style="display:none"></div>
+          <button type="submit" id="btn-login-submit" class="btn-submit">Ingresar</button>
           <div class="success-msg" id="success-login">
             ✅ ¡Sesión iniciada correctamente! Bienvenido.
           </div>

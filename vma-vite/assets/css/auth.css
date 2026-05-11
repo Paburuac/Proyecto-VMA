@@ -1,0 +1,112 @@
+/* =============================================
+   VMA INDUSTRIAL – auth.css
+   Estilos para la UI de autenticación:
+   - Info de usuario en el header (nav)
+   - Mensaje de error del login
+   - Botón de logout
+   ============================================= */
+
+/* ─── Contenedor de usuario en nav (desktop) ─ */
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 4px 10px;
+  background: rgba(132, 189, 0, 0.12);
+  border: 1.5px solid var(--verde);
+  border-radius: var(--radio);
+}
+
+.nav-user-nombre {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--blanco);
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-user-rol {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--verde);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: rgba(132,189,0,0.18);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+/* ─── Botón cerrar sesión ──────────────────── */
+.btn-logout {
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.8);
+  padding: 4px 10px;
+  border-radius: var(--radio);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-style: italic;
+  transition: var(--trans);
+  white-space: nowrap;
+}
+.btn-logout:hover {
+  border-color: #cc3333;
+  color: #ff6b6b;
+  background: rgba(204,51,51,0.1);
+}
+
+/* ─── Info usuario en nav móvil ────────────── */
+.nav-user-nombre-mob {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--verde);
+  padding: 8px 14px 4px;
+}
+
+#nav-user-info-mob a {
+  color: #ff6b6b !important;
+}
+#nav-user-info-mob a:hover {
+  background: rgba(204,51,51,0.12) !important;
+}
+
+/* ─── Mensaje de error del login ──────────── */
+.login-error-msg {
+  background: rgba(204, 51, 51, 0.08);
+  border: 1.5px solid #cc3333;
+  border-radius: var(--radio);
+  color: #cc3333;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* ─── Indicador de rol en la badge del header ─ */
+.rol-badge-admin      { background: rgba(255,165,0,0.2);  color: #ffa500; }
+.rol-badge-trabajador { background: rgba(132,189,0,0.2);  color: #84BD00; }
+.rol-badge-cliente    { background: rgba(0,123,255,0.15); color: #4d9fff; }
+
+/* ─── Responsive ────────────────────────────── */
+@media (max-width: 1024px) {
+  .nav-user-nombre {
+    max-width: 110px;
+    font-size: 0.8rem;
+  }
+  .nav-user-rol {
+    display: none; /* ocultar en pantallas medias */
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-user-info {
+    display: none !important; /* solo mostrar versión móvil */
+  }
+}
