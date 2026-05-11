@@ -3,28 +3,21 @@
  * ─────────────────────────────────────────────
  * Estado global de autenticación y funciones
  * de UI relacionadas con el usuario logueado.
- *
- * Expone en window:
- *   window.authState       → estado actual del usuario
- *   window.handleLogin()   → llamado desde el form HTML
- *   window.handleLogout()  → llamado desde el botón de la nav
- *   window.isAdmin()       → true si rol es "admin"
- *   window.isTrabajador()  → true si rol es "trabajador"
- *   window.isCliente()     → true si rol es "cliente"
  * ─────────────────────────────────────────────
  */
 
 import { login, logout, getSession, cargarPerfil } from '../services/authService.js'
+import { supabase } from '../services/supabase.js'
 
 /* ─────────────────────────────────────────────
    ESTADO GLOBAL DE AUTH
-   Accesible desde cualquier script como window.authState
 ───────────────────────────────────────────── */
 const authState = {
-  loggedIn:  false,
-  user:      null,   // objeto de Supabase Auth
-  perfil:    null,   // fila de tabla usuarios
-  rol:       null,   // string: "admin" | "trabajador" | "cliente"
+  loggedIn:       false,
+  user:           null,
+  perfil:         null,
+  rol:            null,
+  _procesando:    false,  // evita que handleLogin y onAuthStateChange se pisen
 }
 window.authState = authState
 
@@ -41,8 +34,6 @@ window.isCliente    = isCliente
 
 /* ─────────────────────────────────────────────
    ACTUALIZAR UI DEL HEADER
-   Muestra nombre + rol cuando está logueado,
-   o los botones de login/registro cuando no.
 ───────────────────────────────────────────── */
 function actualizarHeaderUI() {
   const btnLogin    = document.getElementById('nav-btn-login')
@@ -56,43 +47,52 @@ function actualizarHeaderUI() {
     const nombre = authState.perfil.nombre || authState.perfil.email
     const rol    = authState.rol || ''
 
-    // Desktop
+    // ── Desktop ──────────────────────────────
     if (btnLogin)    btnLogin.style.display    = 'none'
     if (btnRegistro) btnRegistro.style.display = 'none'
+
     if (userInfo) {
       userInfo.style.display = 'flex'
       userInfo.innerHTML = `
         <span class="nav-user-nombre">👤 ${escHtmlSafe(nombre)}</span>
         <span class="nav-user-rol">${escHtmlSafe(rol)}</span>
-        <button class="btn-logout" onclick="handleLogout()">Cerrar sesión</button>
+        <button class="btn-logout" id="btn-cerrar-sesion">Cerrar sesión</button>
       `
+      // addEventListener en lugar de onclick inline — evita problemas
+      // cuando el botón se regenera dinámicamente
+      document.getElementById('btn-cerrar-sesion')
+        ?.addEventListener('click', handleLogout)
     }
 
-    // Móvil
-    if (btnLoginMob)    btnLoginMob.style.display    = 'none'
-    if (btnRegMob)      btnRegMob.style.display      = 'none'
+    // ── Móvil ─────────────────────────────────
+    if (btnLoginMob) btnLoginMob.style.display = 'none'
+    if (btnRegMob)   btnRegMob.style.display   = 'none'
+
     if (userInfoMob) {
       userInfoMob.style.display = 'block'
       userInfoMob.innerHTML = `
         <span class="nav-user-nombre-mob">👤 ${escHtmlSafe(nombre)} (${escHtmlSafe(rol)})</span>
-        <a onclick="handleLogout()">Cerrar sesión</a>
+        <a id="btn-cerrar-sesion-mob" style="cursor:pointer">Cerrar sesión</a>
       `
+      document.getElementById('btn-cerrar-sesion-mob')
+        ?.addEventListener('click', handleLogout)
     }
 
   } else {
-    // Sin sesión: mostrar botones normales
+    // ── Sin sesión: restaurar botones normales ─
     if (btnLogin)    btnLogin.style.display    = ''
     if (btnRegistro) btnRegistro.style.display = ''
     if (userInfo)    userInfo.style.display    = 'none'
 
-    if (btnLoginMob)    btnLoginMob.style.display    = ''
-    if (btnRegMob)      btnRegMob.style.display      = ''
-    if (userInfoMob)    userInfoMob.style.display    = 'none'
+    if (btnLoginMob) btnLoginMob.style.display = ''
+    if (btnRegMob)   btnRegMob.style.display   = ''
+    if (userInfoMob) userInfoMob.style.display = 'none'
   }
 }
 
-/* Helper local para escaping (main.js la expone también, pero auth.js
-   puede cargarse antes, así que definimos una copia defensiva) */
+/* ─────────────────────────────────────────────
+   HELPERS INTERNOS
+───────────────────────────────────────────── */
 function escHtmlSafe(str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
@@ -102,28 +102,16 @@ function escHtmlSafe(str) {
     .replace(/'/g, '&#039;')
 }
 
-/* ─────────────────────────────────────────────
-   MOSTRAR ERROR EN FORMULARIO LOGIN
-───────────────────────────────────────────── */
 function mostrarLoginError(mensaje) {
   const el = document.getElementById('login-error-msg')
-  if (el) {
-    el.textContent = mensaje
-    el.style.display = 'block'
-  }
+  if (el) { el.textContent = mensaje; el.style.display = 'block' }
 }
 
 function limpiarLoginError() {
   const el = document.getElementById('login-error-msg')
-  if (el) {
-    el.textContent = ''
-    el.style.display = 'none'
-  }
+  if (el) { el.textContent = ''; el.style.display = 'none' }
 }
 
-/* ─────────────────────────────────────────────
-   MOSTRAR / OCULTAR SPINNER EN BOTÓN LOGIN
-───────────────────────────────────────────── */
 function setLoginLoading(loading) {
   const btn = document.getElementById('btn-login-submit')
   if (!btn) return
@@ -132,13 +120,14 @@ function setLoginLoading(loading) {
 }
 
 /* ─────────────────────────────────────────────
-   MANEJAR SESIÓN: guarda estado y actualiza UI
+   MANEJAR SESIÓN
+   Carga el perfil y actualiza el estado global.
+   Retorna true si todo salió bien.
 ───────────────────────────────────────────── */
 async function manejarSesion(user) {
   const { data: perfil, error, inactivo } = await cargarPerfil(user.id)
 
   if (inactivo) {
-    // Usuario desactivado: hacer logout inmediato
     await logout()
     mostrarLoginError('Tu cuenta está desactivada. Contacta al administrador.')
     return false
@@ -150,7 +139,6 @@ async function manejarSesion(user) {
     return false
   }
 
-  // Poblar estado global
   authState.loggedIn = true
   authState.user     = user
   authState.perfil   = perfil
@@ -163,28 +151,29 @@ async function manejarSesion(user) {
 /* ─────────────────────────────────────────────
    handleLogin()
    Llamado desde el submit del form-login.
-   Conectado al formulario en index.html mediante
-   el listener en la sección FORMULARIO LOGIN.
+   Usa _procesando para evitar que onAuthStateChange
+   duplique la carga del perfil simultáneamente.
 ───────────────────────────────────────────── */
 async function handleLogin(email, password) {
   limpiarLoginError()
   setLoginLoading(true)
+  authState._procesando = true   // bloquear onAuthStateChange durante este flujo
 
   const { data, error } = await login(email, password)
 
   if (error) {
+    authState._procesando = false
     setLoginLoading(false)
-    // Traducir mensajes comunes de Supabase al español
-    const msg = traducirErrorAuth(error.message)
-    mostrarLoginError(msg)
+    mostrarLoginError(traducirErrorAuth(error.message))
     return
   }
 
   const ok = await manejarSesion(data.user)
+
+  authState._procesando = false
   setLoginLoading(false)
 
   if (ok) {
-    // Limpiar form y redirigir al inicio
     document.getElementById('form-login')?.reset()
     limpiarLoginError()
     showPage('page-inicio')
@@ -195,16 +184,15 @@ window.handleLogin = handleLogin
 
 /* ─────────────────────────────────────────────
    handleLogout()
-   Llamado desde el botón "Cerrar sesión" en nav.
 ───────────────────────────────────────────── */
 async function handleLogout() {
   await logout()
 
-  // Limpiar estado global
-  authState.loggedIn = false
-  authState.user     = null
-  authState.perfil   = null
-  authState.rol      = null
+  authState.loggedIn    = false
+  authState.user        = null
+  authState.perfil      = null
+  authState.rol         = null
+  authState._procesando = false
 
   actualizarHeaderUI()
   showPage('page-inicio')
@@ -214,38 +202,47 @@ window.handleLogout = handleLogout
 
 /* ─────────────────────────────────────────────
    inicializarAuth()
-   Verifica si hay sesión activa al cargar la app.
-   Llamado desde src/app.js al inicio.
+   Verifica sesión existente al cargar la página.
+   Llamado desde src/app.js.
 ───────────────────────────────────────────── */
 export async function inicializarAuth() {
   const { data, error } = await getSession()
 
   if (error || !data?.session) {
-    actualizarHeaderUI()  // mostrar botones de login
+    actualizarHeaderUI()
     return
   }
 
+  authState._procesando = true
   await manejarSesion(data.session.user)
+  authState._procesando = false
 }
 
 /* ─────────────────────────────────────────────
    ESCUCHAR CAMBIOS DE SESIÓN EN TIEMPO REAL
-   (ej: token expirado, cierre desde otra pestaña)
+   Solo actúa si _procesando es false, para no
+   duplicar la carga del perfil cuando handleLogin
+   o inicializarAuth ya lo están haciendo.
 ───────────────────────────────────────────── */
-import { supabase } from '../services/supabase.js'
-
 supabase.auth.onAuthStateChange(async (event, session) => {
   console.log('[VMA Auth] onAuthStateChange →', event)
 
   if (event === 'SIGNED_IN' && session?.user) {
+    // Si handleLogin o inicializarAuth ya están procesando, ignorar
+    if (authState._procesando) {
+      console.log('[VMA Auth] onAuthStateChange SIGNED_IN ignorado (ya procesando)')
+      return
+    }
+    // Solo llega aquí si el SIGNED_IN viene de otra pestaña o token refresh
     await manejarSesion(session.user)
   }
 
   if (event === 'SIGNED_OUT') {
-    authState.loggedIn = false
-    authState.user     = null
-    authState.perfil   = null
-    authState.rol      = null
+    authState.loggedIn    = false
+    authState.user        = null
+    authState.perfil      = null
+    authState.rol         = null
+    authState._procesando = false
     actualizarHeaderUI()
   }
 
@@ -260,17 +257,13 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 function traducirErrorAuth(msg) {
   if (!msg) return 'Error desconocido al iniciar sesión.'
   const m = msg.toLowerCase()
-  if (m.includes('invalid login credentials') || m.includes('invalid credentials')) {
+  if (m.includes('invalid login credentials') || m.includes('invalid credentials'))
     return 'Correo o contraseña incorrectos.'
-  }
-  if (m.includes('email not confirmed')) {
+  if (m.includes('email not confirmed'))
     return 'Debes confirmar tu correo electrónico antes de iniciar sesión.'
-  }
-  if (m.includes('too many requests')) {
+  if (m.includes('too many requests'))
     return 'Demasiados intentos. Espera unos minutos e intenta nuevamente.'
-  }
-  if (m.includes('user not found')) {
+  if (m.includes('user not found'))
     return 'No existe una cuenta con ese correo.'
-  }
   return msg
 }
