@@ -7,33 +7,87 @@
    ============================================= */
 
 /* -----------------------------------------------
-   FORMULARIO CONTACTO
+   FORMULARIO CONTACTO / COTIZACIÓN
+   Guarda la solicitud en Supabase (tabla cotizaciones).
+   Si el usuario está logueado, pre-llena sus datos.
+   Los productos del carrito se adjuntan automáticamente.
 ----------------------------------------------- */
-document.getElementById('form-contacto').addEventListener('submit', function (e) {
-  e.preventDefault();
-  let valid = true;
+document.getElementById('form-contacto').addEventListener('submit', async function (e) {
+  e.preventDefault()
+  let valid = true
 
-  // Validar campos requeridos
-  ['nombre-c','empresa-c','correo-c','tel-c','mensaje-c'].forEach(id => {
-    const input = document.getElementById(id);
-    const err   = document.getElementById(`err-${id}`);
+  // ── Validaciones visuales ────────────────────
+  const camposReq = ['nombre-c', 'empresa-c', 'correo-c', 'tel-c', 'mensaje-c']
+  camposReq.forEach(id => {
+    const input = document.getElementById(id)
+    const err   = document.getElementById(`err-${id}`)
+    if (!input) return
     if (!input.value.trim()) {
-      if (err) { err.textContent = 'Este campo es obligatorio.'; err.classList.add('show'); }
-      valid = false;
+      if (err) { err.textContent = 'Este campo es obligatorio.'; err.classList.add('show') }
+      valid = false
     } else if (id === 'correo-c' && !isValidEmail(input.value)) {
-      if (err) { err.textContent = 'Ingrese un correo válido.'; err.classList.add('show'); }
-      valid = false;
+      if (err) { err.textContent = 'Ingrese un correo válido.'; err.classList.add('show') }
+      valid = false
     } else {
-      if (err) err.classList.remove('show');
+      if (err) err.classList.remove('show')
     }
-  });
+  })
 
-  if (valid) {
-    document.getElementById('success-contacto').classList.add('show');
-    this.reset();
-    setTimeout(() => document.getElementById('success-contacto').classList.remove('show'), 5000);
+  if (!valid) return
+
+  // ── Preparar datos ───────────────────────────
+  const btn = this.querySelector('button[type="submit"]')
+  if (btn) { btn.disabled = true; btn.textContent = 'Enviando...' }
+
+  // Obtener productos del carrito actual
+  const productosCarrito = typeof cart !== 'undefined'
+    ? cart.map(i => ({
+        codigo:   i.codigo,
+        nombre:   i.nombre,
+        cantidad: i.cantidad,
+        precio:   i.precio,
+      }))
+    : []
+
+  // Si el campo producto-interes tiene texto adicional, incluirlo en el mensaje
+  const productoInteres = document.getElementById('producto-interes')?.value?.trim()
+
+  const datos = {
+    nombre:   document.getElementById('nombre-c').value.trim(),
+    empresa:  document.getElementById('empresa-c').value.trim(),
+    email:    document.getElementById('correo-c').value.trim(),
+    telefono: document.getElementById('tel-c').value.trim(),
+    mensaje:  document.getElementById('mensaje-c').value.trim() +
+              (productoInteres ? `\n\nProducto de interés: ${productoInteres}` : ''),
+    productos_solicitados: productosCarrito,
   }
-});
+
+  // ── Enviar a Supabase ────────────────────────
+  if (typeof window.cotizacionService?.enviarCotizacion !== 'function') {
+    console.error('[VMA] cotizacionService no disponible')
+    if (btn) { btn.disabled = false; btn.textContent = 'Enviar solicitud' }
+    return
+  }
+
+  const { data, error } = await window.cotizacionService.enviarCotizacion(datos)
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Enviar solicitud' }
+
+  if (error) {
+    console.error('[VMA] Error al enviar cotización:', error)
+    showToast('❌ Error al enviar. Intenta nuevamente.')
+    return
+  }
+
+  // ── Éxito ────────────────────────────────────
+  this.reset()
+  document.getElementById('success-contacto').classList.add('show')
+  setTimeout(() => {
+    document.getElementById('success-contacto').classList.remove('show')
+  }, 5000)
+
+  console.log('[VMA] Cotización guardada – id:', data?.id)
+})
 
 /* -----------------------------------------------
    FORMULARIO REGISTRO – conectado a Supabase Auth
@@ -208,3 +262,48 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
+
+/* -----------------------------------------------
+   PRE-LLENAR FORMULARIO DE CONTACTO
+   Cuando el usuario navega a la página de contacto:
+   - Si está logueado, pre-llena nombre, email y teléfono
+   - Si hay productos en el carrito, los muestra en el form
+   Llamado desde router.js al mostrar page-contacto.
+----------------------------------------------- */
+function prellenarFormContacto() {
+  // Pre-llenar con datos del usuario logueado
+  if (window.authState?.loggedIn && window.authState?.perfil) {
+    const perfil = window.authState.perfil
+    const nombreField  = document.getElementById('nombre-c')
+    const correoField  = document.getElementById('correo-c')
+    const telField     = document.getElementById('tel-c')
+
+    if (nombreField && !nombreField.value) nombreField.value = perfil.nombre  || ''
+    if (correoField && !correoField.value) correoField.value = perfil.email   || ''
+    if (telField    && !telField.value)    telField.value    = perfil.telefono || ''
+  }
+
+  // Mostrar productos del carrito si hay alguno
+  const infoBox  = document.getElementById('cotizacion-productos-info')
+  const listaEl  = document.getElementById('cotizacion-productos-lista')
+  const prodField = document.getElementById('producto-interes')
+
+  const itemsCarrito = typeof cart !== 'undefined' ? cart : []
+
+  if (itemsCarrito.length > 0 && infoBox && listaEl) {
+    infoBox.style.display = 'block'
+    listaEl.innerHTML = itemsCarrito.map(i =>
+      `• [${escHtml(i.codigo)}] ${escHtml(i.nombre.substring(0, 50))} × ${i.cantidad}`
+    ).join('<br>')
+
+    // Pre-llenar campo producto de interés
+    if (prodField && !prodField.value) {
+      prodField.value = itemsCarrito
+        .map(i => `[${i.codigo}] ${i.nombre.substring(0, 30)}`)
+        .join(', ')
+    }
+  } else if (infoBox) {
+    infoBox.style.display = 'none'
+  }
+}
+window.prellenarFormContacto = prellenarFormContacto

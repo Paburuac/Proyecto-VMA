@@ -26,6 +26,12 @@ function showPage(id) {
   if (id === 'page-productos') {
     initProductos();
   }
+  // Si es contacto, pre-llenar formulario con datos del usuario y carrito
+  if (id === 'page-contacto') {
+    if (typeof window.prellenarFormContacto === 'function') {
+      window.prellenarFormContacto()
+    }
+  }
 }
 
 /* -----------------------------------------------
