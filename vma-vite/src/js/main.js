@@ -54,6 +54,7 @@ function escHtml(str) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+window.escHtml = escHtml;
 
 function goToCategoria(cat) {
   state.activeCat = cat;
