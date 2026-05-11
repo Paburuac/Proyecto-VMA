@@ -6,7 +6,7 @@
  * ─────────────────────────────────────────────
  */
 
-import { login, logout, getSession, cargarPerfil } from '../services/authService.js'
+import { login, logout, getSession, cargarPerfil, registrarCliente } from '../services/authService.js'
 import { supabase } from '../services/supabase.js'
 
 /* ─────────────────────────────────────────────
@@ -28,9 +28,10 @@ function isAdmin()       { return authState.rol === 'admin' }
 function isTrabajador()  { return authState.rol === 'trabajador' }
 function isCliente()     { return authState.rol === 'cliente' }
 
-window.isAdmin      = isAdmin
-window.isTrabajador = isTrabajador
-window.isCliente    = isCliente
+window.isAdmin         = isAdmin
+window.isTrabajador    = isTrabajador
+window.isCliente       = isCliente
+window.registrarCliente = registrarCliente  // usado por validaciones.js
 
 /* ─────────────────────────────────────────────
    ACTUALIZAR UI DEL HEADER
@@ -157,9 +158,7 @@ async function manejarSesion(user) {
 async function handleLogin(email, password) {
   limpiarLoginError()
   setLoginLoading(true)
-  authState._procesando = false  // limpiar estado previo por si quedó sucio
-  await new Promise(r => setTimeout(r, 50))  // micro-pausa para que onAuthStateChange previo termine
-  authState._procesando = true
+  authState._procesando = true   // bloquear onAuthStateChange durante este flujo
 
   const { data, error } = await login(email, password)
 
@@ -188,7 +187,6 @@ window.handleLogin = handleLogin
    handleLogout()
 ───────────────────────────────────────────── */
 async function handleLogout() {
-  authState._procesando = false  // limpiar antes de cerrar
   await logout()
 
   authState.loggedIn    = false
