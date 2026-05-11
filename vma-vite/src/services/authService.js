@@ -128,3 +128,71 @@ export async function cargarPerfil(userId) {
     return { data: null, error: err }
   }
 }
+
+/* ─────────────────────────────────────────────
+   registrarCliente(datos)
+   Crea un nuevo usuario en Supabase Auth y luego
+   inserta su perfil en la tabla `usuarios` con
+   rol_id = 3 (cliente) y activo = true.
+
+   No requiere confirmación de email (desactivado
+   en Supabase durante desarrollo).
+
+   Parámetros:
+     datos.nombre    → string
+     datos.telefono  → string (opcional)
+     datos.email     → string
+     datos.password  → string
+
+   Retorna { data, error }
+───────────────────────────────────────────── */
+export async function registrarCliente({ nombre, telefono, email, password }) {
+  try {
+    // 1. Crear usuario en Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    })
+
+    if (authError) {
+      console.error('[VMA Auth] registrarCliente – signUp error:', authError.message)
+      return { data: null, error: authError }
+    }
+
+    const userId = authData.user?.id
+    if (!userId) {
+      const err = new Error('No se pudo obtener el ID del usuario registrado.')
+      console.error('[VMA Auth]', err.message)
+      return { data: null, error: err }
+    }
+
+    console.log('[VMA Auth] registrarCliente – usuario Auth creado:', userId)
+
+    // 2. Insertar perfil en tabla usuarios
+    //    rol_id = 3 → cliente
+    const { error: insertError } = await supabase
+      .from('usuarios')
+      .insert({
+        auth_user_id: userId,
+        nombre:       nombre.trim(),
+        email:        email.trim().toLowerCase(),
+        telefono:     telefono?.trim() || null,
+        rol_id:       3,
+        activo:       true,
+      })
+
+    if (insertError) {
+      console.error('[VMA Auth] registrarCliente – insert perfil error:', insertError.message)
+      // El usuario quedó en Auth pero sin perfil — intentar limpiar
+      // (no bloqueante, el admin puede asignarlo manualmente)
+      return { data: null, error: insertError }
+    }
+
+    console.log('[VMA Auth] registrarCliente – perfil insertado OK para:', email)
+    return { data: authData, error: null }
+
+  } catch (err) {
+    console.error('[VMA Auth] registrarCliente excepción:', err)
+    return { data: null, error: err }
+  }
+}
