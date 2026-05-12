@@ -268,3 +268,9 @@ window.removeFromCart = removeFromCart
 window.updateCartQty  = updateCartQty
 window.openCart       = openCart
 window.closeCart      = closeCart
+
+// Exponer cart como getter para que siempre retorne el array actual
+Object.defineProperty(window, 'cart', {
+  get() { return cart },
+  configurable: true,
+})
