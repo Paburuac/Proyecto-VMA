@@ -27,10 +27,13 @@ function showPage(id) {
     initProductos();
   }
   // Si es contacto, pre-llenar formulario con datos del usuario y carrito
+  // El pequeño delay asegura que el DOM de la página esté visible antes de leer el carrito
   if (id === 'page-contacto') {
-    if (typeof window.prellenarFormContacto === 'function') {
-      window.prellenarFormContacto()
-    }
+    setTimeout(() => {
+      if (typeof window.prellenarFormContacto === 'function') {
+        window.prellenarFormContacto()
+      }
+    }, 100)
   }
 }
 
