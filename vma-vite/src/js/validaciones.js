@@ -262,6 +262,8 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 300);
   }, 3000);
 }
+// Exponer globalmente para que auth.js y otros módulos puedan usarla
+window.showToast = showToast;
 
 /* -----------------------------------------------
    PRE-LLENAR FORMULARIO DE CONTACTO
