@@ -26,9 +26,8 @@ function showPage(id) {
   if (id === 'page-productos') {
     initProductos();
   }
-  // Si es contacto, pre-llenar formulario con datos del usuario y carrito
-  // El pequeño delay asegura que el DOM de la página esté visible antes de leer el carrito
-  if (id === 'page-contacto') {
+  // Si es cotización, pre-llenar formulario con datos del usuario y carrito
+  if (id === 'page-cotizacion') {
     setTimeout(() => {
       if (typeof window.prellenarFormContacto === 'function') {
         window.prellenarFormContacto()

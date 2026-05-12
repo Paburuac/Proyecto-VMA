@@ -249,11 +249,7 @@ document.getElementById('cart-overlay').addEventListener('click', e => {
 
 document.getElementById('btn-cotizar-cart').addEventListener('click', () => {
   closeCart()
-  showPage('page-contacto')
-  const prodField = document.getElementById('producto-interes')
-  if (prodField && cart.length > 0) {
-    prodField.value = cart.map(i => `[${i.codigo}] ${i.nombre.substring(0, 30)}`).join(', ')
-  }
+  showPage('page-cotizacion')  // abre la página de cotización, no la de contacto
 })
 
 /* ─────────────────────────────────────────────
