@@ -309,3 +309,48 @@ function prellenarFormContacto() {
   }
 }
 window.prellenarFormContacto = prellenarFormContacto
+
+/* -----------------------------------------------
+   PRE-LLENAR FORMULARIO DE COTIZACIÓN
+   Llamado desde carrito.js con los items actuales.
+   Recibe el array de items directamente para evitar
+   problemas de timing con la variable cart.
+----------------------------------------------- */
+function prellenarFormCotizacion(items) {
+  // Pre-llenar con datos del usuario logueado
+  if (window.authState?.loggedIn && window.authState?.perfil) {
+    const perfil = window.authState.perfil
+    const nombreField = document.getElementById('nombre-c')
+    const correoField = document.getElementById('correo-c')
+    const telField    = document.getElementById('tel-c')
+    if (nombreField) nombreField.value = perfil.nombre   || ''
+    if (correoField) correoField.value = perfil.email    || ''
+    if (telField)    telField.value    = perfil.telefono || ''
+  }
+
+  // Limpiar campos para re-llenado fresco
+  const prodField = document.getElementById('producto-interes')
+  const infoBox   = document.getElementById('cotizacion-productos-info')
+  const listaEl   = document.getElementById('cotizacion-productos-lista')
+
+  if (!items || items.length === 0) {
+    if (infoBox) infoBox.style.display = 'none'
+    return
+  }
+
+  // Llenar campo producto de interés
+  if (prodField) {
+    prodField.value = items
+      .map(i => `[${i.codigo}] ${i.nombre.substring(0, 30)}`)
+      .join(', ')
+  }
+
+  // Mostrar bloque de productos incluidos
+  if (infoBox && listaEl) {
+    infoBox.style.display = 'block'
+    listaEl.innerHTML = items.map(i =>
+      `• [${escHtml(i.codigo)}] ${escHtml(i.nombre.substring(0, 50))} × ${i.cantidad}`
+    ).join('<br>')
+  }
+}
+window.prellenarFormCotizacion = prellenarFormCotizacion
