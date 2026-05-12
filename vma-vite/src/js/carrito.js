@@ -248,8 +248,16 @@ document.getElementById('cart-overlay').addEventListener('click', e => {
 })
 
 document.getElementById('btn-cotizar-cart').addEventListener('click', () => {
+  // Guardar snapshot del carrito ANTES de cerrar el drawer
+  const itemsActuales = [...cart]
   closeCart()
-  showPage('page-cotizacion')  // abre la página de cotización, no la de contacto
+  showPage('page-cotizacion')
+  // Pre-llenar después de que la página sea visible
+  setTimeout(() => {
+    if (typeof window.prellenarFormCotizacion === 'function') {
+      window.prellenarFormCotizacion(itemsActuales)
+    }
+  }, 50)
 })
 
 /* ─────────────────────────────────────────────
