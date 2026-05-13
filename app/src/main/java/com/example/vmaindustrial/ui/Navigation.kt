@@ -1,5 +1,6 @@
 package com.example.vmaindustrial.ui
 
+import android.accounts.Account
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -7,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Dataset
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -35,9 +37,11 @@ enum class Destination(
 ) {
     HOME("home", Icons.Default.Home, "Home", "Home Screen"),
 
-    CATEGORIAS("categorias", Icons.Default.Dataset, "categorias", "Categorias Screen"),
+    FILTROS("filtros", Icons.Default.Dataset, "Filtros", "Filtros Screen"),
 
     CARRITO("carrito", Icons.Default.ShoppingCart,"Carrito","Carrito Screen"),
+
+    ACCOUNT("account", Icons.Default.AccountCircle,"Account","Account Screen"),
     SETTINGS("settings", Icons.Default.Settings, "Settings", "Settings Screen"),
 }
 
@@ -56,11 +60,15 @@ fun AppNavHost(
         composable(Destination.HOME.route) {
             HomeScreen()
         }
-        composable(Destination.CATEGORIAS.route) {
-            SongsScreen()
+        composable(Destination.FILTROS.route) {
+            FiltrosScreen()
         }
         composable(Destination.CARRITO.route){
             CarritoScreen()
+        }
+
+        composable(Destination.ACCOUNT.route){
+            AccountScreen()
         }
         composable(Destination.SETTINGS.route) {
             SettingsScreen()
@@ -76,18 +84,17 @@ fun HomeScreen() {
 }
 
 @Composable
-fun SongsScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Songs Screen")
-    }
-}
-
-@Composable
 fun CarritoScreen(){
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Carrito Screen")
     }
 
+}
+@Composable
+fun AccountScreen(){
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Account Screen")
+    }
 }
 
 @Composable
@@ -100,7 +107,7 @@ fun SettingsScreen() {
 @Composable
 fun NavigationBarExample(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
-    val startDestination = Destination.CATEGORIAS
+    val startDestination = Destination.HOME
     var selectedDestination by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
 
     Scaffold(
