@@ -9,6 +9,8 @@ import com.example.vmaindustrial.model.Categoria
 import com.example.vmaindustrial.model.Producto
 import com.example.vmaindustrial.repository.CategoriaRepository
 import com.example.vmaindustrial.repository.ProductoRepository
+import com.example.vmaindustrial.data.remote.SupabaseClient
+import io.github.jan.supabase.gotrue.auth
 import kotlinx.coroutines.launch
 
 class ProductoViewModel : ViewModel() {
@@ -45,9 +47,26 @@ class ProductoViewModel : ViewModel() {
                 categorias = categoriaRepository.obtenerCategorias()
                 println("DEBUG: Categorías cargadas: ${categorias.size}")
             } catch (e: Exception) {
-                e.printStackTrace()
-                mensajeError = e.message ?: "Error desconocido al cargar datos"
-                println("DEBUG: Error en ViewModel: ${e.message}")
+                val errorMessage = e.message ?: ""
+                if (errorMessage.contains("JWT expired", ignoreCase = true) || 
+                    errorMessage.contains("expired", ignoreCase = true)) {
+                    println("DEBUG: JWT expirado detectado, intentando refrescar sesión...")
+                    try {
+                        SupabaseClient.client.auth.refreshCurrentSession()
+                        // Reintentar una vez después del refresh
+                        productos = productoRepository.obtenerProductos()
+                        categorias = categoriaRepository.obtenerCategorias()
+                        println("DEBUG: Datos cargados exitosamente tras refresh")
+                    } catch (refreshError: Exception) {
+                        refreshError.printStackTrace()
+                        mensajeError = "Sesión expirada. Por favor, vuelve a iniciar sesión."
+                        println("DEBUG: Error tras refresh: ${refreshError.message}")
+                    }
+                } else {
+                    e.printStackTrace()
+                    mensajeError = e.message ?: "Error desconocido al cargar datos"
+                    println("DEBUG: Error en ViewModel: ${e.message}")
+                }
             } finally {
                 isLoading = false
             }

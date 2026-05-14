@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddShoppingCart
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
@@ -17,18 +18,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.model.Producto
+import com.example.vmaindustrial.viewmodel.CarritoViewModel
 import com.example.vmaindustrial.viewmodel.ProductoViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FiltrosScreen(viewModel: ProductoViewModel = viewModel()) {
+fun FiltrosScreen(
+    onNavigateToLogin: () -> Unit,
+    viewModel: ProductoViewModel = viewModel(),
+    carritoViewModel: CarritoViewModel = viewModel()
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Cargar datos iniciales
     LaunchedEffect(Unit) {
         viewModel.cargarDatos()
+    }
+
+    // Mostrar mensajes del carrito
+    LaunchedEffect(carritoViewModel.mensaje) {
+        carritoViewModel.mensaje?.let {
+            if (it == "Debes iniciar sesión para agregar al carrito") {
+                onNavigateToLogin()
+            } else {
+                snackbarHostState.showSnackbar(it)
+            }
+            carritoViewModel.mensaje = null
+        }
     }
 
     val productosFiltrados = viewModel.productosFiltrados()
@@ -83,6 +102,7 @@ fun FiltrosScreen(viewModel: ProductoViewModel = viewModel()) {
         drawerState = drawerState
     ) {
         Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
                     title = { Text(categoriaActual?.nombre_categoria ?: "Todos los Productos") },
@@ -159,7 +179,9 @@ fun FiltrosScreen(viewModel: ProductoViewModel = viewModel()) {
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(productosFiltrados) { producto ->
-                                ProductoItem(producto)
+                                ProductoItem(producto, onAddToCart = {
+                                    carritoViewModel.agregarProducto(producto.id_producto)
+                                })
                             }
                         }
                     }
@@ -170,26 +192,44 @@ fun FiltrosScreen(viewModel: ProductoViewModel = viewModel()) {
 }
 
 @Composable
-fun ProductoItem(producto: Producto) {
+fun ProductoItem(producto: Producto, onAddToCart: () -> Unit) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = producto.descripcion, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(4.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = producto.descripcion, style = MaterialTheme.typography.titleMedium)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "Código: ${producto.codigo}", style = MaterialTheme.typography.bodySmall)
+                }
+                IconButton(onClick = onAddToCart) {
+                    Icon(
+                        Icons.Default.AddShoppingCart,
+                        contentDescription = "Añadir al carrito",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(text = "Código: ${producto.codigo}", style = MaterialTheme.typography.bodySmall)
                 Text(
                     text = "$${producto.precio ?: 0.0}",
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
+                Text(text = "Stock: ${producto.stock ?: 0}", style = MaterialTheme.typography.bodySmall)
             }
-            Text(text = "Stock: ${producto.stock ?: 0}", style = MaterialTheme.typography.bodySmall)
             Text(text = "Distribuidor: ${producto.distribuidor ?: "Sin asignar"}", style = MaterialTheme.typography.bodySmall)
         }
     }

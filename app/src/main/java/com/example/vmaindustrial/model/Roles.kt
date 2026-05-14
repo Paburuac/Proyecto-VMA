@@ -1,11 +1,12 @@
 package com.example.vmaindustrial.model
 
-import java.util.Date
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Roles(
-    val id: Int,
+    val id: Int? = null,
     val nombre: String,
     val descripcion: String,
-    val created_at: Date,
-    val update_at: Date
+    val created_at: String? = null,
+    val update_at: String? = null
 )
