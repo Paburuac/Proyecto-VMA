@@ -15,10 +15,13 @@ import { obtenerProductos, obtenerCategorias, construirCatalogo } from './servic
 import * as carritoService from './services/carritoService.js'
 import * as cotizacionService from './services/cotizacionService.js'
 import { inicializarAuth } from './js/auth.js'
+import * as adminService from './services/adminService.js'
+import './js/admin.js'
 
 // Exponer carritoService globalmente para que carrito.js pueda usarlo
 window.carritoService    = carritoService
 window.cotizacionService = cotizacionService
+window.adminService      = adminService
 import './js/router.js'
 import './js/productos.js'
 import './js/carrito.js'

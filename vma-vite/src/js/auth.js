@@ -47,6 +47,12 @@ function actualizarHeaderUI() {
     const nombre = authState.perfil.nombre || authState.perfil.email
     const rol    = authState.rol || ''
 
+    // Botón Panel Admin — solo visible para admin
+    const btnAdmin    = document.getElementById('nav-btn-admin')
+    const btnAdminMob = document.getElementById('nav-btn-admin-mob')
+    if (btnAdmin)    btnAdmin.style.display    = isAdmin() ? 'flex' : 'none'
+    if (btnAdminMob) btnAdminMob.style.display = isAdmin() ? 'block' : 'none'
+
     if (btnLogin)    btnLogin.style.display    = 'none'
     if (btnRegistro) btnRegistro.style.display = 'none'
 
@@ -75,6 +81,10 @@ function actualizarHeaderUI() {
     }
 
   } else {
+    const _btnAdmin    = document.getElementById('nav-btn-admin')
+    const _btnAdminMob = document.getElementById('nav-btn-admin-mob')
+    if (_btnAdmin)    _btnAdmin.style.display    = 'none'
+    if (_btnAdminMob) _btnAdminMob.style.display = 'none'
     if (btnLogin)    btnLogin.style.display    = ''
     if (btnRegistro) btnRegistro.style.display = ''
     if (userInfo)    userInfo.style.display    = 'none'

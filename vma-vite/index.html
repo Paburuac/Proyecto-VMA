@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="assets/css/formularios.css">
   <link rel="stylesheet" href="assets/css/footer.css">
   <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
 
@@ -50,6 +51,8 @@
       <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;"         >Quiénes somos</a>
       <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;"        >Nuestros productos</a>
       <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;"         >Contáctenos</a>
+      <!-- Botón Panel Admin — visible solo para rol admin (auth.js lo muestra) -->
+      <a href="#" id="nav-btn-admin" class="btn-admin-panel" onclick="showPage('page-admin');initAdmin();return false;" style="display:none">⚙️ Panel Admin</a>
       <!-- Botones visibles cuando NO hay sesión -->
       <a href="#" id="nav-btn-registro" data-page="page-registro" onclick="showPage('page-registro');return false;" class="btn-registro">Registrarse</a>
       <a href="#" id="nav-btn-login"    data-page="page-login"    onclick="showPage('page-login');return false;"    class="btn-login">Iniciar sesión</a>
@@ -75,6 +78,8 @@
     <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;">Quiénes somos</a>
     <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;">Nuestros productos</a>
     <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;">Contáctenos</a>
+    <!-- Botón admin móvil -->
+    <a href="#" id="nav-btn-admin-mob" onclick="showPage('page-admin');initAdmin();return false;" style="display:none;color:var(--verde);font-weight:700">⚙️ Panel Admin</a>
     <!-- Sin sesión -->
     <a href="#" id="nav-btn-registro-mob" data-page="page-registro" onclick="showPage('page-registro');return false;">Registrarse</a>
     <a href="#" id="nav-btn-login-mob"    data-page="page-login"    onclick="showPage('page-login');return false;">Iniciar sesión</a>
@@ -693,6 +698,83 @@
 <!-- Scripts legacy: router, productos, carrito, validaciones
      Se cargan antes del entry point de Vite para que sus funciones
      estén disponibles globalmente cuando app.js las llame. -->
+
+<!-- ============================================================
+     PÁGINA: PANEL DE ADMINISTRACIÓN
+     Solo accesible para rol admin (controlado por auth.js + initAdmin())
+     ============================================================ -->
+<div id="page-admin" class="page">
+
+  <!-- Encabezado del panel -->
+  <div class="admin-hero">
+    <div>
+      <h1>⚙️ Panel de <span>Administración</span></h1>
+      <div class="admin-hero-sub">VMA Industrial — Gestión interna</div>
+    </div>
+  </div>
+
+  <!-- Tabs de navegación -->
+  <div class="admin-tabs">
+    <button class="admin-tab-btn active" data-tab="dashboard"    onclick="adminCambiarTab('dashboard')">📊 Dashboard</button>
+    <button class="admin-tab-btn"        data-tab="cotizaciones" onclick="adminCambiarTab('cotizaciones')">📋 Cotizaciones</button>
+    <button class="admin-tab-btn"        data-tab="usuarios"     onclick="adminCambiarTab('usuarios')">👥 Usuarios</button>
+    <button class="admin-tab-btn"        data-tab="productos"    onclick="adminCambiarTab('productos')">📦 Productos</button>
+    <button class="admin-tab-btn"        data-tab="categorias"   onclick="adminCambiarTab('categorias')">🏷️ Categorías</button>
+    <button class="admin-tab-btn"        data-tab="reportes"     onclick="adminCambiarTab('reportes')">📈 Reportes</button>
+  </div>
+
+  <!-- Cuerpo del panel -->
+  <div class="admin-body">
+
+    <!-- Dashboard -->
+    <div class="admin-section" data-section="dashboard">
+      <div id="admin-dashboard-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+    <!-- Cotizaciones -->
+    <div class="admin-section" data-section="cotizaciones" style="display:none">
+      <div class="admin-filtros">
+        <button class="admin-filter-btn active" data-estado="" onclick="adminFiltrarCotizaciones('')">Todas</button>
+        <button class="admin-filter-btn" data-estado="pendiente"  onclick="adminFiltrarCotizaciones('pendiente')">🟡 Pendientes</button>
+        <button class="admin-filter-btn" data-estado="revisada"   onclick="adminFiltrarCotizaciones('revisada')">🔵 Revisadas</button>
+        <button class="admin-filter-btn" data-estado="respondida" onclick="adminFiltrarCotizaciones('respondida')">🟢 Respondidas</button>
+      </div>
+      <div id="admin-cotizaciones-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+    <!-- Usuarios -->
+    <div class="admin-section" data-section="usuarios" style="display:none">
+      <div id="admin-usuarios-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+    <!-- Productos -->
+    <div class="admin-section" data-section="productos" style="display:none">
+      <div id="admin-productos-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+    <!-- Categorías -->
+    <div class="admin-section" data-section="categorias" style="display:none">
+      <div id="admin-categorias-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+    <!-- Reportes -->
+    <div class="admin-section" data-section="reportes" style="display:none">
+      <div id="admin-reportes-content"><div class="admin-loading">⚙️ Cargando...</div></div>
+    </div>
+
+  </div><!-- /admin-body -->
+</div><!-- /page-admin -->
+
+<!-- Modal genérico del panel admin -->
+<div id="admin-modal" onclick="if(event.target===this)adminCerrarModal()">
+  <div class="admin-modal-box">
+    <div class="admin-modal-head">
+      <h3 id="admin-modal-title">Detalle</h3>
+      <button class="admin-modal-close" onclick="adminCerrarModal()">✕</button>
+    </div>
+    <div class="admin-modal-body" id="admin-modal-body"></div>
+  </div>
+</div>
 
 <!--
   Shim de compatibilidad: los scripts legacy usan `catalogo` como variable
