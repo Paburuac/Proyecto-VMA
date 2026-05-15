@@ -6,6 +6,7 @@
  * Productos, Categorías y Reportes.
  *
  * Solo accesible si window.authState.rol === 'admin'
+ * asdasdasdasda
  * ─────────────────────────────────────────────
  */
 
