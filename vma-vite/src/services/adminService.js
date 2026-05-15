@@ -147,7 +147,8 @@ export async function obtenerProductosAdmin() {
   try {
     const { data, error } = await supabase
       .from('producto')
-      .select('id_producto, codigo, descripcion, precio, stock, distribuidor, id_categoria, categoria(id_categoria, nombre_categoria)')
+      // ✅ imagen_url agregada al SELECT
+      .select('id_producto, codigo, descripcion, precio, stock, distribuidor, imagen_url, id_categoria, categoria(id_categoria, nombre_categoria)')
       .order('descripcion', { ascending: true })
 
     if (error) { console.error('[VMA Admin] obtenerProductos error:', error.message); return { data: null, error } }
@@ -312,19 +313,19 @@ export async function obtenerReporteStock() {
     const clasificado = data.map(p => {
       const stock = parseInt(p.stock) || 0
       let estadoStock = 'suficiente'
-      if (stock === 0)        estadoStock = 'sin_stock'
-      else if (stock <= 5)    estadoStock = 'stock_bajo'
-      else if (stock <= 20)   estadoStock = 'stock_medio'
+      if (stock === 0)       estadoStock = 'sin_stock'
+      else if (stock <= 5)   estadoStock = 'stock_bajo'
+      else if (stock <= 20)  estadoStock = 'stock_medio'
       return { ...p, stockNum: stock, estadoStock }
     })
 
     return {
       data: {
-        todos: clasificado,
-        sinStock:    clasificado.filter(p => p.estadoStock === 'sin_stock'),
-        stockBajo:   clasificado.filter(p => p.estadoStock === 'stock_bajo'),
-        stockMedio:  clasificado.filter(p => p.estadoStock === 'stock_medio'),
-        suficiente:  clasificado.filter(p => p.estadoStock === 'suficiente'),
+        todos:      clasificado,
+        sinStock:   clasificado.filter(p => p.estadoStock === 'sin_stock'),
+        stockBajo:  clasificado.filter(p => p.estadoStock === 'stock_bajo'),
+        stockMedio: clasificado.filter(p => p.estadoStock === 'stock_medio'),
+        suficiente: clasificado.filter(p => p.estadoStock === 'suficiente'),
       },
       error: null
     }
