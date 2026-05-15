@@ -166,3 +166,21 @@
 }
 .nav-mobile a:hover { background: var(--verde); color: var(--azul); }
 
+
+/* ─── Botón Mis Cotizaciones (nav) ─────────── */
+.nav-links .btn-mis-cot {
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.35);
+  color: var(--blanco);
+  padding: 6px 14px;
+  border-radius: var(--radio);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--trans);
+  display: none; /* se muestra vía JS al loguearse */
+}
+.nav-links .btn-mis-cot:hover {
+  border-color: var(--verde);
+  color: var(--verde);
+  background: rgba(132,189,0,0.08);
+}
