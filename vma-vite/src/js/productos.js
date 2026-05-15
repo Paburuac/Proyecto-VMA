@@ -3,11 +3,12 @@
    Responsabilidad: Renderizado del catálogo,
    sidebar, filtros, búsqueda, modal de producto.
    Depende de: catalogo.js, carrito.js, router.js
-   ============================================= */
+============================================= */
 
 /* -----------------------------------------------
    CATÁLOGO DE PRODUCTOS (inyectado desde catalogo.js)
 ----------------------------------------------- */
+
 /* La variable `catalogo` se carga desde catalogo.js */
 
 /* Estado compartido global */
@@ -18,20 +19,19 @@ const state = window.state || {
   filterCat: '',
   filterSub: ''
 };
-
 window.state = state;
 
 /* Iconos por categoría */
 const catIcons = {
-  'Gases':             '⚗️',
-  'Soldaduras':        '🔧',
-  'Herramientas':      '🔨',
-  'Accesorios':        '⚙️',
+  'Gases': '⚗️',
+  'Soldaduras': '🔧',
+  'Herramientas': '🔨',
+  'Accesorios': '⚙️',
   'Calzado de Seguridad':'👢',
   'Cuidados Personales':'🧴',
-  'Limpieza':          '🧹',
-  'Ropa':              '🦺',
-  'Servicio':          '🛠️',
+  'Limpieza': '🧹',
+  'Ropa': '🦺',
+  'Servicio': '🛠️',
 };
 const defaultIcon = '📦';
 
@@ -47,31 +47,31 @@ function initProductos() {
 function renderSidebar() {
   const sidebar = document.getElementById('cat-sidebar');
   if (!sidebar) return;
-  let html = '<div class="sidebar-title">Categorías</div>';
 
+  let html = '<div class="sidebar-title">Categorías</div>';
   Object.keys(catalogo).sort().forEach(cat => {
     const totalCat = Object.values(catalogo[cat]).reduce((s, a) => s + a.length, 0);
     const subs = Object.keys(catalogo[cat]).sort();
     const isActive = state.activeCat === cat;
-    html += `
-      <div class="cat-sidebar-item">
-        <button class="cat-sidebar-btn ${isActive ? 'active' : ''}" onclick="filterByCat('${escHtml(cat)}')" data-cat="${escHtml(cat)}">
-          <span>${catIcons[cat] || defaultIcon} ${escHtml(cat)}</span>
-          <span class="badge">${totalCat}</span>
-        </button>
-        <div class="sub-sidebar-list ${isActive ? 'open' : ''}">
-          ${subs.map(sub => {
-            const cnt = catalogo[cat][sub].length;
-            const isSub = state.activeCat === cat && state.activeSub === sub;
-            return `<button class="sub-sidebar-btn ${isSub ? 'active' : ''}" onclick="filterBySub('${escHtml(cat)}','${escHtml(sub)}')" data-sub="${escHtml(sub)}">
-              <span>${escHtml(sub)}</span>
-              <span>${cnt}</span>
-            </button>`;
-          }).join('')}
-        </div>
-      </div>`;
-  });
 
+    html += `
+    <div class="cat-sidebar-item">
+      <button class="cat-sidebar-btn ${isActive ? 'active' : ''}" onclick="filterByCat('${escHtml(cat)}')" data-cat="${escHtml(cat)}">
+        <span>${catIcons[cat] || defaultIcon} ${escHtml(cat)}</span>
+        <span class="badge">${totalCat}</span>
+      </button>
+      <div class="sub-sidebar-list ${isActive ? 'open' : ''}">
+        ${subs.map(sub => {
+          const cnt = catalogo[cat][sub].length;
+          const isSub = state.activeCat === cat && state.activeSub === sub;
+          return `<button class="sub-sidebar-btn ${isSub ? 'active' : ''}" onclick="filterBySub('${escHtml(cat)}','${escHtml(sub)}')" data-sub="${escHtml(sub)}">
+            <span>${escHtml(sub)}</span>
+            <span>${cnt}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
   sidebar.innerHTML = html;
 }
 
@@ -114,7 +114,6 @@ function initFilters() {
   const selSub = document.getElementById('filter-sub');
   if (!selCat) return;
 
-  // Llenar opciones categoría
   selCat.innerHTML = '<option value="">Todas las categorías</option>';
   Object.keys(catalogo).sort().forEach(cat => {
     selCat.innerHTML += `<option value="${escHtml(cat)}">${escHtml(cat)}</option>`;
@@ -170,9 +169,7 @@ function renderProductos() {
   let totalVisible = 0;
   let html = '';
 
-  // Iterar categorías
   const cats = filterCat ? [filterCat] : Object.keys(catalogo).sort();
-
   cats.forEach(cat => {
     if (!catalogo[cat]) return;
     const subs = filterSub ? [filterSub] : Object.keys(catalogo[cat]).sort();
@@ -181,7 +178,6 @@ function renderProductos() {
 
     subs.forEach(sub => {
       const productos = catalogo[cat][sub] || [];
-      // Filtrar por búsqueda
       const filtrados = search
         ? productos.filter(p =>
             p.nombre.toLowerCase().includes(search) ||
@@ -192,7 +188,6 @@ function renderProductos() {
       catTotal += filtrados.length;
       totalVisible += filtrados.length;
 
-      // Render subcategoría
       catHtml += `
         <div class="sub-bloque" data-sub="${escHtml(sub)}">
           <div class="sub-header" onclick="toggleSub(this)">
@@ -209,7 +204,6 @@ function renderProductos() {
     });
 
     if (catTotal === 0) return;
-
     html += `
       <div class="cat-bloque" data-cat="${escHtml(cat)}">
         <div class="cat-header" onclick="toggleCat(this)">
@@ -232,15 +226,25 @@ function renderProductos() {
 
   container.innerHTML = html;
 
-  // Actualizar contador
   const counter = document.getElementById('prod-count');
   if (counter) counter.textContent = `${totalVisible} producto${totalVisible !== 1 ? 's' : ''}`;
 }
 
+/* ✅ CORREGIDO: usa imagen_url si existe, si no muestra el emoji/placeholder */
 function renderProdCard(cat, sub, p) {
+  const imgHtml = p.imagen_url
+    ? `<img src="${escHtml(p.imagen_url)}" alt="${escHtml(p.nombre)}"
+          style="width:100%;height:100%;object-fit:contain;border-radius:4px"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    : '';
+  const fallbackStyle = p.imagen_url ? 'display:none' : 'display:flex';
+
   return `
     <div class="prod-card" onclick="openModal('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}')">
-      <div class="prod-img">📦</div>
+      <div class="prod-img" style="position:relative;overflow:hidden">
+        ${imgHtml}
+        <span class="prod-img-fallback" style="${fallbackStyle};align-items:center;justify-content:center;width:100%;height:100%;font-size:2rem">📦</span>
+      </div>
       <div class="prod-info">
         <div class="prod-codigo">#${escHtml(p.codigo)}</div>
         <div class="prod-nombre">${escHtml(p.nombre)}</div>
@@ -258,6 +262,7 @@ function toggleCat(header) {
   header.classList.toggle('collapsed');
   body.classList.toggle('collapsed');
 }
+
 function toggleSub(header) {
   const body = header.nextElementSibling;
   header.classList.toggle('collapsed');
@@ -267,15 +272,14 @@ function toggleSub(header) {
 /* -----------------------------------------------
    MODAL DE PRODUCTO
 ----------------------------------------------- */
+
 function openModal(codigo, cat, sub) {
-  // Buscar producto
   const prod = findProduct(codigo, cat, sub);
   if (!prod) return;
 
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  // Llenar datos
   document.getElementById('modal-badge').textContent = `${cat} > ${sub}`;
   document.getElementById('modal-title').textContent = prod.nombre;
   document.getElementById('modal-codigo').textContent = prod.codigo;
@@ -285,28 +289,45 @@ function openModal(codigo, cat, sub) {
   document.getElementById('modal-precio').textContent = prod.precio;
   document.getElementById('modal-qty').value = 1;
 
-  // Distribuidor / stock
+  // ✅ CORREGIDO: mostrar imagen real en el modal
+  const modalImgEl = document.getElementById('modal-img');
+  if (modalImgEl) {
+    if (prod.imagen_url) {
+      modalImgEl.innerHTML = `<img src="${escHtml(prod.imagen_url)}" alt="${escHtml(prod.nombre)}"
+        style="width:100%;height:100%;object-fit:contain;border-radius:8px"
+        onerror="this.parentElement.innerHTML='<span style=\\'font-size:4rem\\'>📦</span>'">`;
+    } else {
+      modalImgEl.innerHTML = '<span style="font-size:4rem">📦</span>';
+    }
+  }
+
   const metaEl = document.getElementById('modal-meta');
   let metaHtml = '';
   if (prod.distribuidor) metaHtml += `Distribuidor: <span>${escHtml(prod.distribuidor)}</span> &nbsp;`;
   if (prod.stock) metaHtml += `Stock: <span>${escHtml(prod.stock)}</span>`;
   metaEl.innerHTML = metaHtml || 'Consulte disponibilidad.';
 
-  // Botón carrito del modal
   document.getElementById('modal-add-cart').onclick = () => {
     const qty = parseInt(document.getElementById('modal-qty').value) || 1;
     addToCart(codigo, cat, sub, qty);
     closeModal();
   };
 
-  // Productos relacionados (placeholder)
+  // Productos relacionados
   const relGrid = document.getElementById('rel-grid');
   const relProds = (catalogo[cat][sub] || []).filter(p => p.codigo !== codigo).slice(0, 3);
   relGrid.innerHTML = relProds.length > 0
-    ? relProds.map(p => `<div class="rel-item" onclick="closeModal();setTimeout(()=>openModal('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}'),100)">
-        <div style="font-size:1.3rem;margin-bottom:4px">📦</div>
-        <div style="font-size:0.75rem;font-weight:600">${escHtml(p.nombre.substring(0,30))}${p.nombre.length>30?'...':''}</div>
-      </div>`).join('')
+    ? relProds.map(p => {
+        const thumb = p.imagen_url
+          ? `<img src="${escHtml(p.imagen_url)}" alt="${escHtml(p.nombre)}"
+               style="width:48px;height:48px;object-fit:contain;margin-bottom:4px"
+               onerror="this.style.display='none'">`
+          : `<div style="font-size:1.3rem;margin-bottom:4px">📦</div>`;
+        return `<div class="rel-item" onclick="closeModal();setTimeout(()=>openModal('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}'),100)">
+          ${thumb}
+          <div style="font-size:0.75rem;font-weight:600">${escHtml(p.nombre.substring(0,30))}${p.nombre.length>30?'...':''}</div>
+        </div>`;
+      }).join('')
     : '<div class="rel-item">Lorem Ipsum Dolor</div><div class="rel-item">Lorem Ipsum Dolor</div><div class="rel-item">Lorem Ipsum Dolor</div>';
 }
 
@@ -324,7 +345,6 @@ document.getElementById('qty-plus').addEventListener('click', () => {
   const inp = document.getElementById('modal-qty');
   inp.value = parseInt(inp.value) + 1;
 });
-
 document.getElementById('modal-overlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal();
 });
@@ -333,7 +353,6 @@ function findProduct(codigo, cat, sub) {
   if (catalogo[cat] && catalogo[cat][sub]) {
     return catalogo[cat][sub].find(p => p.codigo === codigo) || null;
   }
-  // Buscar en todo el catálogo
   for (const c of Object.keys(catalogo)) {
     for (const s of Object.keys(catalogo[c])) {
       const found = catalogo[c][s].find(p => p.codigo === codigo);
@@ -343,18 +362,17 @@ function findProduct(codigo, cat, sub) {
   return null;
 }
 
-
-window.initProductos = initProductos;
-window.renderSidebar = renderSidebar;
-window.renderProductos = renderProductos;
-window.initSearch = initSearch;
-window.initFilters = initFilters;
-window.updateSubFilter = updateSubFilter;
-window.filterByCat = filterByCat;
-window.filterBySub = filterBySub;
-window.renderProdCard = renderProdCard;
-window.toggleCat = toggleCat;
-window.toggleSub = toggleSub;
-window.openModal = openModal;
-window.closeModal = closeModal;
-window.findProduct = findProduct;
+window.initProductos    = initProductos;
+window.renderSidebar    = renderSidebar;
+window.renderProductos  = renderProductos;
+window.initSearch       = initSearch;
+window.initFilters      = initFilters;
+window.updateSubFilter  = updateSubFilter;
+window.filterByCat      = filterByCat;
+window.filterBySub      = filterBySub;
+window.renderProdCard   = renderProdCard;
+window.toggleCat        = toggleCat;
+window.toggleSub        = toggleSub;
+window.openModal        = openModal;
+window.closeModal       = closeModal;
+window.findProduct      = findProduct;
