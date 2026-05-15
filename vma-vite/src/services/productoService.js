@@ -6,7 +6,7 @@
  *
  * Tablas en uso:
  *   producto  → id_producto, codigo, descripcion, id_categoria,
- *               precio, distribuidor, stock
+ *               precio, distribuidor, stock, imagen_url
  *   categoria → id_categoria, nombre_categoria
  *
  * Cada función retorna: { data, error, loading }
@@ -21,6 +21,7 @@ import { supabase } from './supabase.js'
    Incluye la relación categoria para evitar
    duplicar el select en cada función.
 ───────────────────────────────────────────── */
+
 const PRODUCTO_SELECT = `
   id_producto,
   codigo,
@@ -28,6 +29,7 @@ const PRODUCTO_SELECT = `
   precio,
   distribuidor,
   stock,
+  imagen_url,
   categoria (
     id_categoria,
     nombre_categoria
@@ -38,6 +40,7 @@ const PRODUCTO_SELECT = `
    obtenerProductos()
    Retorna todos los productos con su categoría.
 ───────────────────────────────────────────── */
+
 export async function obtenerProductos() {
   const { data, error } = await supabase
     .from('producto')
@@ -57,6 +60,7 @@ export async function obtenerProductos() {
    obtenerCategorias()
    Retorna todas las categorías, ordenadas por nombre.
 ───────────────────────────────────────────── */
+
 export async function obtenerCategorias() {
   const { data, error } = await supabase
     .from('categoria')
@@ -77,8 +81,8 @@ export async function obtenerCategorias() {
    Filtra productos cuya categoría coincide con
    el nombre dado (case-insensitive usando ilike).
 ───────────────────────────────────────────── */
+
 export async function obtenerProductosPorCategoria(nombreCategoria) {
-  // Primero obtenemos el id de la categoría por nombre
   const { data: catData, error: catError } = await supabase
     .from('categoria')
     .select('id_categoria')
@@ -110,6 +114,7 @@ export async function obtenerProductosPorCategoria(nombreCategoria) {
    Búsqueda de texto libre en descripcion y codigo.
    Usa ilike para búsqueda case-insensitive.
 ───────────────────────────────────────────── */
+
 export async function buscarProductos(texto) {
   if (!texto || texto.trim().length === 0) {
     return obtenerProductos()
@@ -136,6 +141,7 @@ export async function buscarProductos(texto) {
    obtenerProductoPorCodigo(codigo)
    Para abrir el modal de detalle de un producto.
 ───────────────────────────────────────────── */
+
 export async function obtenerProductoPorCodigo(codigo) {
   const { data, error } = await supabase
     .from('producto')
@@ -157,37 +163,32 @@ export async function obtenerProductoPorCodigo(codigo) {
    Transforma el array plano de Supabase en la
    estructura anidada { Categoria: { Sub: [...] } }
    que espera el resto del frontend.
-
-   Mientras no haya tabla subcategoria en Supabase,
-   todos los productos caen en subcategoría "General".
-   Cuando se agregue subcategoria al schema, actualizar
-   aquí el campo correspondiente.
 ───────────────────────────────────────────── */
+
 export function construirCatalogo(productos) {
   const catalogo = {}
 
   productos.forEach(prod => {
-    // Nombre de categoría desde la relación
     const cat = prod.categoria?.nombre_categoria || 'Sin Categoría'
 
     // TODO: cuando exista tabla subcategoria, reemplazar 'General' por
-    //       prod.subcategoria?.nombre_subcategoria
+    // prod.subcategoria?.nombre_subcategoria
     const sub = 'General'
 
-    if (!catalogo[cat]) catalogo[cat] = {}
-    if (!catalogo[cat][sub]) catalogo[cat][sub] = []
+    if (!catalogo[cat])       catalogo[cat]      = {}
+    if (!catalogo[cat][sub])  catalogo[cat][sub] = []
 
     catalogo[cat][sub].push({
-      // Mantener mismos campos que esperan productos.js y carrito.js
-      codigo:      String(prod.codigo  ?? ''),
-      nombre:      prod.descripcion    ?? '',
-      distribuidor: prod.distribuidor  ?? '',
-      stock:       String(prod.stock   ?? ''),
-      precio:      prod.precio != null ? String(prod.precio) : 'Consultar',
-      descripcion: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
-      imagen:      `media/productos/${cat.toLowerCase().replace(/\s+/g, '-')}/placeholder.jpg`,
-      // Campos extra de Supabase (disponibles para uso futuro)
-      id_producto: prod.id_producto,
+      codigo:       String(prod.codigo ?? ''),
+      nombre:       prod.descripcion ?? '',
+      distribuidor: prod.distribuidor ?? '',
+      stock:        String(prod.stock ?? ''),
+      precio:       prod.precio != null ? String(prod.precio) : 'Consultar',
+      descripcion:  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
+      // ✅ imagen_url desde Supabase — usado por renderProdCard y openModal
+      imagen_url:   prod.imagen_url || null,
+      // Campos extra de Supabase
+      id_producto:  prod.id_producto,
       id_categoria: prod.categoria?.id_categoria,
     })
   })
