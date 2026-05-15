@@ -53,6 +53,12 @@ function actualizarHeaderUI() {
     if (btnAdmin)    btnAdmin.style.display    = isAdmin() ? 'flex' : 'none'
     if (btnAdminMob) btnAdminMob.style.display = isAdmin() ? 'block' : 'none'
 
+    // Botón Mis Cotizaciones — visible para todos los logueados
+    const btnMisCot    = document.getElementById('nav-btn-mis-cot')
+    const btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
+    if (btnMisCot)    btnMisCot.style.display    = 'flex'
+    if (btnMisCotMob) btnMisCotMob.style.display = 'block'
+
     if (btnLogin)    btnLogin.style.display    = 'none'
     if (btnRegistro) btnRegistro.style.display = 'none'
 
@@ -85,6 +91,10 @@ function actualizarHeaderUI() {
     const _btnAdminMob = document.getElementById('nav-btn-admin-mob')
     if (_btnAdmin)    _btnAdmin.style.display    = 'none'
     if (_btnAdminMob) _btnAdminMob.style.display = 'none'
+    const _btnMisCot    = document.getElementById('nav-btn-mis-cot')
+    const _btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
+    if (_btnMisCot)    _btnMisCot.style.display    = 'none'
+    if (_btnMisCotMob) _btnMisCotMob.style.display = 'none'
     if (btnLogin)    btnLogin.style.display    = ''
     if (btnRegistro) btnRegistro.style.display = ''
     if (userInfo)    userInfo.style.display    = 'none'
