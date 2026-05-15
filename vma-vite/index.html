@@ -12,7 +12,7 @@
     2. header.css     → estilos del header sticky y navegación
     3. main.css       → layout SPA, hero, sección nosotros, toast, responsive
     4. productos.css  → catálogo, sidebar, cards, modal, carrito
-    5. formularios.css → formularios contacto, registro, login
+    5. formularios.css→ formularios contacto, registro, login
     6. footer.css     → footer
   -->
   <link rel="stylesheet" href="assets/css/variables.css">
@@ -29,13 +29,12 @@
 <!-- ============================================================
      COMPONENTE: HEADER FIJO / STICKY
      Fuente: components/header.html
-     ============================================================ -->
+============================================================ -->
 <header id="header">
   <div class="header-top">
     📞 +56 2 2XXX XXXX &nbsp;|&nbsp; ✉ contacto@vmaindustrial.cl &nbsp;|&nbsp; Lun–Vie 8:30–18:00
   </div>
   <div class="header-main">
-
     <!-- Logo -->
     <div class="logo" onclick="showPage('page-inicio')">
       <div class="logo-icon">VMA</div>
@@ -48,14 +47,17 @@
     <!-- Navegación escritorio -->
     <nav class="nav-links">
       <a href="#" data-page="page-inicio"    onclick="showPage('page-inicio');return false;"    class="active">Inicio</a>
-      <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;"         >Quiénes somos</a>
-      <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;"        >Nuestros productos</a>
-      <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;"         >Contáctenos</a>
+      <a href="#" data-page="page-nosotros"  onclick="showPage('page-nosotros');return false;"  >Quiénes somos</a>
+      <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;" >Nuestros productos</a>
+      <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;"  >Contáctenos</a>
+
       <!-- Botón Panel Admin — visible solo para rol admin (auth.js lo muestra) -->
       <a href="#" id="nav-btn-admin" class="btn-admin-panel" onclick="showPage('page-admin');initAdmin();return false;" style="display:none">⚙️ Panel Admin</a>
+
       <!-- Botones visibles cuando NO hay sesión -->
       <a href="#" id="nav-btn-registro" data-page="page-registro" onclick="showPage('page-registro');return false;" class="btn-registro">Registrarse</a>
       <a href="#" id="nav-btn-login"    data-page="page-login"    onclick="showPage('page-login');return false;"    class="btn-login">Iniciar sesión</a>
+
       <!-- Info de usuario visible cuando SÍ hay sesión (auth.js la puebla) -->
       <div id="nav-user-info" class="nav-user-info" style="display:none"></div>
     </nav>
@@ -88,17 +90,18 @@
   </nav>
 </header>
 
-
 <!-- ============================================================
      COMPONENTE: MODAL DE PRODUCTO
      Fuente: components/producto-modal.html
-     ============================================================ -->
+============================================================ -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-body">
-      <!-- Imagen placeholder → reemplazar con ruta de media/productos/{cat}/ -->
-      <div class="modal-img">📦</div>
+
+      <!-- ✅ CORREGIDO: id="modal-img" agregado para que productos.js pueda inyectar la imagen real -->
+      <div class="modal-img" id="modal-img">📦</div>
+
       <!-- Detalles -->
       <div class="modal-details">
         <span class="modal-badge" id="modal-badge">Categoría &gt; Sub</span>
@@ -112,6 +115,7 @@
         <div class="modal-desc" id="modal-desc"></div>
         <div class="modal-precio-label">Precio</div>
         <div class="modal-precio" id="modal-precio">Consultar</div>
+
         <!-- Cantidad -->
         <div class="qty-row">
           <span class="qty-label">Cantidad:</span>
@@ -121,9 +125,11 @@
             <button class="qty-btn" id="qty-plus">+</button>
           </div>
         </div>
+
         <button class="btn-cart" id="modal-add-cart">🛒 Agregar al carrito</button>
       </div>
     </div>
+
     <!-- Relacionados -->
     <div class="modal-relacionados">
       <h4>Productos relacionados</h4>
@@ -132,11 +138,10 @@
   </div>
 </div>
 
-
 <!-- ============================================================
      COMPONENTE: CARRITO DRAWER
      Fuente: components/carrito-drawer.html
-     ============================================================ -->
+============================================================ -->
 <div class="cart-overlay" id="cart-overlay">
   <div class="cart-drawer">
     <div class="cart-head">
@@ -159,11 +164,10 @@
   </div>
 </div>
 
-
 <!-- ============================================================
      PÁGINA: INICIO
      Fuente: pages/home.html
-     ============================================================ -->
+============================================================ -->
 <div id="page-inicio" class="page active">
 
   <!-- Hero -->
@@ -174,7 +178,7 @@
       <h1>Tu proveedor industrial<br><span>de confianza</span></h1>
       <p>Gases industriales, soldaduras, herramientas y equipos de seguridad para la industria chilena. Atención personalizada y stock garantizado.</p>
       <div class="hero-btns">
-        <button class="btn-primary" onclick="showPage('page-productos')">Ver catálogo completo</button>
+        <button class="btn-primary"   onclick="showPage('page-productos')">Ver catálogo completo</button>
         <button class="btn-secondary" onclick="showPage('page-cotizacion')">Solicitar cotización</button>
       </div>
     </div>
@@ -182,22 +186,10 @@
 
   <!-- Stats -->
   <div class="stats-bar">
-    <div class="stat-item">
-      <div class="stat-num">1.400+</div>
-      <div class="stat-label">Productos</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">9</div>
-      <div class="stat-label">Categorías</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">20+</div>
-      <div class="stat-label">Años de experiencia</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num">500+</div>
-      <div class="stat-label">Clientes activos</div>
-    </div>
+    <div class="stat-item"><div class="stat-num">1.400+</div><div class="stat-label">Productos</div></div>
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">Categorías</div></div>
+    <div class="stat-item"><div class="stat-num">20+</div><div class="stat-label">Años de experiencia</div></div>
+    <div class="stat-item"><div class="stat-num">500+</div><div class="stat-label">Clientes activos</div></div>
   </div>
 
   <!-- Categorías -->
@@ -274,13 +266,11 @@
 
 </div><!-- /page-inicio -->
 
-
 <!-- ============================================================
      PÁGINA: QUIÉNES SOMOS
      Fuente: pages/quienes-somos.html
-     ============================================================ -->
+============================================================ -->
 <div id="page-nosotros" class="page">
-
   <div class="about-hero">
     <h1>Quiénes <span>somos</span></h1>
     <p>Más de 20 años siendo el puente entre la industria chilena y las mejores soluciones en gases, soldadura y seguridad.</p>
@@ -304,26 +294,10 @@
       <div class="divider"></div>
     </div>
     <div class="values-grid">
-      <div class="value-card">
-        <div class="v-icon">🎯</div>
-        <h3>Compromiso</h3>
-        <p>Nos comprometemos con la satisfacción de cada cliente, respondiendo con prontitud y responsabilidad.</p>
-      </div>
-      <div class="value-card">
-        <div class="v-icon">✅</div>
-        <h3>Calidad</h3>
-        <p>Solo trabajamos con productos certificados que cumplen los más altos estándares de la industria.</p>
-      </div>
-      <div class="value-card">
-        <div class="v-icon">🤝</div>
-        <h3>Confianza</h3>
-        <p>Relaciones a largo plazo basadas en la transparencia y la honestidad en cada transacción.</p>
-      </div>
-      <div class="value-card">
-        <div class="v-icon">💡</div>
-        <h3>Innovación</h3>
-        <p>Actualizamos continuamente nuestro catálogo para ofrecer las últimas soluciones del mercado.</p>
-      </div>
+      <div class="value-card"><div class="v-icon">🎯</div><h3>Compromiso</h3><p>Nos comprometemos con la satisfacción de cada cliente, respondiendo con prontitud y responsabilidad.</p></div>
+      <div class="value-card"><div class="v-icon">✅</div><h3>Calidad</h3><p>Solo trabajamos con productos certificados que cumplen los más altos estándares de la industria.</p></div>
+      <div class="value-card"><div class="v-icon">🤝</div><h3>Confianza</h3><p>Relaciones a largo plazo basadas en la transparencia y la honestidad en cada transacción.</p></div>
+      <div class="value-card"><div class="v-icon">💡</div><h3>Innovación</h3><p>Actualizamos continuamente nuestro catálogo para ofrecer las últimas soluciones del mercado.</p></div>
     </div>
   </section>
 
@@ -337,37 +311,26 @@
     <div class="team-grid">
       <div class="team-card">
         <div class="team-photo">👨‍💼</div>
-        <div class="team-info">
-          <h3>Gerente General</h3>
-          <div class="role">Dirección Ejecutiva</div>
-        </div>
+        <div class="team-info"><h3>Gerente General</h3><div class="role">Dirección Ejecutiva</div></div>
       </div>
       <div class="team-card">
         <div class="team-photo">👩‍💼</div>
-        <div class="team-info">
-          <h3>Jefa Comercial</h3>
-          <div class="role">Ventas y Relaciones Comerciales</div>
-        </div>
+        <div class="team-info"><h3>Jefa Comercial</h3><div class="role">Ventas y Relaciones Comerciales</div></div>
       </div>
       <div class="team-card">
         <div class="team-photo">👨‍🔧</div>
-        <div class="team-info">
-          <h3>Jefe Técnico</h3>
-          <div class="role">Asesoría Técnica y Soporte</div>
-        </div>
+        <div class="team-info"><h3>Jefe Técnico</h3><div class="role">Asesoría Técnica y Soporte</div></div>
       </div>
     </div>
   </section>
 
 </div><!-- /page-nosotros -->
 
-
 <!-- ============================================================
      PÁGINA: NUESTROS PRODUCTOS
      Fuente: pages/productos.html
-     ============================================================ -->
+============================================================ -->
 <div id="page-productos" class="page">
-
   <div class="productos-hero">
     <h1>Nuestros <span>productos</span></h1>
     <p>Catálogo completo de +1.400 referencias en gases, soldaduras, herramientas y más</p>
@@ -390,36 +353,25 @@
 
   <!-- Layout: sidebar + lista -->
   <div class="productos-layout">
-
     <!-- Sidebar categorías -->
     <div class="cat-sidebar" id="cat-sidebar">
       <!-- Generado dinámicamente por assets/js/productos.js → renderSidebar() -->
     </div>
-
     <!-- Lista de productos -->
     <div class="productos-lista" id="productos-container">
       <!-- Generado dinámicamente por assets/js/productos.js → renderProductos() -->
     </div>
-
   </div>
-
 </div><!-- /page-productos -->
-
 
 <!-- ============================================================
      PÁGINA: CONTÁCTENOS
-     Fuente: pages/contacto.html
-     ============================================================ -->
-<!-- ============================================================
-     PÁGINA: CONTÁCTENOS — solo información
-     ============================================================ -->
+============================================================ -->
 <div id="page-contacto" class="page">
-
   <div class="about-hero">
     <h1>Contáct<span>enos</span></h1>
     <p>Estamos disponibles para atenderte y resolver tus consultas.</p>
   </div>
-
   <div class="section" style="max-width:700px;margin:0 auto;padding:60px 2rem">
     <div class="contacto-info">
       <h2 style="margin-bottom:1.5rem">Información de contacto</h2>
@@ -427,51 +379,34 @@
         Estamos disponibles para atenderte de lunes a viernes de 8:30 a 18:00 hrs.
         Para urgencias industriales contamos con línea de atención extendida.
       </p>
-
       <div class="info-item">
         <div class="info-icon">📍</div>
-        <div class="info-text">
-          <h4>Dirección</h4>
-          <p>Av. Ejemplo 1234, Local 5<br>Santiago, Región Metropolitana</p>
-        </div>
+        <div class="info-text"><h4>Dirección</h4><p>Av. Ejemplo 1234, Local 5<br>Santiago, Región Metropolitana</p></div>
       </div>
       <div class="info-item">
         <div class="info-icon">📞</div>
-        <div class="info-text">
-          <h4>Teléfono</h4>
-          <p>+56 2 2XXX XXXX<br>+56 9 XXXX XXXX</p>
-        </div>
+        <div class="info-text"><h4>Teléfono</h4><p>+56 2 2XXX XXXX<br>+56 9 XXXX XXXX</p></div>
       </div>
       <div class="info-item">
         <div class="info-icon">✉</div>
-        <div class="info-text">
-          <h4>Correo</h4>
-          <p>contacto@vmaindustrial.cl<br>ventas@vmaindustrial.cl</p>
-        </div>
+        <div class="info-text"><h4>Correo</h4><p>contacto@vmaindustrial.cl<br>ventas@vmaindustrial.cl</p></div>
       </div>
       <div class="info-item">
         <div class="info-icon">🕐</div>
-        <div class="info-text">
-          <h4>Horario</h4>
-          <p>Lunes a Viernes: 8:30 – 18:00 hrs<br>Sábado: 9:00 – 13:00 hrs</p>
-        </div>
+        <div class="info-text"><h4>Horario</h4><p>Lunes a Viernes: 8:30 – 18:00 hrs<br>Sábado: 9:00 – 13:00 hrs</p></div>
       </div>
     </div>
   </div>
-
 </div><!-- /page-contacto -->
 
 <!-- ============================================================
-     PÁGINA: SOLICITAR COTIZACIÓN — solo formulario
-     Accesible únicamente desde el botón del carrito
-     ============================================================ -->
+     PÁGINA: SOLICITAR COTIZACIÓN
+============================================================ -->
 <div id="page-cotizacion" class="page">
-
   <div class="about-hero">
     <h1>Solicitar <span>cotización</span></h1>
     <p>Completa el formulario y te responderemos a la brevedad con una propuesta personalizada.</p>
   </div>
-
   <div class="form-page" style="background:var(--gris-claro);padding:3rem 2rem">
     <div class="form-card form-card-wide">
       <div class="form-header">
@@ -526,14 +461,11 @@
       </div>
     </div>
   </div>
-
 </div><!-- /page-cotizacion -->
-
 
 <!-- ============================================================
      PÁGINA: REGISTRARSE
-     Fuente: pages/registro.html
-     ============================================================ -->
+============================================================ -->
 <div id="page-registro" class="page">
   <div class="form-page">
     <div class="form-card">
@@ -568,7 +500,6 @@
             <input type="password" id="reg-pass2" placeholder="Repite tu contraseña" autocomplete="new-password">
             <div class="form-error" id="err-reg-pass2"></div>
           </div>
-          <!-- Mensaje de error de Supabase (registro) -->
           <div id="registro-error-msg" class="login-error-msg" style="display:none"></div>
           <button type="submit" id="btn-registro-submit" class="btn-submit">Crear cuenta</button>
           <div class="success-msg" id="success-registro">
@@ -583,11 +514,9 @@
   </div>
 </div><!-- /page-registro -->
 
-
 <!-- ============================================================
      PÁGINA: INICIAR SESIÓN
-     Fuente: pages/login.html
-     ============================================================ -->
+============================================================ -->
 <div id="page-login" class="page">
   <div class="form-page">
     <div class="form-card">
@@ -607,7 +536,6 @@
             <input type="password" id="login-pass" placeholder="Tu contraseña" autocomplete="current-password">
             <div class="form-error" id="err-login-pass"></div>
           </div>
-          <!-- Mensaje de error de Supabase Auth (auth.js lo puebla) -->
           <div id="login-error-msg" class="login-error-msg" style="display:none"></div>
           <button type="submit" id="btn-login-submit" class="btn-submit">Ingresar</button>
           <div class="success-msg" id="success-login">
@@ -622,11 +550,9 @@
   </div>
 </div><!-- /page-login -->
 
-
 <!-- ============================================================
      COMPONENTE: FOOTER
-     Fuente: components/footer.html
-     ============================================================ -->
+============================================================ -->
 <footer>
   <div class="footer-grid">
     <div class="footer-brand">
@@ -667,45 +593,13 @@
     <span>Agente Autorizado Indura · Santiago, Chile</span>
   </div>
 </footer>
+
 <div class="footer-verde-bar"></div>
-
-
-<!-- ============================================================
-     SCRIPTS — Orden de carga obligatorio:
-     1. catalogo.js   → datos del catálogo (variable global `catalogo`)
-     2. router.js     → navegación SPA entre páginas
-     3. productos.js  → renderizado, filtros, búsqueda, modal
-     4. carrito.js    → carrito de compras y drawer
-     5. validaciones.js → formularios y utilidades
-     6. main.js       → inicialización y entry-point final
-     ============================================================ -->
-<!--
-     SCRIPTS – Con Vite, todos los módulos JS se cargan
-     a través de un único entry point (type="module").
-     Vite se encarga del bundling y del orden de carga.
-
-     Orden interno en src/app.js:
-       src/services/supabase.js       → cliente Supabase
-       src/services/productoService.js → consultas a BD
-       src/js/router.js               → navegación SPA
-       src/js/productos.js            → renderizado catálogo
-       src/js/carrito.js              → carrito de compras
-       src/js/validaciones.js         → formularios y utils
-       src/js/main-legacy.js          → init + renderCatGrid
-       src/app.js                     → orquestador principal
--->
-
-<!-- Scripts legacy: router, productos, carrito, validaciones
-     Se cargan antes del entry point de Vite para que sus funciones
-     estén disponibles globalmente cuando app.js las llame. -->
 
 <!-- ============================================================
      PÁGINA: PANEL DE ADMINISTRACIÓN
-     Solo accesible para rol admin (controlado por auth.js + initAdmin())
-     ============================================================ -->
+============================================================ -->
 <div id="page-admin" class="page">
-
-  <!-- Encabezado del panel -->
   <div class="admin-hero">
     <div>
       <h1>⚙️ Panel de <span>Administración</span></h1>
@@ -713,7 +607,6 @@
     </div>
   </div>
 
-  <!-- Tabs de navegación -->
   <div class="admin-tabs">
     <button class="admin-tab-btn active" data-tab="dashboard"    onclick="adminCambiarTab('dashboard')">📊 Dashboard</button>
     <button class="admin-tab-btn"        data-tab="cotizaciones" onclick="adminCambiarTab('cotizaciones')">📋 Cotizaciones</button>
@@ -723,46 +616,32 @@
     <button class="admin-tab-btn"        data-tab="reportes"     onclick="adminCambiarTab('reportes')">📈 Reportes</button>
   </div>
 
-  <!-- Cuerpo del panel -->
   <div class="admin-body">
-
-    <!-- Dashboard -->
     <div class="admin-section" data-section="dashboard">
       <div id="admin-dashboard-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-    <!-- Cotizaciones -->
     <div class="admin-section" data-section="cotizaciones" style="display:none">
       <div class="admin-filtros">
-        <button class="admin-filter-btn active" data-estado="" onclick="adminFiltrarCotizaciones('')">Todas</button>
-        <button class="admin-filter-btn" data-estado="pendiente"  onclick="adminFiltrarCotizaciones('pendiente')">🟡 Pendientes</button>
-        <button class="admin-filter-btn" data-estado="revisada"   onclick="adminFiltrarCotizaciones('revisada')">🔵 Revisadas</button>
-        <button class="admin-filter-btn" data-estado="respondida" onclick="adminFiltrarCotizaciones('respondida')">🟢 Respondidas</button>
+        <button class="admin-filter-btn active" data-estado=""           onclick="adminFiltrarCotizaciones('')">Todas</button>
+        <button class="admin-filter-btn"        data-estado="pendiente"  onclick="adminFiltrarCotizaciones('pendiente')">🟡 Pendientes</button>
+        <button class="admin-filter-btn"        data-estado="revisada"   onclick="adminFiltrarCotizaciones('revisada')">🔵 Revisadas</button>
+        <button class="admin-filter-btn"        data-estado="respondida" onclick="adminFiltrarCotizaciones('respondida')">🟢 Respondidas</button>
       </div>
       <div id="admin-cotizaciones-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-    <!-- Usuarios -->
-    <div class="admin-section" data-section="usuarios" style="display:none">
+    <div class="admin-section" data-section="usuarios"     style="display:none">
       <div id="admin-usuarios-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-    <!-- Productos -->
-    <div class="admin-section" data-section="productos" style="display:none">
+    <div class="admin-section" data-section="productos"    style="display:none">
       <div id="admin-productos-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-    <!-- Categorías -->
-    <div class="admin-section" data-section="categorias" style="display:none">
+    <div class="admin-section" data-section="categorias"   style="display:none">
       <div id="admin-categorias-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-    <!-- Reportes -->
-    <div class="admin-section" data-section="reportes" style="display:none">
+    <div class="admin-section" data-section="reportes"     style="display:none">
       <div id="admin-reportes-content"><div class="admin-loading">⚙️ Cargando...</div></div>
     </div>
-
-  </div><!-- /admin-body -->
+  </div>
 </div><!-- /page-admin -->
 
 <!-- Modal genérico del panel admin -->
@@ -782,15 +661,11 @@
   via un Proxy, sin modificar ningún archivo legacy.
 -->
 <script>
-Object.defineProperty(window, 'catalogo', {
-  get() {
-    return window._catalogoData || {};
-  },
-  set(v) {
-    window._catalogoData = v;
-  },
-  configurable: true,
-});
+  Object.defineProperty(window, 'catalogo', {
+    get() { return window._catalogoData || {}; },
+    set(v) { window._catalogoData = v; },
+    configurable: true,
+  });
 </script>
 
 <script type="module" src="/src/app.js"></script>
