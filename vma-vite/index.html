@@ -23,6 +23,9 @@
   <link rel="stylesheet" href="assets/css/footer.css">
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/admin.css">
+  <link rel="stylesheet" href="assets/css/misCotizaciones.css">
+  <!-- jsPDF para descarga de PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -52,6 +55,7 @@
       <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;"  >Contáctenos</a>
 
       <!-- Botón Panel Admin — visible solo para rol admin (auth.js lo muestra) -->
+      <a href="#" id="nav-btn-mis-cot" onclick="showPage('page-mis-cotizaciones');initMisCotizaciones();return false;" style="display:none" class="btn-mis-cot">📋 Mis Cotizaciones</a>
       <a href="#" id="nav-btn-admin" class="btn-admin-panel" onclick="showPage('page-admin');initAdmin();return false;" style="display:none">⚙️ Panel Admin</a>
 
       <!-- Botones visibles cuando NO hay sesión -->
@@ -81,6 +85,7 @@
     <a href="#" data-page="page-productos" onclick="showPage('page-productos');return false;">Nuestros productos</a>
     <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;">Contáctenos</a>
     <!-- Botón admin móvil -->
+    <a href="#" id="nav-btn-mis-cot-mob" onclick="showPage('page-mis-cotizaciones');initMisCotizaciones();return false;" style="display:none">📋 Mis Cotizaciones</a>
     <a href="#" id="nav-btn-admin-mob" onclick="showPage('page-admin');initAdmin();return false;" style="display:none;color:var(--verde);font-weight:700">⚙️ Panel Admin</a>
     <!-- Sin sesión -->
     <a href="#" id="nav-btn-registro-mob" data-page="page-registro" onclick="showPage('page-registro');return false;">Registrarse</a>
@@ -464,8 +469,50 @@
 </div><!-- /page-cotizacion -->
 
 <!-- ============================================================
-     PÁGINA: REGISTRARSE
+     PÁGINA: MIS COTIZACIONES (cliente)
 ============================================================ -->
+<div id="page-mis-cotizaciones" class="page">
+
+  <!-- Hero -->
+  <div class="mc-hero">
+    <div class="mc-hero-inner">
+      <div>
+        <h1>Mis <span>Cotizaciones</span></h1>
+        <p class="mc-hero-sub">Historial y estado de todas tus solicitudes enviadas</p>
+      </div>
+      <div class="mc-hero-action">
+        <button class="mc-btn-nueva" onclick="showPage('page-cotizacion')">➕ Nueva cotización</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido -->
+  <div class="mc-body">
+    <!-- Filtros -->
+    <div id="mc-filtros-wrap"></div>
+    <!-- Lista de cotizaciones -->
+    <div id="mc-content">
+      <div class="mc-loading">
+        <div class="mc-spinner"></div>
+        <p>Cargando tus cotizaciones...</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-mis-cotizaciones -->
+
+<!-- Modal detalle cotización -->
+<div id="mc-modal" role="dialog" aria-modal="true" onclick="if(event.target===this) mcCerrarModal()">
+  <div class="mc-modal-box">
+    <div class="mc-modal-header">
+      <h3 id="mc-modal-title">Detalle de cotización</h3>
+      <button class="mc-modal-close" onclick="mcCerrarModal()" title="Cerrar">&times;</button>
+    </div>
+    <div id="mc-modal-body"></div>
+  </div>
+</div>
+
+
 <div id="page-registro" class="page">
   <div class="form-page">
     <div class="form-card">
