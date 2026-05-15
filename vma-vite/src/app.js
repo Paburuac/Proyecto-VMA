@@ -1,292 +1,136 @@
 /**
- * src/js/auth.js
+ * src/app.js
  * ─────────────────────────────────────────────
- * Estado global de autenticación y funciones
- * de UI relacionadas con el usuario logueado.
+ * Entry point de Vite para VMA Industrial.
+ *
+ * Responsabilidades:
+ *  1. Inicializar autenticación (sesión persistente).
+ *  2. Cargar productos y categorías desde Supabase.
+ *  3. Construir la variable global `catalogo`.
+ *  4. Mostrar estados de carga y error.
  * ─────────────────────────────────────────────
  */
 
-import { login, logout, getSession, cargarPerfil, registrarCliente } from '../services/authService.js'
-import { supabase } from '../services/supabase.js'
+import { obtenerProductos, obtenerCategorias, construirCatalogo } from './services/productoService.js'
+import * as carritoService from './services/carritoService.js'
+import * as cotizacionService from './services/cotizacionService.js'
+import { inicializarAuth } from './js/auth.js'
+import * as adminService from './services/adminService.js'
+import './js/admin.js'
+import './js/misCotizaciones.js'
 
-/* ─────────────────────────────────────────────
-   ESTADO GLOBAL DE AUTH
-───────────────────────────────────────────── */
-const authState = {
-  loggedIn: false,
-  user:     null,
-  perfil:   null,
-  rol:      null,
-}
-window.authState = authState
+// Exponer carritoService globalmente para que carrito.js pueda usarlo
+window.carritoService    = carritoService
+window.cotizacionService = cotizacionService
+window.adminService      = adminService
+import './js/router.js'
+import './js/productos.js'
+import './js/carrito.js'
+import './js/validaciones.js'
+import './js/main.js'
 
-/* ─────────────────────────────────────────────
-   HELPERS DE ROL
-───────────────────────────────────────────── */
-function isAdmin()      { return authState.rol === 'admin' }
-function isTrabajador() { return authState.rol === 'trabajador' }
-function isCliente()    { return authState.rol === 'cliente' }
-
-window.isAdmin          = isAdmin
-window.isTrabajador     = isTrabajador
-window.isCliente        = isCliente
-window.registrarCliente = registrarCliente
-
-/* ─────────────────────────────────────────────
-   ACTUALIZAR UI DEL HEADER
-───────────────────────────────────────────── */
-function actualizarHeaderUI() {
-  const btnLogin    = document.getElementById('nav-btn-login')
-  const btnRegistro = document.getElementById('nav-btn-registro')
-  const userInfo    = document.getElementById('nav-user-info')
-  const btnLoginMob = document.getElementById('nav-btn-login-mob')
-  const btnRegMob   = document.getElementById('nav-btn-registro-mob')
-  const userInfoMob = document.getElementById('nav-user-info-mob')
-
-  if (authState.loggedIn && authState.perfil) {
-    const nombre = authState.perfil.nombre || authState.perfil.email
-    const rol    = authState.rol || ''
-
-    // Botón Panel Admin — solo visible para admin
-    const btnAdmin    = document.getElementById('nav-btn-admin')
-    const btnAdminMob = document.getElementById('nav-btn-admin-mob')
-    if (btnAdmin)    btnAdmin.style.display    = isAdmin() ? 'flex' : 'none'
-    if (btnAdminMob) btnAdminMob.style.display = isAdmin() ? 'block' : 'none'
-
-    // Botón Mis Cotizaciones — visible para todos los logueados
-    const btnMisCot    = document.getElementById('nav-btn-mis-cot')
-    const btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
-    if (btnMisCot)    btnMisCot.style.display    = 'flex'
-    if (btnMisCotMob) btnMisCotMob.style.display = 'block'
-
-    if (btnLogin)    btnLogin.style.display    = 'none'
-    if (btnRegistro) btnRegistro.style.display = 'none'
-
-    if (userInfo) {
-      userInfo.style.display = 'flex'
-      userInfo.innerHTML = `
-        <span class="nav-user-nombre">👤 ${escHtmlSafe(nombre)}</span>
-        <span class="nav-user-rol">${escHtmlSafe(rol)}</span>
-        <button class="btn-logout" id="btn-cerrar-sesion">Cerrar sesión</button>
-      `
-      document.getElementById('btn-cerrar-sesion')
-        ?.addEventListener('click', handleLogout)
-    }
-
-    if (btnLoginMob) btnLoginMob.style.display = 'none'
-    if (btnRegMob)   btnRegMob.style.display   = 'none'
-
-    if (userInfoMob) {
-      userInfoMob.style.display = 'block'
-      userInfoMob.innerHTML = `
-        <span class="nav-user-nombre-mob">👤 ${escHtmlSafe(nombre)} (${escHtmlSafe(rol)})</span>
-        <a id="btn-cerrar-sesion-mob" style="cursor:pointer">Cerrar sesión</a>
-      `
-      document.getElementById('btn-cerrar-sesion-mob')
-        ?.addEventListener('click', handleLogout)
-    }
-
-  } else {
-    const _btnAdmin    = document.getElementById('nav-btn-admin')
-    const _btnAdminMob = document.getElementById('nav-btn-admin-mob')
-    if (_btnAdmin)    _btnAdmin.style.display    = 'none'
-    if (_btnAdminMob) _btnAdminMob.style.display = 'none'
-    const _btnMisCot    = document.getElementById('nav-btn-mis-cot')
-    const _btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
-    if (_btnMisCot)    _btnMisCot.style.display    = 'none'
-    if (_btnMisCotMob) _btnMisCotMob.style.display = 'none'
-    if (btnLogin)    btnLogin.style.display    = ''
-    if (btnRegistro) btnRegistro.style.display = ''
-    if (userInfo)    userInfo.style.display    = 'none'
-    if (btnLoginMob) btnLoginMob.style.display = ''
-    if (btnRegMob)   btnRegMob.style.display   = ''
-    if (userInfoMob) userInfoMob.style.display = 'none'
-  }
+// ─── Estado de la aplicación ────────────────
+let appState = {
+  loading: true,
+  error:   null,
+  data:    null,
 }
 
-/* ─────────────────────────────────────────────
-   HELPERS INTERNOS
-───────────────────────────────────────────── */
-function escHtmlSafe(str) {
-  return String(str || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
+// ─── UI de carga ────────────────────────────
+function mostrarCargando() {
+  const container = document.getElementById('productos-container')
+  const sidebar   = document.getElementById('cat-sidebar')
+  const catGrid   = document.getElementById('cat-grid-inicio')
+
+  const html = `
+    <div style="text-align:center;padding:3rem;color:var(--gris-texto)">
+      <div style="font-size:2rem;margin-bottom:1rem;animation:spin 1s linear infinite;display:inline-block">⚙️</div>
+      <p style="font-weight:600">Cargando catálogo desde Supabase...</p>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  `
+  if (container) container.innerHTML = html
+  if (sidebar)   sidebar.innerHTML   = html
+  if (catGrid)   catGrid.innerHTML   = html
 }
 
-function mostrarLoginError(mensaje) {
-  const el = document.getElementById('login-error-msg')
-  if (el) { el.textContent = mensaje; el.style.display = 'block' }
+function mostrarError(error) {
+  console.error('[VMA] Error al cargar datos de Supabase:', error)
+
+  const msg = `
+    <div style="text-align:center;padding:3rem;color:#cc3333">
+      <div style="font-size:2.5rem;margin-bottom:1rem">⚠️</div>
+      <h3 style="margin-bottom:.5rem;color:#003B5C">No se pudo conectar con Supabase</h3>
+      <p style="font-size:.9rem;max-width:400px;margin:0 auto;color:#555">
+        ${error?.message || 'Error desconocido'}<br><br>
+        Verifica que tu archivo <code>.env</code> tiene las credenciales correctas
+        y que el proyecto Supabase está activo.
+      </p>
+    </div>
+  `
+  const container = document.getElementById('productos-container')
+  const catGrid   = document.getElementById('cat-grid-inicio')
+  if (container) container.innerHTML = msg
+  if (catGrid)   catGrid.innerHTML   = msg
 }
 
-function limpiarLoginError() {
-  const el = document.getElementById('login-error-msg')
-  if (el) { el.textContent = ''; el.style.display = 'none' }
-}
+// ─── Carga de datos desde Supabase ───────────
+async function cargarDatos() {
+  mostrarCargando()
 
-function setLoginLoading(loading) {
-  const btn = document.getElementById('btn-login-submit')
-  if (!btn) return
-  btn.disabled    = loading
-  btn.textContent = loading ? 'Ingresando...' : 'Ingresar'
-}
+  const [productosResult, categoriasResult] = await Promise.all([
+    obtenerProductos(),
+    obtenerCategorias(),
+  ])
 
-/* ─────────────────────────────────────────────
-   MANEJAR SESIÓN
-   Carga perfil y actualiza UI.
-   Retorna true si todo salió bien.
-───────────────────────────────────────────── */
-async function manejarSesion(user, itemsEnMemoria = []) {
-  const { data: perfil, error, inactivo } = await cargarPerfil(user.id)
-
-  if (inactivo) {
-    await logout()
-    mostrarLoginError('Tu cuenta está desactivada. Contacta al administrador.')
-    return false
-  }
-
-  if (error || !perfil) {
-    await logout()
-    mostrarLoginError(error?.message || 'No se pudo cargar el perfil del usuario.')
-    return false
-  }
-
-  authState.loggedIn = true
-  authState.user     = user
-  authState.perfil   = perfil
-  authState.rol      = perfil.roles?.nombre || null
-
-  actualizarHeaderUI()
-
-  // Cargar y fusionar carrito desde Supabase
-  if (typeof window.cargarCarritoDesdeSupabase === 'function') {
-    await window.cargarCarritoDesdeSupabase(itemsEnMemoria)
-  }
-
-  return true
-}
-
-/* ─────────────────────────────────────────────
-   handleLogin()
-   Fuente única de verdad para el login manual.
-   onAuthStateChange está desactivado para SIGNED_IN
-   — toda la lógica pasa por aquí.
-───────────────────────────────────────────── */
-async function handleLogin(email, password) {
-  limpiarLoginError()
-  setLoginLoading(true)
-
-  // Snapshot del carrito en memoria antes del login
-  const itemsEnMemoria = typeof cart !== 'undefined' ? [...cart] : []
-
-  const { data, error } = await login(email, password)
-
-  if (error) {
-    setLoginLoading(false)
-    mostrarLoginError(traducirErrorAuth(error.message))
+  if (productosResult.error) {
+    appState.loading = false
+    appState.error   = productosResult.error
+    mostrarError(productosResult.error)
     return
   }
 
-  // Pasar los items en memoria directamente a manejarSesion
-  const ok = await manejarSesion(data.user, itemsEnMemoria)
+  const productos  = productosResult.data
+  const categorias = categoriasResult.data
 
-  setLoginLoading(false)
+  console.log('[VMA] ✅ Productos cargados desde Supabase:', productos)
+  console.log('[VMA] ✅ Categorías cargadas desde Supabase:', categorias)
+  console.log(`[VMA] Total productos: ${productos.length}`)
 
-  if (ok) {
-    document.getElementById('form-login')?.reset()
-    limpiarLoginError()
-    showPage('page-inicio')
-    showToast(`✅ Bienvenido, ${authState.perfil.nombre || authState.perfil.email}`)
-  }
-}
-window.handleLogin = handleLogin
+  const catalogoDesdeSupabase = construirCatalogo(productos)
+  console.log('[VMA] Catálogo construido:', catalogoDesdeSupabase)
 
-/* ─────────────────────────────────────────────
-   handleLogout()
-───────────────────────────────────────────── */
-async function handleLogout() {
-  await logout()
+  // Exponer como global — el shim en index.html intercepta el setter
+  window.catalogo = catalogoDesdeSupabase
 
-  authState.loggedIn = false
-  authState.user     = null
-  authState.perfil   = null
-  authState.rol      = null
+  appState.loading = false
+  appState.error   = null
+  appState.data    = { productos, categorias, catalogo: catalogoDesdeSupabase }
 
-  if (typeof window.limpiarCarritoLocal === 'function') {
-    window.limpiarCarritoLocal()
-  }
-
-  actualizarHeaderUI()
-  showPage('page-inicio')
-  showToast('👋 Sesión cerrada correctamente.')
-}
-window.handleLogout = handleLogout
-
-/* ─────────────────────────────────────────────
-   inicializarAuth()
-   Verifica sesión existente al cargar la página.
-   Llamado desde src/app.js ANTES de cargar catálogo.
-───────────────────────────────────────────── */
-export async function inicializarAuth() {
-  const { data, error } = await getSession()
-
-  if (error || !data?.session) {
-    actualizarHeaderUI()
-    return
-  }
-
-  // Hay sesión activa — cargar perfil sin items en memoria
-  // (al recargar no hay carrito en memoria todavía)
-  await manejarSesion(data.session.user, [])
+  inicializarApp()
 }
 
-/* ─────────────────────────────────────────────
-   ESCUCHAR CAMBIOS DE SESIÓN EN TIEMPO REAL
-   Solo maneja SIGNED_OUT y TOKEN_REFRESHED.
-   SIGNED_IN lo maneja handleLogin directamente
-   para evitar doble ejecución de manejarSesion.
-───────────────────────────────────────────── */
-supabase.auth.onAuthStateChange(async (event, session) => {
-  console.log('[VMA Auth] onAuthStateChange →', event)
-
-  // SIGNED_IN lo ignora completamente — handleLogin e inicializarAuth
-  // ya lo manejan con control total del flujo
-  if (event === 'SIGNED_IN') {
-    console.log('[VMA Auth] SIGNED_IN ignorado — manejado por handleLogin/inicializarAuth')
-    return
+// ─── Inicialización de la app ─────────────────
+function inicializarApp() {
+  if (typeof renderCatGrid === 'function') {
+    renderCatGrid()
   }
 
-  if (event === 'SIGNED_OUT') {
-    authState.loggedIn = false
-    authState.user     = null
-    authState.perfil   = null
-    authState.rol      = null
-    if (typeof window.limpiarCarritoLocal === 'function') {
-      window.limpiarCarritoLocal()
+  if (typeof initProductos === 'function') {
+    const paginaProductos = document.getElementById('page-productos')
+    if (paginaProductos?.classList.contains('active')) {
+      initProductos()
     }
-    actualizarHeaderUI()
   }
+}
 
-  if (event === 'TOKEN_REFRESHED') {
-    console.log('[VMA Auth] token renovado automáticamente')
-  }
+// ─── Arrancar ────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Verificar sesión existente PRIMERO (antes de mostrar UI)
+  await inicializarAuth()
+
+  // 2. Luego cargar el catálogo
+  await cargarDatos()
 })
 
-/* ─────────────────────────────────────────────
-   TRADUCCIÓN DE ERRORES DE SUPABASE AUTH
-───────────────────────────────────────────── */
-function traducirErrorAuth(msg) {
-  if (!msg) return 'Error desconocido al iniciar sesión.'
-  const m = msg.toLowerCase()
-  if (m.includes('invalid login credentials') || m.includes('invalid credentials'))
-    return 'Correo o contraseña incorrectos.'
-  if (m.includes('email not confirmed'))
-    return 'Debes confirmar tu correo electrónico antes de iniciar sesión.'
-  if (m.includes('too many requests'))
-    return 'Demasiados intentos. Espera unos minutos e intenta nuevamente.'
-  if (m.includes('user not found'))
-    return 'No existe una cuenta con ese correo.'
-  return msg
-}
+export { appState }
