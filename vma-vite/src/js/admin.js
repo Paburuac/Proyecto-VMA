@@ -6,7 +6,6 @@
  * Productos, Categorías y Reportes.
  *
  * Solo accesible si window.authState.rol === 'admin'
- * asdasdasdasda
  * ─────────────────────────────────────────────
  */
 
@@ -383,6 +382,13 @@ function renderTablaProductos(cont) {
           <label>Distribuidor</label>
           <input type="text" id="prod-distribuidor" placeholder="Nombre del distribuidor">
         </div>
+        <div class="admin-form-row" style="grid-column: 1 / -1">
+          <label>URL de imagen</label>
+          <input type="url" id="prod-imagen" placeholder="https://ejemplo.com/imagen.jpg">
+          <div id="prod-imagen-preview" style="margin-top:0.5rem;display:none">
+            <img src="" alt="Preview" style="max-height:80px;border-radius:6px;border:1px solid var(--gris-medio)">
+          </div>
+        </div>
       </div>
       <div class="admin-form-actions">
         <button class="admin-btn admin-btn-ok"     onclick="adminGuardarProducto()">💾 Guardar</button>
@@ -417,6 +423,17 @@ function renderTablaProductos(cont) {
   `
 }
 
+// Preview imagen en tiempo real
+document.addEventListener('input', function(e) {
+  if (e.target.id === 'prod-imagen') {
+    const preview = document.getElementById('prod-imagen-preview')
+    const img     = preview?.querySelector('img')
+    const url     = e.target.value.trim()
+    if (url && img) { img.src = url; preview.style.display = 'block' }
+    else if (preview) { preview.style.display = 'none' }
+  }
+})
+
 window.adminBuscarProducto = function(val) {
   adminState.busquedaProducto = val
   const cont = document.getElementById('admin-productos-content')
@@ -431,6 +448,8 @@ window.adminAbrirFormProducto = function() {
   document.getElementById('prod-precio').value       = ''
   document.getElementById('prod-stock').value        = ''
   document.getElementById('prod-distribuidor').value = ''
+  document.getElementById('prod-imagen').value        = ''
+  document.getElementById('prod-imagen-preview').style.display = 'none'
   document.getElementById('admin-form-producto').style.display = 'block'
   document.getElementById('admin-form-producto').scrollIntoView({ behavior: 'smooth' })
 }
@@ -446,6 +465,10 @@ window.adminEditarProducto = function(id) {
   document.getElementById('prod-precio').value       = p.precio || ''
   document.getElementById('prod-stock').value        = p.stock || ''
   document.getElementById('prod-distribuidor').value = p.distribuidor || ''
+  const imgUrl = p.imagen_url || ''
+  document.getElementById('prod-imagen').value = imgUrl
+  const preview = document.getElementById('prod-imagen-preview')
+  if (imgUrl) { preview.style.display='block'; preview.querySelector('img').src = imgUrl } else { preview.style.display='none' }
   document.getElementById('admin-form-producto').style.display = 'block'
   document.getElementById('admin-form-producto').scrollIntoView({ behavior: 'smooth' })
 }
@@ -469,6 +492,7 @@ window.adminGuardarProducto = async function() {
     precio:       parseFloat(document.getElementById('prod-precio').value) || null,
     stock:        document.getElementById('prod-stock').value.trim() || null,
     distribuidor: document.getElementById('prod-distribuidor').value.trim() || null,
+    imagen_url:   document.getElementById('prod-imagen').value.trim() || null,
   }
 
   let error
