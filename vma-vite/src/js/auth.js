@@ -53,11 +53,17 @@ function actualizarHeaderUI() {
     if (btnAdmin)    btnAdmin.style.display    = isAdmin() ? 'flex' : 'none'
     if (btnAdminMob) btnAdminMob.style.display = isAdmin() ? 'block' : 'none'
 
-    // Botón Mis Cotizaciones — visible para todos los logueados
+    // Botón Mis Cotizaciones — solo para clientes
     const btnMisCot    = document.getElementById('nav-btn-mis-cot')
     const btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
-    if (btnMisCot)    btnMisCot.style.display    = 'flex'
-    if (btnMisCotMob) btnMisCotMob.style.display = 'block'
+    if (btnMisCot)    btnMisCot.style.display    = isCliente() ? 'flex' : 'none'
+    if (btnMisCotMob) btnMisCotMob.style.display = isCliente() ? 'block' : 'none'
+
+    // Botón Panel Trabajador — solo para trabajadores
+    const btnTrab    = document.getElementById('nav-btn-trabajador')
+    const btnTrabMob = document.getElementById('nav-btn-trabajador-mob')
+    if (btnTrab)    btnTrab.style.display    = isTrabajador() ? 'flex' : 'none'
+    if (btnTrabMob) btnTrabMob.style.display = isTrabajador() ? 'block' : 'none'
 
     if (btnLogin)    btnLogin.style.display    = 'none'
     if (btnRegistro) btnRegistro.style.display = 'none'
@@ -95,6 +101,10 @@ function actualizarHeaderUI() {
     const _btnMisCotMob = document.getElementById('nav-btn-mis-cot-mob')
     if (_btnMisCot)    _btnMisCot.style.display    = 'none'
     if (_btnMisCotMob) _btnMisCotMob.style.display = 'none'
+    const _btnTrab    = document.getElementById('nav-btn-trabajador')
+    const _btnTrabMob = document.getElementById('nav-btn-trabajador-mob')
+    if (_btnTrab)    _btnTrab.style.display    = 'none'
+    if (_btnTrabMob) _btnTrabMob.style.display = 'none'
     if (btnLogin)    btnLogin.style.display    = ''
     if (btnRegistro) btnRegistro.style.display = ''
     if (userInfo)    userInfo.style.display    = 'none'
@@ -197,7 +207,14 @@ async function handleLogin(email, password) {
   if (ok) {
     document.getElementById('form-login')?.reset()
     limpiarLoginError()
-    showPage('page-inicio')
+    if (isAdmin()) {
+      showPage('page-inicio')
+    } else if (isTrabajador()) {
+      showPage('page-trabajador')
+      if (typeof initPanelTrabajador === 'function') initPanelTrabajador()
+    } else {
+      showPage('page-inicio')
+    }
     showToast(`✅ Bienvenido, ${authState.perfil.nombre || authState.perfil.email}`)
   }
 }
