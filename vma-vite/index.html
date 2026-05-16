@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="assets/css/auth.css">
   <link rel="stylesheet" href="assets/css/admin.css">
   <link rel="stylesheet" href="assets/css/misCotizaciones.css">
+  <link rel="stylesheet" href="assets/css/panelTrabajador.css">
   <!-- jsPDF para descarga de PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
@@ -56,6 +57,7 @@
 
       <!-- Botón Panel Admin — visible solo para rol admin (auth.js lo muestra) -->
       <a href="#" id="nav-btn-mis-cot" onclick="showPage('page-mis-cotizaciones');initMisCotizaciones();return false;" style="display:none" class="btn-mis-cot">📋 Mis Cotizaciones</a>
+      <a href="#" id="nav-btn-trabajador" onclick="showPage('page-trabajador');initPanelTrabajador();return false;" style="display:none" class="btn-mis-cot">📋 Gestión Cotizaciones</a>
       <a href="#" id="nav-btn-admin" class="btn-admin-panel" onclick="showPage('page-admin');initAdmin();return false;" style="display:none">⚙️ Panel Admin</a>
 
       <!-- Botones visibles cuando NO hay sesión -->
@@ -86,6 +88,7 @@
     <a href="#" data-page="page-contacto"  onclick="showPage('page-contacto');return false;">Contáctenos</a>
     <!-- Botón admin móvil -->
     <a href="#" id="nav-btn-mis-cot-mob" onclick="showPage('page-mis-cotizaciones');initMisCotizaciones();return false;" style="display:none">📋 Mis Cotizaciones</a>
+    <a href="#" id="nav-btn-trabajador-mob" onclick="showPage('page-trabajador');initPanelTrabajador();return false;" style="display:none">📋 Gestión Cotizaciones</a>
     <a href="#" id="nav-btn-admin-mob" onclick="showPage('page-admin');initAdmin();return false;" style="display:none;color:var(--verde);font-weight:700">⚙️ Panel Admin</a>
     <!-- Sin sesión -->
     <a href="#" id="nav-btn-registro-mob" data-page="page-registro" onclick="showPage('page-registro');return false;">Registrarse</a>
@@ -512,6 +515,43 @@
   </div>
 </div>
 
+
+<!-- ============================================================
+     PÁGINA: PANEL TRABAJADOR
+============================================================ -->
+<div id="page-trabajador" class="page">
+  <div class="tw-hero">
+    <div class="tw-hero-inner">
+      <div>
+        <h1>Panel <span>Trabajador</span></h1>
+        <p class="tw-hero-sub">Gestión y seguimiento de cotizaciones</p>
+      </div>
+      <div class="tw-hero-actions">
+        <button class="tw-btn-recargar" onclick="twRecargar()">🔄 Actualizar</button>
+      </div>
+    </div>
+  </div>
+  <div class="tw-body">
+    <div id="tw-filtros-wrap"></div>
+    <div id="tw-content">
+      <div class="tw-loading">
+        <div class="tw-spinner"></div>
+        <p>Cargando cotizaciones...</p>
+      </div>
+    </div>
+  </div>
+</div><!-- /page-trabajador -->
+
+<!-- Modal detalle trabajador -->
+<div id="tw-modal" role="dialog" aria-modal="true" onclick="if(event.target===this) twCerrarModal()">
+  <div class="tw-modal-box">
+    <div class="tw-modal-header">
+      <h3 id="tw-modal-title">Detalle de cotización</h3>
+      <button class="tw-modal-close" onclick="twCerrarModal()" title="Cerrar">&times;</button>
+    </div>
+    <div id="tw-modal-body"></div>
+  </div>
+</div>
 
 <div id="page-registro" class="page">
   <div class="form-page">
