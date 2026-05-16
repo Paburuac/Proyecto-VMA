@@ -52,6 +52,22 @@ export async function enviarCotizacion(datos) {
     }
 
     console.log('[VMA Cotizacion] cotización enviada – id:', data.id)
+
+    // Llamar Edge Function para notificar por email (sin bloquear)
+    fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/notificar-cotizacion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id:                    data.id,
+        nombre:                payload.nombre,
+        empresa:               payload.empresa,
+        email:                 payload.email,
+        telefono:              payload.telefono,
+        mensaje:               payload.mensaje,
+        productos_solicitados: payload.productos_solicitados,
+      }),
+    }).catch(err => console.warn('[VMA Email] No se pudo notificar:', err))
+
     return { data, error: null }
 
   } catch (err) {
