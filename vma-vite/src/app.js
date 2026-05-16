@@ -11,7 +11,7 @@
  * ─────────────────────────────────────────────
  */
 
-import { obtenerProductos, obtenerCategorias, construirCatalogo } from './services/productoService.js'
+import { obtenerProductos, obtenerCategorias, construirCatalogo, buscarProductos } from './services/productoService.js'
 import * as carritoService from './services/carritoService.js'
 import * as cotizacionService from './services/cotizacionService.js'
 import { inicializarAuth } from './js/auth.js'
@@ -24,6 +24,7 @@ import './js/panelTrabajador.js'
 window.carritoService    = carritoService
 window.cotizacionService = cotizacionService
 window.adminService      = adminService
+window.productoService   = { buscarProductos, construirCatalogo }
 import './js/router.js'
 import './js/productos.js'
 import './js/carrito.js'
