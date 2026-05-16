@@ -540,3 +540,22 @@
   color: var(--gris-texto);
   white-space: nowrap;
 }
+
+/* ─── Botones exportar cotizaciones ─────────── */
+.admin-exportar-btns {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.admin-filtros {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.admin-btn-success {
+  background: #2a8f3c;
+  color: var(--blanco);
+  border: none;
+}
+.admin-btn-success:hover { filter: brightness(1.1); }
