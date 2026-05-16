@@ -377,7 +377,7 @@ window.mcDescargarPDF = function(id) {
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(9)
-  doc.text('Agente Autorizado Indura', 14, 23)
+  doc.text('', 14, 23)
   doc.text('Gases industriales · Soldaduras · Equipos de seguridad', 14, 29)
 
   // Número de cotización (derecha)
@@ -547,7 +547,7 @@ window.mcDescargarPDF = function(id) {
   doc.setTextColor(...BLANCO)
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(7.5)
-  doc.text('VMA Industrial — Agente Autorizado Indura', 14, pageH - 5)
+  doc.text('VMA Industrial —', 14, pageH - 5)
 
   const generado = `Generado el ${new Date().toLocaleDateString('es-CL')} a las ${new Date().toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`
   const genW = doc.getTextWidth(generado)
