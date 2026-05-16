@@ -66,9 +66,13 @@ export async function enviarCotizacion(datos) {
 ───────────────────────────────────────────── */
 export async function obtenerMisCotizaciones() {
   try {
+    const usuarioId = window.authState?.perfil?.id
+    if (!usuarioId) return { data: [], error: null }
+
     const { data, error } = await supabase
       .from('cotizaciones')
-      .select('id, nombre, email, estado, productos_solicitados, created_at')
+      .select('id, nombre, empresa, email, telefono, mensaje, estado, productos_solicitados, created_at')
+      .eq('usuario_id', usuarioId)
       .order('created_at', { ascending: false })
 
     if (error) {
