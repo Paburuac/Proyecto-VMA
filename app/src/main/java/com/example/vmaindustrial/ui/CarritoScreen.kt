@@ -1,5 +1,6 @@
 package com.example.vmaindustrial.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,8 @@ fun CarritoScreen(
     viewModel: CarritoViewModel = viewModel()
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val brandBlue = Color(0xFF002E4F)
+    val brandGreen = Color(0xFF7CB342)
 
     LaunchedEffect(Unit) {
         viewModel.cargarCarrito()
@@ -46,13 +50,30 @@ fun CarritoScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(title = { Text("Mi Carrito") })
+            Column(modifier = Modifier.background(brandBlue)) {
+                // Título más alto aplicando padding al TopAppBar o un Spacer
+                Spacer(modifier = Modifier.height(8.dp))
+                TopAppBar(
+                    title = { Text("Mi Carrito", color = Color.White) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = brandBlue
+                    )
+                )
+                // Línea verde
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp)
+                        .background(brandGreen)
+                )
+            }
         }
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .background(Color.White)
         ) {
             if (viewModel.isLoading && viewModel.items.isEmpty()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))

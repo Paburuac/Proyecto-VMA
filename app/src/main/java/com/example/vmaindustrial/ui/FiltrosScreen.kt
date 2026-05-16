@@ -1,9 +1,11 @@
 package com.example.vmaindustrial.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddShoppingCart
@@ -15,6 +17,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.model.Producto
@@ -52,50 +55,98 @@ fun FiltrosScreen(
 
     val productosFiltrados = viewModel.productosFiltrados()
     val categoriaActual = viewModel.categorias.find { it.id_categoria == viewModel.categoriaSeleccionada }
+    
+    val brandBlue = Color(0xFF002E4F)
+    val brandGreen = Color(0xFF7CB342)
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet {
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    Spacer(Modifier.height(12.dp))
-                    Text(
-                        "Filtros",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.titleLarge
-                    )
-                    HorizontalDivider()
-
-                    Text(
-                        "Categorías",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.titleMedium
-                    )
-
-                    NavigationDrawerItem(
-                        label = { Text("Todas las categorías") },
-                        selected = viewModel.categoriaSeleccionada == null,
-                        onClick = {
-                            viewModel.categoriaSeleccionada = null
-                            scope.launch { drawerState.close() }
-                        }
-                    )
-
-                    viewModel.categorias.forEach { categoria ->
-                        NavigationDrawerItem(
-                            label = { Text(categoria.nombre_categoria) },
-                            selected = viewModel.categoriaSeleccionada == categoria.id_categoria,
-                            onClick = {
-                                viewModel.categoriaSeleccionada = categoria.id_categoria
-                                scope.launch { drawerState.close() }
-                            }
+            ModalDrawerSheet(
+                drawerContainerColor = brandBlue,
+                drawerShape = RoundedCornerShape(0.dp) // Cuadrado para llenar arriba y abajo
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    // Parte Superior Azul (Header)
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text(
+                            "Filtros",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = Color.White
                         )
                     }
 
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    // Línea verde superior
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .background(brandGreen)
+                    )
+
+                    // Parte Central Blanca (Categorías)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        Text(
+                            "Categorías",
+                            modifier = Modifier.padding(16.dp),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        NavigationDrawerItem(
+                            label = { Text("Todas las categorías") },
+                            selected = viewModel.categoriaSeleccionada == null,
+                            onClick = {
+                                viewModel.categoriaSeleccionada = null
+                                scope.launch { drawerState.close() }
+                            },
+                            colors = NavigationDrawerItemDefaults.colors(
+                                unselectedContainerColor = Color.White,
+                                selectedContainerColor = brandBlue.copy(alpha = 0.1f)
+                            ),
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+
+                        viewModel.categorias.forEach { categoria ->
+                            NavigationDrawerItem(
+                                label = { Text(categoria.nombre_categoria) },
+                                selected = viewModel.categoriaSeleccionada == categoria.id_categoria,
+                                onClick = {
+                                    viewModel.categoriaSeleccionada = categoria.id_categoria
+                                    scope.launch { drawerState.close() }
+                                },
+                                colors = NavigationDrawerItemDefaults.colors(
+                                    unselectedContainerColor = Color.White,
+                                    selectedContainerColor = brandBlue.copy(alpha = 0.1f)
+                                ),
+                                modifier = Modifier.padding(horizontal = 12.dp)
+                            )
+                        }
+                    }
+
+                    // Línea verde inferior
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .background(brandGreen)
+                    )
+
+                    // Parte Inferior Azul
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp)
+                            .background(brandBlue)
+                    )
                 }
             }
         },
@@ -104,85 +155,105 @@ fun FiltrosScreen(
         Scaffold(
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
-                TopAppBar(
-                    title = { Text(categoriaActual?.nombre_categoria ?: "Todos los Productos") },
-                    navigationIcon = {
-                        IconButton(onClick = {
-                            scope.launch {
-                                if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                Column(modifier = Modifier.background(brandBlue)) {
+                    TopAppBar(
+                        title = { Text(categoriaActual?.nombre_categoria ?: "Todos los Productos", color = Color.White) },
+                        navigationIcon = {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                }
+                            }) {
+                                Icon(Icons.Default.Menu, contentDescription = "Menu", tint = Color.White)
                             }
-                        }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
-                        }
-                    },
-                    actions = {
-                        IconButton(onClick = {
-                            viewModel.cargarDatos()
-                        }) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Recargar")
-                        }
-                    }
-                )
+                        },
+                        actions = {
+                            IconButton(onClick = {
+                                viewModel.cargarDatos()
+                            }) {
+                                Icon(Icons.Default.Refresh, contentDescription = "Recargar", tint = Color.White)
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = brandBlue
+                        )
+                    )
+
+                    // Barra de búsqueda dentro del azul
+                    OutlinedTextField(
+                        value = viewModel.textoBusqueda,
+                        onValueChange = { viewModel.textoBusqueda = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        placeholder = { Text("Buscar producto...") },
+                        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                        trailingIcon = {
+                            if (viewModel.textoBusqueda.isNotEmpty()) {
+                                IconButton(onClick = { viewModel.textoBusqueda = "" }) {
+                                    Icon(Icons.Default.Close, contentDescription = "Limpiar")
+                                }
+                            }
+                        },
+                        singleLine = true,
+                        shape = MaterialTheme.shapes.medium,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedContainerColor = Color.White,
+                            unfocusedContainerColor = Color.White,
+                            focusedBorderColor = brandGreen,
+                            unfocusedBorderColor = Color.Transparent,
+                        )
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Línea verde
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(4.dp)
+                            .background(brandGreen)
+                    )
+                }
             }
         ) { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .background(Color.White)
             ) {
-                // Barra de búsqueda
-                OutlinedTextField(
-                    value = viewModel.textoBusqueda,
-                    onValueChange = { viewModel.textoBusqueda = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    placeholder = { Text("Buscar producto...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    trailingIcon = {
-                        if (viewModel.textoBusqueda.isNotEmpty()) {
-                            IconButton(onClick = { viewModel.textoBusqueda = "" }) {
-                                Icon(Icons.Default.Close, contentDescription = "Limpiar")
-                            }
-                        }
-                    },
-                    singleLine = true,
-                    shape = MaterialTheme.shapes.medium
-                )
-
-                Box(modifier = Modifier.fillMaxSize()) {
-                    if (viewModel.isLoading) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    } else if (viewModel.mensajeError != null) {
-                        Column(
-                            modifier = Modifier.align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Text(
-                                text = "Error: ${viewModel.mensajeError}",
-                                color = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.padding(16.dp)
-                            )
-                            Button(onClick = { viewModel.cargarDatos() }) {
-                                Text("Reintentar")
-                            }
-                        }
-                    } else if (productosFiltrados.isEmpty()) {
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (viewModel.mensajeError != null) {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(
-                            text = "No se encontraron productos",
-                            modifier = Modifier.align(Alignment.Center)
+                            text = "Error: ${viewModel.mensajeError}",
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(16.dp)
                         )
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            items(productosFiltrados) { producto ->
-                                ProductoItem(producto, onAddToCart = {
-                                    carritoViewModel.agregarProducto(producto.id_producto)
-                                })
-                            }
+                        Button(onClick = { viewModel.cargarDatos() }) {
+                            Text("Reintentar")
+                        }
+                    }
+                } else if (productosFiltrados.isEmpty()) {
+                    Text(
+                        text = "No se encontraron productos",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(bottom = 16.dp, start = 16.dp, end = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(productosFiltrados) { producto ->
+                            ProductoItem(producto, onAddToCart = {
+                                carritoViewModel.agregarProducto(producto.id_producto)
+                            })
                         }
                     }
                 }

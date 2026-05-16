@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,8 @@ fun LoginScreen(
             viewModel.isSuccess = false // Reset state
         }
     }
+
+    val brandBlue = Color(0xFF002E4F)
 
     Box(modifier = Modifier.fillMaxSize()) {
         IconButton(
@@ -75,17 +78,18 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             if (viewModel.isLoading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = brandBlue)
             } else {
                 Button(
                     onClick = { viewModel.login() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
                 ) {
-                    Text("Ingresar")
+                    Text("Ingresar", color = Color.White)
                 }
 
                 TextButton(onClick = onNavigateToRegister) {
-                    Text("¿No tienes cuenta? Regístrate")
+                    Text("¿No tienes cuenta? Regístrate", color = brandBlue)
                 }
             }
         }

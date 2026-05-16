@@ -15,29 +15,26 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Dataset
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,6 +43,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.viewmodel.AuthViewModel
 import com.example.vmaindustrial.viewmodel.CarritoViewModel
+import com.example.vmaindustrial.viewmodel.CotizacionViewModel
 
 enum class Destination(
     val route: String,
@@ -59,7 +57,7 @@ enum class Destination(
     FILTROS("filtros", Icons.Default.Dataset, "Filtros", "Filtros Screen"),
     CARRITO("carrito", Icons.Default.ShoppingCart,"Carrito","Carrito Screen"),
     ACCOUNT("account", Icons.Default.AccountCircle,"Account","Account Screen"),
-    SETTINGS("settings", Icons.Default.Settings, "Settings", "Settings Screen"),
+    COTIZACION("cotizacion", Icons.Default.Description, "Cotización", "Cotización Screen"),
 }
 
 
@@ -71,6 +69,7 @@ fun AppNavHost(
 ) {
     val authViewModel: AuthViewModel = viewModel()
     val carritoViewModel: CarritoViewModel = viewModel()
+    val cotizacionViewModel: CotizacionViewModel = viewModel()
     
     NavHost(
         navController = navController,
@@ -116,8 +115,8 @@ fun AppNavHost(
                 viewModel = authViewModel
             )
         }
-        composable(Destination.SETTINGS.route) {
-            SettingsScreen()
+        composable(Destination.COTIZACION.route) {
+            CotizacionScreen(viewModel = cotizacionViewModel)
         }
     }
 }
@@ -128,34 +127,34 @@ fun AccountScreen(
     onNavigateToRegister: () -> Unit,
     viewModel: AuthViewModel
 ) {
+    val brandBlue = Color(0xFF002E4F)
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         if (viewModel.currentUser != null) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = "Bienvenido, ${viewModel.currentUser?.user?.email ?: "Usuario"}")
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { viewModel.logout() }) {
-                    Text("Cerrar Sesión")
+                Button(
+                    onClick = { viewModel.logout() },
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
+                ) {
+                    Text("Cerrar Sesión", color = Color.White)
                 }
             }
         } else {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(text = "No has iniciado sesión")
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = onNavigateToLogin) {
-                    Text("Iniciar Sesión")
+                Button(
+                    onClick = onNavigateToLogin,
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
+                ) {
+                    Text("Iniciar Sesión", color = Color.White)
                 }
                 TextButton(onClick = onNavigateToRegister) {
-                    Text("Crear una cuenta")
+                    Text("Crear una cuenta", color = brandBlue)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun SettingsScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Settings Screen")
     }
 }
 
@@ -172,7 +171,11 @@ fun NavigationBarExample(modifier: Modifier = Modifier) {
         modifier = modifier,
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar(windowInsets = NavigationBarDefaults.windowInsets) {
+                NavigationBar(
+                    containerColor = Color(0xFF002E4F), // Azul del logo
+                    contentColor = Color.White,
+                    windowInsets = NavigationBarDefaults.windowInsets
+                ) {
                     Destination.entries.filter { it.icon != null }.forEach { destination ->
                         NavigationBarItem(
                             selected = currentRoute == destination.route,
@@ -192,12 +195,20 @@ fun NavigationBarExample(modifier: Modifier = Modifier) {
                                 )
                             },
                             label = { Text(destination.label) },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFF7CB342), // Verde del logo para el seleccionado
+                                selectedTextColor = Color(0xFF7CB342),
+                                unselectedIconColor = Color.White.copy(alpha = 0.7f),
+                                unselectedTextColor = Color.White.copy(alpha = 0.7f),
+                                indicatorColor = Color.White.copy(alpha = 0.1f)
+                            )
                         )
                     }
                 }
             }
         },
-    ) { contentPadding ->
+    ) {
+contentPadding ->
         AppNavHost(
             navController = navController,
             startDestination = startDestination,
