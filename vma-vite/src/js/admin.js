@@ -383,10 +383,35 @@ function renderTablaProductos(cont) {
           <input type="text" id="prod-distribuidor" placeholder="Nombre del distribuidor">
         </div>
         <div class="admin-form-row" style="grid-column: 1 / -1">
-          <label>URL de imagen</label>
-          <input type="url" id="prod-imagen" placeholder="https://ejemplo.com/imagen.jpg">
-          <div id="prod-imagen-preview" style="margin-top:0.5rem;display:none">
-            <img src="" alt="Preview" style="max-height:80px;border-radius:6px;border:1px solid var(--gris-medio)">
+          <label>Imagen del producto</label>
+          <div class="prod-img-uploader" id="prod-img-uploader">
+            <!-- Preview -->
+            <div class="prod-img-preview-wrap" id="prod-img-preview-wrap" style="display:none">
+              <img id="prod-img-preview" src="" alt="Preview imagen">
+              <button type="button" class="prod-img-remove" onclick="adminQuitarImagen()" title="Quitar imagen">✕</button>
+            </div>
+            <!-- Zona de drop / botón -->
+            <div class="prod-img-drop-zone" id="prod-img-drop-zone"
+                 ondragover="event.preventDefault();this.classList.add('drag-over')"
+                 ondragleave="this.classList.remove('drag-over')"
+                 ondrop="adminOnDrop(event)">
+              <div class="prod-img-drop-icon">🖼️</div>
+              <p class="prod-img-drop-text">Arrastra una imagen aquí<br><span>o</span></p>
+              <button type="button" class="admin-btn admin-btn-info prod-img-btn" onclick="document.getElementById('prod-img-file').click()">
+                📁 Seleccionar archivo
+              </button>
+              <p class="prod-img-drop-hint">PNG, JPG, WEBP — máx. 5 MB</p>
+            </div>
+            <!-- Input oculto -->
+            <input type="file" id="prod-img-file" accept="image/png,image/jpeg,image/webp,image/gif"
+                   style="display:none" onchange="adminSeleccionarImagen(this.files[0])">
+            <!-- Barra de progreso -->
+            <div class="prod-img-progress-wrap" id="prod-img-progress-wrap" style="display:none">
+              <div class="prod-img-progress-bar" id="prod-img-progress-bar"></div>
+              <span class="prod-img-progress-txt" id="prod-img-progress-txt">Subiendo imagen...</span>
+            </div>
+            <!-- URL actual (oculta, usada al guardar) -->
+            <input type="hidden" id="prod-imagen">
           </div>
         </div>
       </div>
@@ -423,16 +448,90 @@ function renderTablaProductos(cont) {
   `
 }
 
-// Preview imagen en tiempo real
-document.addEventListener('input', function(e) {
-  if (e.target.id === 'prod-imagen') {
-    const preview = document.getElementById('prod-imagen-preview')
-    const img     = preview?.querySelector('img')
-    const url     = e.target.value.trim()
-    if (url && img) { img.src = url; preview.style.display = 'block' }
-    else if (preview) { preview.style.display = 'none' }
+// ── Uploader helpers ─────────────────────────────────────────────────────────
+
+function adminMostrarPreview(url) {
+  const previewWrap = document.getElementById('prod-img-preview-wrap')
+  const previewImg  = document.getElementById('prod-img-preview')
+  const dropZone    = document.getElementById('prod-img-drop-zone')
+  if (!previewWrap || !previewImg) return
+  previewImg.src = url
+  previewWrap.style.display = 'block'
+  if (dropZone) dropZone.style.display = 'none'
+}
+
+function adminOcultarPreview() {
+  const previewWrap = document.getElementById('prod-img-preview-wrap')
+  const dropZone    = document.getElementById('prod-img-drop-zone')
+  if (previewWrap) previewWrap.style.display = 'none'
+  if (dropZone)    dropZone.style.display    = 'flex'
+  const fileInput = document.getElementById('prod-img-file')
+  if (fileInput) fileInput.value = ''
+}
+
+window.adminQuitarImagen = function() {
+  document.getElementById('prod-imagen').value = ''
+  adminOcultarPreview()
+}
+
+window.adminOnDrop = function(event) {
+  event.preventDefault()
+  document.getElementById('prod-img-drop-zone')?.classList.remove('drag-over')
+  const archivo = event.dataTransfer?.files?.[0]
+  if (archivo && archivo.type.startsWith('image/')) adminSeleccionarImagen(archivo)
+}
+
+window.adminSeleccionarImagen = function(archivo) {
+  if (!archivo) return
+
+  // Validar tamaño (5MB)
+  if (archivo.size > 5 * 1024 * 1024) {
+    showToast('❌ La imagen supera los 5 MB permitidos.')
+    return
   }
-})
+
+  // Preview local inmediato
+  const reader = new FileReader()
+  reader.onload = (e) => adminMostrarPreview(e.target.result)
+  reader.readAsDataURL(archivo)
+
+  // Mostrar barra de progreso simulada
+  const progressWrap = document.getElementById('prod-img-progress-wrap')
+  const progressBar  = document.getElementById('prod-img-progress-bar')
+  const progressTxt  = document.getElementById('prod-img-progress-txt')
+  if (progressWrap) progressWrap.style.display = 'flex'
+
+  // Animación de progreso mientras sube
+  let pct = 0
+  const intervalo = setInterval(() => {
+    pct = Math.min(pct + Math.random() * 15, 85)
+    if (progressBar) progressBar.style.width = pct + '%'
+  }, 120)
+
+  // Subir a Supabase Storage
+  const idProducto = adminState.editandoProducto || 'nuevo'
+  window.adminService.subirImagenProducto(archivo, idProducto).then(({ url, error }) => {
+    clearInterval(intervalo)
+    if (error) {
+      if (progressWrap) progressWrap.style.display = 'none'
+      if (progressBar)  progressBar.style.width = '0'
+      showToast('❌ Error al subir la imagen. Verifica los permisos del bucket.')
+      adminOcultarPreview()
+      return
+    }
+    // Completar barra
+    if (progressBar) progressBar.style.width = '100%'
+    if (progressTxt) progressTxt.textContent = '✅ Imagen subida correctamente'
+    setTimeout(() => {
+      if (progressWrap) progressWrap.style.display = 'none'
+      if (progressBar)  progressBar.style.width = '0%'
+    }, 1200)
+
+    // Guardar URL en el input oculto
+    document.getElementById('prod-imagen').value = url
+    adminMostrarPreview(url)
+  })
+}
 
 window.adminBuscarProducto = function(val) {
   adminState.busquedaProducto = val
@@ -448,8 +547,8 @@ window.adminAbrirFormProducto = function() {
   document.getElementById('prod-precio').value       = ''
   document.getElementById('prod-stock').value        = ''
   document.getElementById('prod-distribuidor').value = ''
-  document.getElementById('prod-imagen').value        = ''
-  document.getElementById('prod-imagen-preview').style.display = 'none'
+  document.getElementById('prod-imagen').value       = ''
+  adminOcultarPreview()
   document.getElementById('admin-form-producto').style.display = 'block'
   document.getElementById('admin-form-producto').scrollIntoView({ behavior: 'smooth' })
 }
@@ -467,14 +566,14 @@ window.adminEditarProducto = function(id) {
   document.getElementById('prod-distribuidor').value = p.distribuidor || ''
   const imgUrl = p.imagen_url || ''
   document.getElementById('prod-imagen').value = imgUrl
-  const preview = document.getElementById('prod-imagen-preview')
-  if (imgUrl) { preview.style.display='block'; preview.querySelector('img').src = imgUrl } else { preview.style.display='none' }
+  if (imgUrl) { adminMostrarPreview(imgUrl) } else { adminOcultarPreview() }
   document.getElementById('admin-form-producto').style.display = 'block'
   document.getElementById('admin-form-producto').scrollIntoView({ behavior: 'smooth' })
 }
 
 window.adminCancelarFormProducto = function() {
   adminState.editandoProducto = null
+  adminOcultarPreview()
   document.getElementById('admin-form-producto').style.display = 'none'
 }
 
