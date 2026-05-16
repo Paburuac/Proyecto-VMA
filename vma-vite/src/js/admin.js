@@ -835,7 +835,7 @@ window.adminExportarPDF = function() {
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(8)
-  doc.text('Agente Autorizado Indura', 14, 18)
+  doc.text('', 14, 18)
 
   // Título reporte
   const filtroLabel = adminState.filtroEstado
@@ -954,7 +954,7 @@ window.adminExportarPDF = function() {
     doc.setTextColor(...BLANCO)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
-    doc.text('VMA Industrial — Agente Autorizado Indura', 14, H - 4)
+    doc.text('VMA Industrial —', 14, H - 4)
     const pTxt = `Página ${p} de ${totalPages}`
     const pW   = doc.getTextWidth(pTxt)
     doc.text(pTxt, W - 14 - pW, H - 4)
