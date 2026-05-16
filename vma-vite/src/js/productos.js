@@ -151,13 +151,124 @@ function updateSubFilter(cat) {
 }
 
 /* --- BÚSQUEDA --- */
+/* ─── BÚSQUEDA DESDE SUPABASE (con debounce) ─── */
+let searchDebounceTimer = null
+
 function initSearch() {
-  const inp = document.getElementById('search-prod');
-  if (!inp) return;
+  const inp = document.getElementById('search-prod')
+  if (!inp) return
+
   inp.addEventListener('input', () => {
-    state.search = inp.value.trim().toLowerCase();
-    renderProductos();
-  });
+    const valor = inp.value.trim()
+    state.search = valor.toLowerCase()
+
+    clearTimeout(searchDebounceTimer)
+
+    // Si está vacío, volver al catálogo completo en memoria
+    if (!valor) {
+      renderProductos()
+      return
+    }
+
+    // Mostrar indicador de búsqueda
+    const container = document.getElementById('productos-container')
+    if (container) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:3rem;color:var(--gris-texto)">
+          <div class="search-spinner"></div>
+          <p>Buscando <strong>"${escHtml(valor)}"</strong>...</p>
+        </div>`
+    }
+
+    // Debounce 350ms para no lanzar query en cada tecla
+    searchDebounceTimer = setTimeout(async () => {
+      await ejecutarBusqueda(valor)
+    }, 350)
+  })
+}
+
+async function ejecutarBusqueda(texto) {
+  const container = document.getElementById('productos-container')
+  if (!container) return
+
+  const { data, error } = await window.productoService.buscarProductos(texto)
+
+  if (error || !data) {
+    container.innerHTML = `<div style="text-align:center;padding:3rem;color:#cc3333">❌ Error al buscar. Intenta de nuevo.</div>`
+    return
+  }
+
+  if (data.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:center;padding:4rem 2rem;color:var(--gris-texto)">
+        <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+        <p>No se encontraron productos para <strong>"${escHtml(texto)}"</strong>.</p>
+        <button onclick="limpiarBusqueda()" style="margin-top:1rem;padding:0.5rem 1.5rem;background:var(--verde);color:var(--blanco);border:none;border-radius:20px;cursor:pointer;font-weight:700">Ver todos los productos</button>
+      </div>`
+    return
+  }
+
+  // Construir catalogo temporal con los resultados
+  const catalogoTemp = window.productoService.construirCatalogo(data)
+
+  // Renderizar con el catálogo temporal
+  let totalVisible = 0
+  let html = ''
+
+  Object.keys(catalogoTemp).sort().forEach(cat => {
+    const subs = Object.keys(catalogoTemp[cat]).sort()
+    let catHtml = ''
+    let catTotal = 0
+
+    subs.forEach(sub => {
+      const filtrados = catalogoTemp[cat][sub] || []
+      if (filtrados.length === 0) return
+      catTotal += filtrados.length
+      totalVisible += filtrados.length
+
+      catHtml += `
+        <div class="sub-bloque" data-sub="${escHtml(sub)}">
+          <div class="sub-header" onclick="toggleSub(this)">
+            <h3>${escHtml(sub)}</h3>
+            <span class="sub-count">${filtrados.length} producto${filtrados.length !== 1 ? 's' : ''}</span>
+            <span class="sub-toggle">▼</span>
+          </div>
+          <div class="sub-body">
+            <div class="prod-grid">
+              ${filtrados.map(p => renderProdCard(cat, sub, p)).join('')}
+            </div>
+          </div>
+        </div>`
+    })
+
+    if (catHtml) {
+      html += `
+        <div class="cat-bloque" data-cat="${escHtml(cat)}">
+          <div class="cat-header">
+            <h2>${catIcons[cat] || defaultIcon} ${escHtml(cat)}</h2>
+            <span class="cat-count">${catTotal} producto${catTotal !== 1 ? 's' : ''}</span>
+          </div>
+          ${catHtml}
+        </div>`
+    }
+  })
+
+  const resumen = `
+    <div class="search-resumen">
+      🔍 <strong>${totalVisible}</strong> resultado${totalVisible !== 1 ? 's' : ''} para "<em>${escHtml(texto)}</em>"
+      &nbsp;·&nbsp;
+      <button onclick="limpiarBusqueda()" class="search-limpiar-btn">✕ Limpiar búsqueda</button>
+    </div>`
+
+  container.innerHTML = resumen + html
+}
+
+window.limpiarBusqueda = function() {
+  const inp = document.getElementById('search-prod')
+  if (inp) inp.value = ''
+  state.search = ''
+  clearTimeout(searchDebounceTimer)
+  renderProductos()
 }
 
 /* --- RENDER PRODUCTOS --- */
