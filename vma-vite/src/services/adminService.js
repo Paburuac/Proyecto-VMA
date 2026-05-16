@@ -333,3 +333,72 @@ export async function obtenerReporteStock() {
     return { data: null, error: err }
   }
 }
+
+/* ═══════════════════════════════════════════════
+   STORAGE — Subida de imágenes de productos
+═══════════════════════════════════════════════ */
+
+/**
+ * Sube una imagen al bucket "productos" de Supabase Storage.
+ * Retorna la URL pública del archivo subido.
+ *
+ * @param {File}   archivo      - El File del input[type=file]
+ * @param {number} idProducto   - ID del producto (para nombrar el archivo)
+ * @returns {{ url: string|null, error: Error|null }}
+ */
+export async function subirImagenProducto(archivo, idProducto) {
+  try {
+    // Generar nombre único: {id}_{timestamp}.{ext}
+    const ext      = archivo.name.split('.').pop().toLowerCase()
+    const nombre   = `${idProducto || 'nuevo'}_${Date.now()}.${ext}`
+
+    const { error: uploadError } = await supabase
+      .storage
+      .from('productos')
+      .upload(nombre, archivo, {
+        cacheControl: '3600',
+        upsert: true,          // sobreescribe si ya existe el mismo nombre
+        contentType: archivo.type,
+      })
+
+    if (uploadError) {
+      console.error('[VMA Storage] Error al subir imagen:', uploadError.message)
+      return { url: null, error: uploadError }
+    }
+
+    // Obtener URL pública
+    const { data } = supabase
+      .storage
+      .from('productos')
+      .getPublicUrl(nombre)
+
+    console.log('[VMA Storage] Imagen subida:', data.publicUrl)
+    return { url: data.publicUrl, error: null }
+
+  } catch (err) {
+    console.error('[VMA Storage] Error inesperado:', err)
+    return { url: null, error: err }
+  }
+}
+
+/**
+ * Elimina una imagen del bucket "productos" dado su path.
+ * El path es la parte final de la URL pública (ej: "123_1716000000.jpg")
+ *
+ * @param {string} urlPublica
+ */
+export async function eliminarImagenProducto(urlPublica) {
+  try {
+    if (!urlPublica) return { error: null }
+    // Extraer nombre del archivo de la URL
+    const partes = urlPublica.split('/productos/')
+    if (partes.length < 2) return { error: null }
+    const nombre = partes[1]
+
+    const { error } = await supabase.storage.from('productos').remove([nombre])
+    if (error) console.warn('[VMA Storage] No se pudo eliminar imagen:', error.message)
+    return { error }
+  } catch (err) {
+    return { error: err }
+  }
+}
