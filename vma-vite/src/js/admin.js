@@ -731,3 +731,236 @@ function escHtml(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;')
 }
+
+/* ═══════════════════════════════════════════════
+   EXPORTAR COTIZACIONES
+═══════════════════════════════════════════════ */
+
+/**
+ * Retorna los datos visibles actualmente en la
+ * tabla (respeta el filtro activo).
+ */
+function adminGetDatosExportar() {
+  const filtro = adminState.filtroEstado || ''
+  return filtro
+    ? adminState.cotizaciones.filter(c => c.estado === filtro)
+    : adminState.cotizaciones
+}
+
+/* ─── EXCEL ──────────────────────────────────── */
+window.adminExportarExcel = function() {
+  const data = adminGetDatosExportar()
+
+  if (data.length === 0) {
+    showToast('⚠️ No hay cotizaciones para exportar.')
+    return
+  }
+
+  if (typeof XLSX === 'undefined') {
+    showToast('❌ Error al cargar librería Excel. Intenta de nuevo.')
+    return
+  }
+
+  // Armar filas
+  const filas = data.map(c => {
+    const prods = (c.productos_solicitados || [])
+      .map(p => `${p.nombre || p.codigo || '?'} x${p.cantidad || 1}`)
+      .join(' | ')
+
+    return {
+      'N°':          c.id,
+      'Fecha':       new Date(c.created_at).toLocaleDateString('es-CL'),
+      'Nombre':      c.nombre || '',
+      'Empresa':     c.empresa || '',
+      'Email':       c.email || '',
+      'Teléfono':    c.telefono || '',
+      'Productos':   prods || '(sin productos)',
+      'Estado':      c.estado || '',
+      'Mensaje':     c.mensaje || '',
+    }
+  })
+
+  const wb  = XLSX.utils.book_new()
+  const ws  = XLSX.utils.json_to_sheet(filas)
+
+  // Anchos de columna
+  ws['!cols'] = [
+    { wch: 6 }, { wch: 12 }, { wch: 22 }, { wch: 20 },
+    { wch: 26 }, { wch: 14 }, { wch: 50 }, { wch: 12 }, { wch: 30 },
+  ]
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Cotizaciones')
+
+  const fecha = new Date().toLocaleDateString('es-CL').replace(/\//g, '-')
+  XLSX.writeFile(wb, `VMA-Cotizaciones-${fecha}.xlsx`)
+  showToast('✅ Excel descargado correctamente.')
+}
+
+/* ─── PDF ────────────────────────────────────── */
+window.adminExportarPDF = function() {
+  const data = adminGetDatosExportar()
+
+  if (data.length === 0) {
+    showToast('⚠️ No hay cotizaciones para exportar.')
+    return
+  }
+
+  if (typeof window.jspdf === 'undefined') {
+    showToast('❌ Error al cargar librería PDF. Intenta de nuevo.')
+    return
+  }
+
+  const { jsPDF } = window.jspdf
+  const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'landscape' })
+
+  const AZUL   = [0, 59, 92]
+  const VERDE  = [132, 189, 0]
+  const BLANCO = [255, 255, 255]
+  const GRIS   = [85, 94, 106]
+  const GRIS_CL= [244, 246, 248]
+
+  const W = doc.internal.pageSize.getWidth()
+  const H = doc.internal.pageSize.getHeight()
+
+  // ── HEADER ──────────────────────────────────
+  doc.setFillColor(...AZUL)
+  doc.rect(0, 0, W, 28, 'F')
+  doc.setFillColor(...VERDE)
+  doc.rect(0, 26, W, 2.5, 'F')
+
+  doc.setTextColor(...BLANCO)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(16)
+  doc.text('VMA INDUSTRIAL', 14, 12)
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  doc.text('Agente Autorizado Indura', 14, 18)
+
+  // Título reporte
+  const filtroLabel = adminState.filtroEstado
+    ? `Estado: ${adminState.filtroEstado}`
+    : 'Todas las cotizaciones'
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(11)
+  const titulo = `Reporte de Cotizaciones — ${filtroLabel}`
+  const tW = doc.getTextWidth(titulo)
+  doc.text(titulo, W - 14 - tW, 12)
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  const fechaHoy = new Date().toLocaleDateString('es-CL', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  })
+  const fW = doc.getTextWidth(fechaHoy)
+  doc.text(fechaHoy, W - 14 - fW, 19)
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(8)
+  const totalTxt = `Total: ${data.length} cotizaci${data.length !== 1 ? 'ones' : 'ón'}`
+  const tTW = doc.getTextWidth(totalTxt)
+  doc.text(totalTxt, W - 14 - tTW, 24)
+
+  // ── TABLA ────────────────────────────────────
+  const cols = {
+    id:      { x: 14,  w: 12,  label: '#' },
+    fecha:   { x: 26,  w: 22,  label: 'Fecha' },
+    nombre:  { x: 48,  w: 38,  label: 'Nombre' },
+    empresa: { x: 86,  w: 38,  label: 'Empresa' },
+    email:   { x: 124, w: 52,  label: 'Email' },
+    prods:   { x: 176, w: 18,  label: 'Items' },
+    estado:  { x: 194, w: 24,  label: 'Estado' },
+  }
+
+  let y = 34
+  const rowH = 7
+
+  // Cabecera tabla
+  doc.setFillColor(...AZUL)
+  doc.rect(14, y, W - 28, rowH, 'F')
+  doc.setTextColor(...BLANCO)
+  doc.setFont('helvetica', 'bold')
+  doc.setFontSize(7.5)
+
+  Object.values(cols).forEach(col => {
+    doc.text(col.label, col.x + 1, y + 4.8)
+  })
+  y += rowH
+
+  // Filas
+  const estadoColor = {
+    pendiente:  [224, 123, 0],
+    revisada:   [0, 100, 180],
+    respondida: [50, 150, 50],
+  }
+
+  data.forEach((c, i) => {
+    // Paginación
+    if (y + rowH > H - 16) {
+      doc.addPage()
+      y = 14
+      // Repetir cabecera
+      doc.setFillColor(...AZUL)
+      doc.rect(14, y, W - 28, rowH, 'F')
+      doc.setTextColor(...BLANCO)
+      doc.setFont('helvetica', 'bold')
+      doc.setFontSize(7.5)
+      Object.values(cols).forEach(col => doc.text(col.label, col.x + 1, y + 4.8))
+      y += rowH
+    }
+
+    // Fondo alternado
+    if (i % 2 === 0) {
+      doc.setFillColor(...GRIS_CL)
+      doc.rect(14, y, W - 28, rowH, 'F')
+    }
+
+    doc.setTextColor(30, 30, 30)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7.2)
+
+    const fecha  = new Date(c.created_at).toLocaleDateString('es-CL')
+    const nombre = (c.nombre || '').substring(0, 22)
+    const empresa= (c.empresa || '—').substring(0, 22)
+    const email  = (c.email || '').substring(0, 30)
+    const prods  = String((c.productos_solicitados || []).length)
+
+    doc.text(String(c.id),  cols.id.x + 1,      y + 4.8)
+    doc.text(fecha,          cols.fecha.x + 1,   y + 4.8)
+    doc.text(nombre,         cols.nombre.x + 1,  y + 4.8)
+    doc.text(empresa,        cols.empresa.x + 1, y + 4.8)
+    doc.text(email,          cols.email.x + 1,   y + 4.8)
+    doc.text(prods,          cols.prods.x + 5,   y + 4.8)
+
+    // Badge de estado
+    const color = estadoColor[c.estado] || GRIS
+    doc.setFillColor(...color)
+    doc.roundedRect(cols.estado.x + 1, y + 1.5, 20, 4, 1, 1, 'F')
+    doc.setTextColor(...BLANCO)
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(6.5)
+    doc.text((c.estado || '').toUpperCase(), cols.estado.x + 11, y + 4.5, { align: 'center' })
+
+    y += rowH
+  })
+
+  // ── FOOTER ──────────────────────────────────
+  const totalPages = doc.internal.getNumberOfPages()
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p)
+    doc.setFillColor(...AZUL)
+    doc.rect(0, H - 10, W, 10, 'F')
+    doc.setFillColor(...VERDE)
+    doc.rect(0, H - 10, W, 1.5, 'F')
+    doc.setTextColor(...BLANCO)
+    doc.setFont('helvetica', 'normal')
+    doc.setFontSize(7)
+    doc.text('VMA Industrial — Agente Autorizado Indura', 14, H - 4)
+    const pTxt = `Página ${p} de ${totalPages}`
+    const pW   = doc.getTextWidth(pTxt)
+    doc.text(pTxt, W - 14 - pW, H - 4)
+  }
+
+  const fechaArchivo = new Date().toLocaleDateString('es-CL').replace(/\//g, '-')
+  doc.save(`VMA-Cotizaciones-${fechaArchivo}.pdf`)
+  showToast('✅ PDF descargado correctamente.')
+}
