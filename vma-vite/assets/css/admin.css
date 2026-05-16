@@ -439,3 +439,104 @@
 @media (max-width: 480px) {
   .admin-kpi-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ═══════════════════════════════════════════════
+   UPLOADER DE IMAGEN — admin productos
+═══════════════════════════════════════════════ */
+
+.prod-img-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Zona de drop */
+.prod-img-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.5rem 1rem;
+  border: 2px dashed var(--gris-medio);
+  border-radius: var(--radio-lg);
+  background: var(--gris-claro);
+  cursor: pointer;
+  transition: var(--trans);
+  text-align: center;
+}
+.prod-img-drop-zone:hover,
+.prod-img-drop-zone.drag-over {
+  border-color: var(--verde);
+  background: rgba(132, 189, 0, 0.06);
+}
+.prod-img-drop-icon { font-size: 2rem; line-height: 1; }
+.prod-img-drop-text {
+  font-size: 0.88rem;
+  color: var(--gris-texto);
+  margin: 0;
+  line-height: 1.5;
+}
+.prod-img-drop-text span { color: var(--azul); font-weight: 600; }
+.prod-img-drop-hint {
+  font-size: 0.75rem;
+  color: var(--gris-texto);
+  opacity: 0.7;
+  margin: 0;
+}
+.prod-img-btn { font-size: 0.82rem !important; padding: 0.4rem 1rem !important; }
+
+/* Preview de imagen */
+.prod-img-preview-wrap {
+  position: relative;
+  display: inline-block;
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+  border: 2px solid var(--gris-medio);
+  max-width: 260px;
+}
+.prod-img-preview-wrap img {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+}
+.prod-img-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--trans);
+}
+.prod-img-remove:hover { background: #cc3333; }
+
+/* Barra de progreso */
+.prod-img-progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.prod-img-progress-bar {
+  height: 6px;
+  background: var(--verde);
+  border-radius: 3px;
+  width: 0%;
+  transition: width 0.15s ease;
+  flex: 1;
+  box-shadow: 0 0 6px rgba(132,189,0,0.4);
+}
+.prod-img-progress-txt {
+  font-size: 0.78rem;
+  color: var(--gris-texto);
+  white-space: nowrap;
+}
