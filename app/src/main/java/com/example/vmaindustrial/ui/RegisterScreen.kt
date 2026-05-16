@@ -8,9 +8,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.viewmodel.AuthViewModel
 
@@ -27,6 +30,9 @@ fun RegisterScreen(
             viewModel.isSuccess = false // Reset state
         }
     }
+
+    val brandBlue = Color(0xFF002E4F)
+    val errorRed = Color(0xFFD32F2F)
 
     Box(modifier = Modifier.fillMaxSize()) {
         IconButton(
@@ -45,56 +51,75 @@ fun RegisterScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Registro", style = MaterialTheme.typography.headlineLarge)
+            Text("Registro de Usuario", style = MaterialTheme.typography.headlineLarge, color = brandBlue, fontWeight = FontWeight.Bold)
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            OutlinedTextField(
+            CotizacionField(
+                label = "NOMBRE COMPLETO",
                 value = viewModel.nombre,
                 onValueChange = { viewModel.nombre = it },
-                label = { Text("Nombre Completo") },
-                modifier = Modifier.fillMaxWidth()
+                placeholder = "Juan Pérez",
+                brandBlue = brandBlue,
+                errorRed = errorRed
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            CotizacionField(
+                label = "CORREO ELECTRÓNICO",
                 value = viewModel.email,
                 onValueChange = { viewModel.email = it },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                placeholder = "tu@correo.com",
+                brandBlue = brandBlue,
+                errorRed = errorRed
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Text(
+                text = "CONTRASEÑA",
+                color = brandBlue,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.Start)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
-                label = { Text("Contraseña") },
-                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                placeholder = { Text("Mínimo 6 caracteres", fontSize = 14.sp) },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = brandBlue,
+                    unfocusedBorderColor = Color.LightGray
+                )
             )
 
             viewModel.error?.let {
-                Text(it, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+                Text(it, color = errorRed, modifier = Modifier.padding(top = 8.dp), fontSize = 12.sp)
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             if (viewModel.isLoading) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(color = brandBlue)
             } else {
                 Button(
                     onClick = { viewModel.register() },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue),
+                    shape = MaterialTheme.shapes.medium
                 ) {
-                    Text("Registrarse")
+                    Text("Crear Cuenta", color = Color.White, fontWeight = FontWeight.Bold)
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
                 TextButton(onClick = onNavigateToLogin) {
-                    Text("¿Ya tienes cuenta? Inicia sesión")
+                    Text("¿Ya tienes cuenta? Inicia sesión aquí", color = brandBlue)
                 }
             }
         }

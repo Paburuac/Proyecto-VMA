@@ -16,9 +16,34 @@ import androidx.compose.material.icons.filled.Dataset
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.vmaindustrial.model.Cotizacion
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
@@ -54,7 +79,7 @@ enum class Destination(
     LOGIN("login", null, "Login", "Login Screen"),
     REGISTER("register", null, "Register", "Register Screen"),
     HOME("home", Icons.Default.Home, "Home", "Home Screen"),
-    FILTROS("filtros", Icons.Default.Dataset, "Filtros", "Filtros Screen"),
+    FILTROS("filtros", Icons.Default.Dataset, "Productos", "Filtros Screen"),
     CARRITO("carrito", Icons.Default.ShoppingCart,"Carrito","Carrito Screen"),
     ACCOUNT("account", Icons.Default.AccountCircle,"Account","Account Screen"),
     COTIZACION("cotizacion", Icons.Default.Description, "Cotización", "Cotización Screen"),
@@ -117,43 +142,6 @@ fun AppNavHost(
         }
         composable(Destination.COTIZACION.route) {
             CotizacionScreen(viewModel = cotizacionViewModel)
-        }
-    }
-}
-
-@Composable
-fun AccountScreen(
-    onNavigateToLogin: () -> Unit,
-    onNavigateToRegister: () -> Unit,
-    viewModel: AuthViewModel
-) {
-    val brandBlue = Color(0xFF002E4F)
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        if (viewModel.currentUser != null) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Bienvenido, ${viewModel.currentUser?.user?.email ?: "Usuario"}")
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = { viewModel.logout() },
-                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
-                ) {
-                    Text("Cerrar Sesión", color = Color.White)
-                }
-            }
-        } else {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "No has iniciado sesión")
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNavigateToLogin,
-                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
-                ) {
-                    Text("Iniciar Sesión", color = Color.White)
-                }
-                TextButton(onClick = onNavigateToRegister) {
-                    Text("Crear una cuenta", color = brandBlue)
-                }
-            }
         }
     }
 }

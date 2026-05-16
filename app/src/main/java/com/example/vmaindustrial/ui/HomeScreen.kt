@@ -73,29 +73,7 @@ fun HomeScreen(viewModel: ProductoViewModel = viewModel()) {
                             fontWeight = FontWeight.Bold,
                             fontStyle = FontStyle.Italic
                         )
-                        Text(
-                            text = "AGENTE AUTORIZADO INDURA",
-                            color = brandGreen,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 0.5.sp
-                        )
                     }
-                }
-
-                // Badge "AGENTE AUTORIZADO INDURA" (Secundario)
-                Surface(
-                    color = brandGreen,
-                    shape = RoundedCornerShape(16.dp),
-                    modifier = Modifier.padding(bottom = 24.dp)
-                ) {
-                    Text(
-                        text = "AGENTE AUTORIZADO INDURA",
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = brandBlue
-                    )
                 }
 
                 // Título Principal

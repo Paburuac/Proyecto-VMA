@@ -24,6 +24,31 @@ class CotizacionViewModel : ViewModel() {
     var isLoading by mutableStateOf(false)
     var statusMessage by mutableStateOf<String?>(null)
     var hasAttemptedSubmit by mutableStateOf(false)
+    
+    var misCotizaciones by mutableStateOf<List<Cotizacion>>(emptyList())
+        private set
+
+    fun cargarCotizacionesUsuario() {
+        viewModelScope.launch {
+            isLoading = true
+            println("Debug: Cargando perfil de usuario...")
+            val perfil = authRepository.getUserProfile()
+            println("Debug: Perfil obtenido: $perfil")
+            if (perfil != null) {
+                println("Debug: Buscando cotizaciones para usuario_id: ${perfil.id}")
+                val result = repository.obtenerCotizacionesPorUsuario(perfil.id)
+                if (result.isSuccess) {
+                    misCotizaciones = result.getOrDefault(emptyList())
+                    println("Debug: Cotizaciones cargadas: ${misCotizaciones.size}")
+                } else {
+                    println("Debug: Error al obtener cotizaciones: ${result.exceptionOrNull()?.message}")
+                }
+            } else {
+                println("Debug: No se pudo obtener el perfil del usuario")
+            }
+            isLoading = false
+        }
+    }
 
     fun enviarSolicitud() {
         hasAttemptedSubmit = true
