@@ -18,6 +18,7 @@ import { inicializarAuth } from './js/auth.js'
 import * as adminService from './services/adminService.js'
 import './js/admin.js'
 import './js/misCotizaciones.js'
+import './js/panelTrabajador.js'
 
 // Exponer carritoService globalmente para que carrito.js pueda usarlo
 window.carritoService    = carritoService
