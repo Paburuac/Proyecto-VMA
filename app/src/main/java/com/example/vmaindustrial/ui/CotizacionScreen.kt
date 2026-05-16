@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -52,7 +53,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                     placeholder = "Tu nombre completo",
                     modifier = Modifier.weight(1f),
                     brandBlue = brandBlue,
-                    errorRed = errorRed
+                    errorRed = errorRed,
+                    showError = viewModel.hasAttemptedSubmit
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 CotizacionField(
@@ -62,7 +64,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                     placeholder = "Nombre de la empresa",
                     modifier = Modifier.weight(1f),
                     brandBlue = brandBlue,
-                    errorRed = errorRed
+                    errorRed = errorRed,
+                    showError = viewModel.hasAttemptedSubmit
                 )
             }
 
@@ -77,7 +80,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                     placeholder = "correo@empresa.cl",
                     modifier = Modifier.weight(1f),
                     brandBlue = brandBlue,
-                    errorRed = errorRed
+                    errorRed = errorRed,
+                    showError = viewModel.hasAttemptedSubmit
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 CotizacionField(
@@ -87,7 +91,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                     placeholder = "+56 9 XXXX XXXX",
                     modifier = Modifier.weight(1f),
                     brandBlue = brandBlue,
-                    errorRed = errorRed
+                    errorRed = errorRed,
+                    showError = viewModel.hasAttemptedSubmit
                 )
             }
 
@@ -101,7 +106,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                 placeholder = "Ej: Acetileno, Soldadora MIG 250A...",
                 brandBlue = brandBlue,
                 errorRed = errorRed,
-                isRequired = false
+                isRequired = false,
+                showError = viewModel.hasAttemptedSubmit
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -115,7 +121,8 @@ fun CotizacionScreen(viewModel: CotizacionViewModel) {
                 brandBlue = brandBlue,
                 errorRed = errorRed,
                 isSingleLine = false,
-                modifier = Modifier.height(150.dp)
+                modifier = Modifier.height(150.dp),
+                showError = viewModel.hasAttemptedSubmit
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -161,8 +168,11 @@ fun CotizacionField(
     errorRed: Color,
     modifier: Modifier = Modifier,
     isRequired: Boolean = true,
-    isSingleLine: Boolean = true
+    isSingleLine: Boolean = true,
+    showError: Boolean = false
 ) {
+    var hasBeenFocused by remember { mutableStateOf(false) }
+
     Column(modifier = modifier) {
         Text(
             text = label,
@@ -174,15 +184,19 @@ fun CotizacionField(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusChanged { if (it.isFocused) hasBeenFocused = true },
             placeholder = { Text(placeholder, fontSize = 14.sp) },
             singleLine = isSingleLine,
+            isError = (isRequired && value.isBlank() && (hasBeenFocused || showError)),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = brandBlue,
-                unfocusedBorderColor = Color.LightGray
+                unfocusedBorderColor = Color.LightGray,
+                errorBorderColor = errorRed
             )
         )
-        if (isRequired && value.isBlank()) {
+        if (isRequired && value.isBlank() && (hasBeenFocused || showError)) {
             Text(
                 text = "Este campo es obligatorio.",
                 color = errorRed,

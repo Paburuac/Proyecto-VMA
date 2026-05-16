@@ -23,8 +23,10 @@ class CotizacionViewModel : ViewModel() {
 
     var isLoading by mutableStateOf(false)
     var statusMessage by mutableStateOf<String?>(null)
+    var hasAttemptedSubmit by mutableStateOf(false)
 
     fun enviarSolicitud() {
+        hasAttemptedSubmit = true
         if (nombre.isBlank() || email.isBlank() || mensaje.isBlank()) {
             statusMessage = "Por favor completa los campos obligatorios"
             return
@@ -62,5 +64,6 @@ class CotizacionViewModel : ViewModel() {
         telefono = ""
         productoInteres = ""
         mensaje = ""
+        hasAttemptedSubmit = false
     }
 }
