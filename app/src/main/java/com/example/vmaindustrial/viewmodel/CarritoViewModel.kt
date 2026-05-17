@@ -56,7 +56,7 @@ class CarritoViewModel : ViewModel() {
         }
     }
 
-    fun agregarProducto(productoId: Int) {
+    fun agregarProducto(productoId: Int, reintentos: Int = 1) {
         viewModelScope.launch {
             try {
                 val perfil = authRepository.getUserProfile()
@@ -74,10 +74,10 @@ class CarritoViewModel : ViewModel() {
                 cargarCarrito()
                 mensaje = "Producto añadido al carrito"
             } catch (e: Exception) {
-                if (e.message?.contains("expired", ignoreCase = true) == true) {
+                if (e.message?.contains("expired", ignoreCase = true) == true && reintentos > 0) {
                     try {
                         SupabaseClient.client.auth.refreshCurrentSession()
-                        agregarProducto(productoId) // Reintento recursivo (una vez)
+                        agregarProducto(productoId, reintentos - 1)
                     } catch (ex: Exception) {
                         mensaje = "Error de sesión"
                     }
@@ -98,18 +98,21 @@ class CarritoViewModel : ViewModel() {
     fun realizarCompra() {
         viewModelScope.launch {
             isLoading = true
+            println("DEBUG: Iniciando realizarCompra")
             val perfil = authRepository.getUserProfile()
             if (perfil == null || items.isEmpty()) {
+                println("DEBUG: Perfil nulo o items vacíos. Perfil: $perfil, Items size: ${items.size}")
                 isLoading = false
                 return@launch
             }
 
+            println("DEBUG: Preparando productos simplificados")
             val productosSimplificados = items.map {
                 ProductoCarritoSimplificado(
                     id_producto = it.producto_id,
                     descripcion = it.producto.descripcion,
                     cantidad = it.cantidad,
-                    precio = it.producto.precio
+                    precio = it.producto.precio?.toString() ?: "Consultar"
                 )
             }
 
@@ -121,13 +124,17 @@ class CarritoViewModel : ViewModel() {
                 productos_solicitados = productosSimplificados
             )
 
+            println("DEBUG: Insertando cotización en Supabase")
             val result = cotizacionRepository.crearCotizacion(cotizacion)
             if (result.isSuccess) {
+                println("DEBUG: Cotización insertada con éxito. Vaciando carrito.")
                 carritoRepository.vaciarCarrito(perfil.id!!)
                 items = emptyList()
                 mensaje = "¡Compra realizada con éxito! Cotización generada."
             } else {
-                mensaje = "Error al procesar la compra: ${result.exceptionOrNull()?.message}"
+                val errorMsg = result.exceptionOrNull()?.message ?: "Error desconocido"
+                println("DEBUG: Error al insertar cotización: $errorMsg")
+                mensaje = "Error al procesar la compra: $errorMsg"
             }
             isLoading = false
         }

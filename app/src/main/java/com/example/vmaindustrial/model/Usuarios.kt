@@ -1,16 +1,17 @@
 package com.example.vmaindustrial.model
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerialName
 
 @Serializable
 data class Usuarios(
-    val id: Int? = null,
-    val auth_user_id: String,
-    val rol_id: Int,
-    val nombre: String,
-    val email: String,
-    val telefono: String? = null,
-    val activo: Boolean,
-    val create_at: String? = null,
-    val update_at: String? = null
+    @SerialName("id") val id: Int? = null,
+    @SerialName("auth_user_id") val auth_user_id: String,
+    @SerialName("rol_id") val rol_id: Int,
+    @SerialName("nombre") val nombre: String,
+    @SerialName("email") val email: String,
+    @SerialName("telefono") val telefono: String? = null,
+    @SerialName("activo") val activo: Boolean = true,
+    @SerialName("created_at") val created_at: String? = null,
+    @SerialName("updated_at") val updated_at: String? = null
 )

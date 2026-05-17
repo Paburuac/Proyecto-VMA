@@ -1,5 +1,6 @@
 package com.example.vmaindustrial.viewmodel
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,6 +30,18 @@ class ProductoViewModel : ViewModel() {
 
     var categoriaSeleccionada by mutableStateOf<Int?>(null)
 
+    val productosFiltrados by derivedStateOf {
+        productos.filter {
+            (categoriaSeleccionada == null ||
+                    it.id_categoria == categoriaSeleccionada)
+                    &&
+                    it.descripcion.contains(
+                        textoBusqueda,
+                        ignoreCase = true
+                    )
+        }
+    }
+
     var isLoading by mutableStateOf(false)
         private set
 
@@ -52,16 +65,23 @@ class ProductoViewModel : ViewModel() {
                     errorMessage.contains("expired", ignoreCase = true)) {
                     println("DEBUG: JWT expirado detectado, intentando refrescar sesión...")
                     try {
-                        SupabaseClient.client.auth.refreshCurrentSession()
-                        // Reintentar una vez después del refresh
-                        productos = productoRepository.obtenerProductos()
-                        categorias = categoriaRepository.obtenerCategorias()
-                        println("DEBUG: Datos cargados exitosamente tras refresh")
+                        val session = SupabaseClient.client.auth.currentSessionOrNull()
+                        if (session?.refreshToken != null) {
+                            SupabaseClient.client.auth.refreshCurrentSession()
+                            // Reintentar una vez después del refresh
+                            productos = productoRepository.obtenerProductos()
+                            categorias = categoriaRepository.obtenerCategorias()
+                            println("DEBUG: Datos cargados exitosamente tras refresh")
+                        } else {
+                            mensajeError = "Sesión expirada. Por favor, vuelve a iniciar sesión."
+                        }
                     } catch (refreshError: Exception) {
                         refreshError.printStackTrace()
-                        mensajeError = "Sesión expirada. Por favor, vuelve a iniciar sesión."
+                        mensajeError = "Error al refrescar sesión: ${refreshError.message}"
                         println("DEBUG: Error tras refresh: ${refreshError.message}")
                     }
+                } else if (errorMessage.contains("timeout", ignoreCase = true)) {
+                    mensajeError = "Tiempo de conexión agotado. Verifica tu internet."
                 } else {
                     e.printStackTrace()
                     mensajeError = e.message ?: "Error desconocido al cargar datos"
@@ -70,22 +90,6 @@ class ProductoViewModel : ViewModel() {
             } finally {
                 isLoading = false
             }
-        }
-    }
-
-    fun productosFiltrados(): List<Producto> {
-
-        return productos.filter {
-
-            (categoriaSeleccionada == null ||
-                    it.id_categoria == categoriaSeleccionada)
-
-                    &&
-
-                    it.descripcion.contains(
-                        textoBusqueda,
-                        ignoreCase = true
-                    )
         }
     }
 }

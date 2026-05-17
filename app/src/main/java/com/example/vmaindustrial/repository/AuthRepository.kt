@@ -51,23 +51,16 @@ class AuthRepository {
     fun getCurrentUser() = SupabaseClient.client.auth.currentSessionOrNull()
 
     suspend fun getUserProfile(): Usuarios? {
-        val session = getCurrentUser() ?: run {
-            println("Debug AuthRepo: No hay sesión activa")
-            return null
-        }
+        val session = getCurrentUser() ?: return null
         val authId = session.user?.id ?: ""
-        println("Debug AuthRepo: Buscando perfil para auth_id: $authId")
         return try {
-            val usuario = SupabaseClient.client.from("usuarios")
+            SupabaseClient.client.from("usuarios")
                 .select {
                     filter {
                         eq("auth_user_id", authId)
                     }
-                }.decodeSingle<Usuarios>()
-            println("Debug AuthRepo: Usuario encontrado: $usuario")
-            usuario
+                }.decodeSingleOrNull<Usuarios>()
         } catch (e: Exception) {
-            println("Debug AuthRepo: Error al decodificar usuario: ${e.message}")
             e.printStackTrace()
             null
         }

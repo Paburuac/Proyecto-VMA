@@ -116,7 +116,7 @@ fun CarritoScreen(
                                 Text(
                                     "$${String.format(Locale.getDefault(), "%.2f", total)}",
                                     style = MaterialTheme.typography.titleLarge,
-                                    color = MaterialTheme.colorScheme.primary,
+                                    color = brandBlue,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -124,7 +124,8 @@ fun CarritoScreen(
                             Button(
                                 onClick = { viewModel.realizarCompra() },
                                 modifier = Modifier.fillMaxWidth(),
-                                enabled = !viewModel.isLoading
+                                enabled = !viewModel.isLoading && viewModel.items.isNotEmpty(),
+                                colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
                             ) {
                                 Icon(Icons.Default.ShoppingCartCheckout, contentDescription = null)
                                 Spacer(modifier = Modifier.width(8.dp))
@@ -159,7 +160,7 @@ fun CarritoItemView(
                 Text(
                     text = "$${item.producto.precio ?: 0.0}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
+                    color = Color(0xFF002E4F)
                 )
             }
 

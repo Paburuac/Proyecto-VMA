@@ -22,7 +22,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.viewmodel.ProductoViewModel
 
 @Composable
-fun HomeScreen(viewModel: ProductoViewModel = viewModel()) {
+fun HomeScreen(
+    viewModel: ProductoViewModel = viewModel(),
+    onNavigateToFiltros: (Int) -> Unit = {}
+) {
     val brandBlue = Color(0xFF002E4F)
     val brandGreen = Color(0xFF7CB342)
 
@@ -143,15 +146,15 @@ fun HomeScreen(viewModel: ProductoViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Grid de categorías (limitado a altura fija para scroll interno o usar FlowRow)
-            // Aquí usaremos una implementación manual con Column/Row para el verticalScroll del parent
+            // Grid de categorías
             viewModel.categorias.chunked(2).forEach { rowItems ->
                 Row(modifier = Modifier.fillMaxWidth()) {
                     rowItems.forEach { categoria ->
                         CategoryCard(
                             name = categoria.nombre_categoria,
                             modifier = Modifier.weight(1f).padding(4.dp),
-                            brandBlue = brandBlue
+                            brandBlue = brandBlue,
+                            onClick = { onNavigateToFiltros(categoria.id_categoria) }
                         )
                     }
                     if (rowItems.size == 1) Spacer(modifier = Modifier.weight(1f))
@@ -170,12 +173,13 @@ fun StatItem(value: String, label: String, color: Color) {
 }
 
 @Composable
-fun CategoryCard(name: String, modifier: Modifier, brandBlue: Color) {
+fun CategoryCard(name: String, modifier: Modifier, brandBlue: Color, onClick: () -> Unit) {
     Card(
         modifier = modifier.height(120.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(2.dp)
+        elevation = CardDefaults.cardElevation(2.dp),
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

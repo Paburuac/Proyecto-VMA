@@ -53,7 +53,7 @@ fun FiltrosScreen(
         }
     }
 
-    val productosFiltrados = viewModel.productosFiltrados()
+    val productosFiltrados = viewModel.productosFiltrados
     val categoriaActual = viewModel.categorias.find { it.id_categoria == viewModel.categoriaSeleccionada }
     
     val brandBlue = Color(0xFF002E4F)
@@ -110,7 +110,9 @@ fun FiltrosScreen(
                             },
                             colors = NavigationDrawerItemDefaults.colors(
                                 unselectedContainerColor = Color.White,
-                                selectedContainerColor = brandBlue.copy(alpha = 0.1f)
+                                selectedContainerColor = brandBlue.copy(alpha = 0.1f),
+                                unselectedTextColor = Color.Black,
+                                selectedTextColor = Color.Black
                             ),
                             modifier = Modifier.padding(horizontal = 12.dp)
                         )
@@ -125,7 +127,9 @@ fun FiltrosScreen(
                                 },
                                 colors = NavigationDrawerItemDefaults.colors(
                                     unselectedContainerColor = Color.White,
-                                    selectedContainerColor = brandBlue.copy(alpha = 0.1f)
+                                    selectedContainerColor = brandBlue.copy(alpha = 0.1f),
+                                    unselectedTextColor = Color.Black,
+                                    selectedTextColor = Color.Black
                                 ),
                                 modifier = Modifier.padding(horizontal = 12.dp)
                             )

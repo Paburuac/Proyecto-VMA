@@ -69,6 +69,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vmaindustrial.viewmodel.AuthViewModel
 import com.example.vmaindustrial.viewmodel.CarritoViewModel
 import com.example.vmaindustrial.viewmodel.CotizacionViewModel
+import com.example.vmaindustrial.viewmodel.ProductoViewModel
 
 enum class Destination(
     val route: String,
@@ -76,13 +77,13 @@ enum class Destination(
     val label: String,
     val contentDescription: String,
 ) {
-    LOGIN("login", null, "Login", "Login Screen"),
-    REGISTER("register", null, "Register", "Register Screen"),
     HOME("home", Icons.Default.Home, "Home", "Home Screen"),
     FILTROS("filtros", Icons.Default.Dataset, "Productos", "Filtros Screen"),
+    USER("user", Icons.Default.AccountCircle, "Usuario", "User Screen"),
     CARRITO("carrito", Icons.Default.ShoppingCart,"Carrito","Carrito Screen"),
-    ACCOUNT("account", Icons.Default.AccountCircle,"Account","Account Screen"),
     COTIZACION("cotizacion", Icons.Default.Description, "Cotización", "Cotización Screen"),
+    LOGIN("login", null, "Login", "Login Screen"),
+    REGISTER("register", null, "Register", "Register Screen"),
 }
 
 
@@ -95,6 +96,7 @@ fun AppNavHost(
     val authViewModel: AuthViewModel = viewModel()
     val carritoViewModel: CarritoViewModel = viewModel()
     val cotizacionViewModel: CotizacionViewModel = viewModel()
+    val productoViewModel: ProductoViewModel = viewModel()
     
     NavHost(
         navController = navController,
@@ -118,30 +120,63 @@ fun AppNavHost(
             )
         }
         composable(Destination.HOME.route) {
-            HomeScreen()
+            HomeScreen(
+                viewModel = productoViewModel,
+                onNavigateToFiltros = { categoriaId ->
+                    productoViewModel.categoriaSeleccionada = categoriaId
+                    navController.navigate(Destination.FILTROS.route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
         composable(Destination.FILTROS.route) {
             FiltrosScreen(
                 onNavigateToLogin = { navController.navigate(Destination.LOGIN.route) },
+                viewModel = productoViewModel,
                 carritoViewModel = carritoViewModel
             )
         }
+        composable(Destination.USER.route) {
+            if (authViewModel.currentUser == null) {
+                LaunchedEffect(Unit) {
+                    navController.navigate(Destination.LOGIN.route)
+                }
+            } else {
+                UserScreen(
+                    viewModel = authViewModel,
+                    onLogout = {
+                        navController.navigate(Destination.HOME.route) {
+                            popUpTo(0)
+                        }
+                    }
+                )
+            }
+        }
         composable(Destination.CARRITO.route){
-            CarritoScreen(
-                onNavigateToLogin = { navController.navigate(Destination.LOGIN.route) },
-                viewModel = carritoViewModel
-            )
+            if (authViewModel.currentUser == null) {
+                LaunchedEffect(Unit) {
+                    navController.navigate(Destination.LOGIN.route)
+                }
+            } else {
+                CarritoScreen(
+                    onNavigateToLogin = { navController.navigate(Destination.LOGIN.route) },
+                    viewModel = carritoViewModel
+                )
+            }
         }
 
-        composable(Destination.ACCOUNT.route){
-            AccountScreen(
-                onNavigateToLogin = { navController.navigate(Destination.LOGIN.route) },
-                onNavigateToRegister = { navController.navigate(Destination.REGISTER.route) },
-                viewModel = authViewModel
-            )
-        }
         composable(Destination.COTIZACION.route) {
-            CotizacionScreen(viewModel = cotizacionViewModel)
+            CotizacionScreen(
+                viewModel = cotizacionViewModel,
+                authViewModel = authViewModel,
+                onNavigateToLogin = { navController.navigate(Destination.LOGIN.route) },
+                onNavigateToRegister = { navController.navigate(Destination.REGISTER.route) }
+            )
         }
     }
 }

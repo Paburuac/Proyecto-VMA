@@ -6,7 +6,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.vmaindustrial.model.Cotizacion
+import com.example.vmaindustrial.model.ProductoCarritoSimplificado
 import com.example.vmaindustrial.repository.AuthRepository
+import io.github.jan.supabase.gotrue.auth
 import com.example.vmaindustrial.repository.CotizacionRepository
 import kotlinx.coroutines.launch
 
@@ -31,22 +33,26 @@ class CotizacionViewModel : ViewModel() {
     fun cargarCotizacionesUsuario() {
         viewModelScope.launch {
             isLoading = true
-            println("Debug: Cargando perfil de usuario...")
-            val perfil = authRepository.getUserProfile()
-            println("Debug: Perfil obtenido: $perfil")
-            if (perfil != null) {
-                println("Debug: Buscando cotizaciones para usuario_id: ${perfil.id}")
-                val result = repository.obtenerCotizacionesPorUsuario(perfil.id)
-                if (result.isSuccess) {
-                    misCotizaciones = result.getOrDefault(emptyList())
-                    println("Debug: Cotizaciones cargadas: ${misCotizaciones.size}")
+            println("DEBUG: [ViewModel] Ejecutando cargarCotizacionesUsuario")
+            
+            try {
+                val perfil = authRepository.getUserProfile()
+                println("DEBUG: [ViewModel] Perfil obtenido: $perfil")
+                
+                if (perfil != null && perfil.id != null) {
+                    println("DEBUG: [ViewModel] Solicitando cotizaciones para usuario_id: ${perfil.id}")
+                    misCotizaciones = repository.obtenerCotizacionesPorUsuario(perfil.id)
+                    println("DEBUG: [ViewModel] Cotizaciones cargadas: ${misCotizaciones.size}")
                 } else {
-                    println("Debug: Error al obtener cotizaciones: ${result.exceptionOrNull()?.message}")
+                    println("DEBUG: [ViewModel] No se pudo obtener el perfil o el ID es nulo")
+                    misCotizaciones = emptyList()
                 }
-            } else {
-                println("Debug: No se pudo obtener el perfil del usuario")
+            } catch (e: Exception) {
+                println("DEBUG: [ViewModel] Error: ${e.message}")
+                e.printStackTrace()
+            } finally {
+                isLoading = false
             }
-            isLoading = false
         }
     }
 
@@ -68,7 +74,7 @@ class CotizacionViewModel : ViewModel() {
                 email = email,
                 telefono = telefono,
                 mensaje = "Producto: $productoInteres\n\nMensaje: $mensaje",
-                productos_solicitados = emptyList() // Es una solicitud directa, no desde carrito
+                productos_solicitados = emptyList<ProductoCarritoSimplificado>() // Es una solicitud directa, no desde carrito
             )
 
             val result = repository.crearCotizacion(cotizacion)
