@@ -16,17 +16,27 @@ export default defineConfig({
   // Carpeta de salida del build de producción
   build: {
     outDir: 'dist',
-    // Copiar assets estáticos (CSS legacy, JS legacy, media, data)
     assetsDir: 'assets',
   },
 
   // Servidor de desarrollo local
   server: {
     port: 5173,
-    open: true,   // abre el navegador automáticamente con `npm run dev`
+    open: true,
   },
 
   // Variables de entorno: Vite expone solo las que empiezan con VITE_
-  // Definidas en .env — nunca hardcodearlas aquí
   envPrefix: 'VITE_',
+
+  // Configuración de Vitest
+  test: {
+    environment: 'jsdom',   // simula el DOM del navegador
+    globals: true,           // describe, it, expect disponibles sin importar
+    setupFiles: ['./src/tests/setup.js'],
+    coverage: {
+      reporter: ['text', 'html'],
+      include: ['src/**/*.js'],
+      exclude: ['src/tests/**'],
+    },
+  },
 })
