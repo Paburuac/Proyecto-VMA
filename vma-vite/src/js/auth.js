@@ -207,14 +207,18 @@ async function handleLogin(email, password) {
   if (ok) {
     document.getElementById('form-login')?.reset()
     limpiarLoginError()
+
+    // Usar _navegarA (sin re-verificar permisos) porque el rol
+    // ya está cargado en authState en este punto
     if (isAdmin()) {
-      showPage('page-inicio')
+      window._navegarA('page-inicio')
     } else if (isTrabajador()) {
-      showPage('page-trabajador')
+      window._navegarA('page-trabajador')
       if (typeof initPanelTrabajador === 'function') initPanelTrabajador()
     } else {
-      showPage('page-inicio')
+      window._navegarA('page-inicio')
     }
+
     showToast(`✅ Bienvenido, ${authState.perfil.nombre || authState.perfil.email}`)
   }
 }
@@ -236,7 +240,9 @@ async function handleLogout() {
   }
 
   actualizarHeaderUI()
-  showPage('page-inicio')
+  // Usar _navegarA — el usuario ya no tiene sesión,
+  // no necesita pasar por la verificación de permisos
+  window._navegarA('page-inicio')
   showToast('👋 Sesión cerrada correctamente.')
 }
 window.handleLogout = handleLogout
