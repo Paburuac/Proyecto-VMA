@@ -1,5 +1,6 @@
 package com.example.vmaindustrial.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

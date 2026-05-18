@@ -117,10 +117,10 @@ class CarritoViewModel : ViewModel() {
             }
 
             val cotizacion = Cotizacion(
-                usuario_id = perfil.id!!,
+                usuario_id = perfil.id,
                 nombre = perfil.nombre,
                 email = perfil.email,
-                telefono = perfil.telefono,
+                telefono = perfil.telefono?.ifBlank { null },
                 productos_solicitados = productosSimplificados
             )
 

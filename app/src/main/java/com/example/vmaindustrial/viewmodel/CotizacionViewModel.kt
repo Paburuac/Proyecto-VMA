@@ -68,13 +68,13 @@ class CotizacionViewModel : ViewModel() {
             val perfil = authRepository.getUserProfile()
             
             val cotizacion = Cotizacion(
-                usuario_id = perfil?.id ?: 0, // 0 si es invitado
+                usuario_id = perfil?.id, // null si es invitado
                 nombre = nombre,
-                empresa = empresa,
+                empresa = empresa.ifBlank { null },
                 email = email,
-                telefono = telefono,
+                telefono = telefono.ifBlank { null },
                 mensaje = "Producto: $productoInteres\n\nMensaje: $mensaje",
-                productos_solicitados = emptyList<ProductoCarritoSimplificado>() // Es una solicitud directa, no desde carrito
+                productos_solicitados = null // Es una solicitud directa, no enviamos lista vacía
             )
 
             val result = repository.crearCotizacion(cotizacion)

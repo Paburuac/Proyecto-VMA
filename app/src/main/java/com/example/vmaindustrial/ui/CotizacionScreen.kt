@@ -128,14 +128,15 @@ fun NuevaSolicitudTab(
             )
             Spacer(modifier = Modifier.width(16.dp))
             CotizacionField(
-                label = "EMPRESA *",
+                label = "EMPRESA",
                 value = viewModel.empresa,
                 onValueChange = { viewModel.empresa = it },
                 placeholder = "Nombre de la empresa",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
                 errorRed = errorRed,
-                showError = viewModel.hasAttemptedSubmit
+                showError = viewModel.hasAttemptedSubmit,
+                isRequired = false
             )
         }
 
@@ -154,14 +155,15 @@ fun NuevaSolicitudTab(
             )
             Spacer(modifier = Modifier.width(16.dp))
             CotizacionField(
-                label = "TELÉFONO *",
+                label = "TELÉFONO",
                 value = viewModel.telefono,
                 onValueChange = { viewModel.telefono = it },
                 placeholder = "+56 9 XXXX XXXX",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
                 errorRed = errorRed,
-                showError = viewModel.hasAttemptedSubmit
+                showError = viewModel.hasAttemptedSubmit,
+                isRequired = false
             )
         }
 

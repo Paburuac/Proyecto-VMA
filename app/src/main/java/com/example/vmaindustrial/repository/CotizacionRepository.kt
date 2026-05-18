@@ -13,9 +13,13 @@ class CotizacionRepository {
 
     suspend fun crearCotizacion(cotizacion: Cotizacion): Result<Unit> = withContext(Dispatchers.IO) {
         return@withContext try {
-            SupabaseClient.client.from("cotizaciones").insert(cotizacion)
+            println("DEBUG: Intentando insertar cotización: $cotizacion")
+            val response = SupabaseClient.client.from("cotizaciones").insert(cotizacion)
+            println("DEBUG: Respuesta de inserción exitosa")
             Result.success(Unit)
         } catch (e: Exception) {
+            println("DEBUG: Error en crearCotizacion: ${e.message}")
+            e.printStackTrace()
             Result.failure(e)
         }
     }

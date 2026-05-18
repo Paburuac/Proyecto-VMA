@@ -1,11 +1,12 @@
 package com.example.vmaindustrial.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductoCarritoSimplificado(
-    val id_producto: Int,
-    val descripcion: String,
+    @SerialName("id_producto") val id_producto: Int? = null,
+    val descripcion: String? = "Producto",
     val cantidad: Int,
-    val precio: String?
+    val precio: String? = null
 )

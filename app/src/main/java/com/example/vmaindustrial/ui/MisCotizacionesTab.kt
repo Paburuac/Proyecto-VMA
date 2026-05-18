@@ -4,7 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.History
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.example.vmaindustrial.model.Cotizacion
 import com.example.vmaindustrial.viewmodel.AuthViewModel
 import com.example.vmaindustrial.viewmodel.CotizacionViewModel
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -37,90 +40,117 @@ fun MisCotizacionesTab(
     brandGreen: Color,
     errorRed: Color
 ) {
-    if (authViewModel.currentUser == null) {
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(64.dp), tint = Color.LightGray)
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "Inicia sesión para ver tu historial", fontWeight = FontWeight.Bold)
-            Text(text = "Podrás hacer seguimiento a todas tus solicitudes.", textAlign = TextAlign.Center, color = Color.Gray, fontSize = 14.sp)
-            Spacer(modifier = Modifier.height(24.dp))
-            Button(
-                onClick = onNavigateToLogin,
-                colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
-            ) {
-                Text("Iniciar Sesión", color = Color.White)
-            }
-            TextButton(onClick = onNavigateToRegister) {
-                Text("Crear una cuenta", color = brandBlue)
-            }
-        }
-    } else {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Filtros
-            var selectedFilter by remember { mutableStateOf("Todas") }
-            val filters = remember { listOf("Todas", "Pendientes", "En revisión", "Respondidas") }
+    var selectedCotizacionForDetail by remember { mutableStateOf<Cotizacion?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-            val counts = remember(viewModel.misCotizaciones) {
-                mapOf(
-                    "Todas" to viewModel.misCotizaciones.size,
-                    "Pendientes" to viewModel.misCotizaciones.count { it.estado == "Pendiente" },
-                    "En revisión" to viewModel.misCotizaciones.count { it.estado == "En revisión" },
-                    "Respondidas" to viewModel.misCotizaciones.count { it.estado == "Respondida" }
-                )
-            }
+    if (selectedCotizacionForDetail != null) {
+        CotizacionDetalleDialog(
+            cotizacion = selectedCotizacionForDetail!!,
+            onDismiss = { selectedCotizacionForDetail = null },
+            brandBlue = brandBlue
+        )
+    }
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        containerColor = Color.Transparent
+    ) { padding ->
+        if (authViewModel.currentUser == null) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                filters.forEach { filter ->
-                    val count = counts[filter] ?: 0
-                    
-                    FilterChip(
-                        selected = selectedFilter == filter,
-                        onClick = { selectedFilter = filter },
-                        label = { Text("$filter $count") },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = brandBlue,
-                            selectedLabelColor = Color.White
-                        )
+                Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(64.dp), tint = Color.LightGray)
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = "Inicia sesión para ver tu historial", fontWeight = FontWeight.Bold)
+                Text(text = "Podrás hacer seguimiento a todas tus solicitudes.", textAlign = TextAlign.Center, color = Color.Gray, fontSize = 14.sp)
+                Spacer(modifier = Modifier.height(24.dp))
+                Button(
+                    onClick = onNavigateToLogin,
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
+                ) {
+                    Text("Iniciar Sesión", color = Color.White)
+                }
+                TextButton(onClick = onNavigateToRegister) {
+                    Text("Crear una cuenta", color = brandBlue)
+                }
+            }
+        } else {
+            Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+                // Filtros
+                var selectedFilter by remember { mutableStateOf("Todas") }
+                val filters = remember { listOf("Todas", "Pendientes", "En revisión", "Respondidas") }
+
+                val counts = remember(viewModel.misCotizaciones) {
+                    mapOf(
+                        "Todas" to viewModel.misCotizaciones.size,
+                        "Pendientes" to viewModel.misCotizaciones.count { it.estado == "Pendiente" },
+                        "En revisión" to viewModel.misCotizaciones.count { it.estado == "En revisión" },
+                        "Respondidas" to viewModel.misCotizaciones.count { it.estado == "Respondida" }
                     )
                 }
-            }
 
-            // Lista de Cotizaciones
-            if (viewModel.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = brandBlue)
-                }
-            } else {
-                val filteredList = remember(selectedFilter, viewModel.misCotizaciones) {
-                    when (selectedFilter) {
-                        "Pendientes" -> viewModel.misCotizaciones.filter { it.estado == "Pendiente" }
-                        "En revisión" -> viewModel.misCotizaciones.filter { it.estado == "En revisión" }
-                        "Respondidas" -> viewModel.misCotizaciones.filter { it.estado == "Respondida" }
-                        else -> viewModel.misCotizaciones
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    filters.forEach { filter ->
+                        val count = counts[filter] ?: 0
+                        
+                        FilterChip(
+                            selected = selectedFilter == filter,
+                            onClick = { selectedFilter = filter },
+                            label = { Text("$filter $count") },
+                            colors = FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = brandBlue,
+                                selectedLabelColor = Color.White
+                            )
+                        )
                     }
                 }
 
-                if (filteredList.isEmpty()) {
-                    Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        Text("No tienes cotizaciones en esta categoría")
+                // Lista de Cotizaciones
+                if (viewModel.isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(color = brandBlue)
                     }
                 } else {
-                    LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-                        items(filteredList) { cotizacion ->
-                            CotizacionItemCard(cotizacion, brandBlue, brandGreen)
+                    val filteredList = remember(selectedFilter, viewModel.misCotizaciones) {
+                        when (selectedFilter) {
+                            "Pendientes" -> viewModel.misCotizaciones.filter { it.estado == "Pendiente" }
+                            "En revisión" -> viewModel.misCotizaciones.filter { it.estado == "En revisión" }
+                            "Respondidas" -> viewModel.misCotizaciones.filter { it.estado == "Respondida" }
+                            else -> viewModel.misCotizaciones
+                        }
+                    }
+
+                    if (filteredList.isEmpty()) {
+                        Box(modifier = Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Text("No tienes cotizaciones en esta categoría")
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.weight(1f),
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            items(filteredList) { cotizacion ->
+                                CotizacionItemCard(
+                                    cotizacion = cotizacion,
+                                    brandBlue = brandBlue,
+                                    brandGreen = brandGreen,
+                                    onVerDetalle = { selectedCotizacionForDetail = cotizacion },
+                                    onDescargarPDF = {
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar("Generando PDF de la cotización #${cotizacion.id}...")
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -130,11 +160,17 @@ fun MisCotizacionesTab(
 }
 
 @Composable
-fun CotizacionItemCard(cotizacion: Cotizacion, brandBlue: Color, brandGreen: Color) {
+fun CotizacionItemCard(
+    cotizacion: Cotizacion,
+    brandBlue: Color,
+    brandGreen: Color,
+    onVerDetalle: () -> Unit,
+    onDescargarPDF: () -> Unit
+) {
     val formattedDate = remember(cotizacion.created_at) { formatDateTime(cotizacion.created_at) }
     val prodText = remember(cotizacion.productos_solicitados, cotizacion.mensaje) {
         if (!cotizacion.productos_solicitados.isNullOrEmpty()) {
-            cotizacion.productos_solicitados!!.joinToString(", ") { it.descripcion }
+            cotizacion.productos_solicitados!!.joinToString(", ") { it.descripcion ?: "Producto" }
         } else {
             cotizacion.mensaje?.substringBefore("\n")?.replace("Producto: ", "") ?: "Consultar"
         }
@@ -207,7 +243,7 @@ fun CotizacionItemCard(cotizacion: Cotizacion, brandBlue: Color, brandGreen: Col
                 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Button(
-                        onClick = { /* Ver detalle */ },
+                        onClick = onVerDetalle,
                         colors = ButtonDefaults.buttonColors(containerColor = brandBlue),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
                         modifier = Modifier.height(32.dp)
@@ -218,7 +254,7 @@ fun CotizacionItemCard(cotizacion: Cotizacion, brandBlue: Color, brandGreen: Col
                     }
                     
                     Button(
-                        onClick = { /* Descargar PDF */ },
+                        onClick = onDescargarPDF,
                         colors = ButtonDefaults.buttonColors(containerColor = brandGreen),
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
                         modifier = Modifier.height(32.dp)
@@ -230,6 +266,77 @@ fun CotizacionItemCard(cotizacion: Cotizacion, brandBlue: Color, brandGreen: Col
                 }
             }
         }
+    }
+}
+
+@Composable
+fun CotizacionDetalleDialog(
+    cotizacion: Cotizacion,
+    onDismiss: () -> Unit,
+    brandBlue: Color
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cerrar", color = brandBlue)
+            }
+        },
+        title = {
+            Text(
+                text = "Detalle de Cotización #${cotizacion.id ?: ""}",
+                fontWeight = FontWeight.Bold,
+                color = brandBlue
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                DetailRow("Estado", cotizacion.estado)
+                DetailRow("Fecha", formatDateTime(cotizacion.created_at))
+                DetailRow("Nombre", cotizacion.nombre)
+                DetailRow("Empresa", cotizacion.empresa ?: "---")
+                DetailRow("Email", cotizacion.email)
+                DetailRow("Teléfono", cotizacion.telefono ?: "---")
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Productos Solicitados:", fontWeight = FontWeight.Bold, color = brandBlue)
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                if (!cotizacion.productos_solicitados.isNullOrEmpty()) {
+                    cotizacion.productos_solicitados!!.forEach { producto ->
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.LightGray.copy(alpha = 0.2f))
+                        ) {
+                            Column(modifier = Modifier.padding(8.dp)) {
+                                Text(producto.descripcion ?: "Producto", fontWeight = FontWeight.SemiBold)
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Text("Cantidad: ${producto.cantidad}", fontSize = 12.sp)
+                                    Text("Precio: ${producto.precio ?: "Consultar"}", fontSize = 12.sp)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    Text(cotizacion.mensaje ?: "Sin detalles de productos.", fontSize = 14.sp)
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun DetailRow(label: String, value: String) {
+    Row(modifier = Modifier.padding(vertical = 2.dp)) {
+        Text("$label: ", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+        Text(value, fontSize = 14.sp)
     }
 }
 
