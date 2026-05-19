@@ -1,3 +1,12 @@
 [2026-05-10 16:07:39.895024] Reporte generado correctamente | Tipo: RESUMEN
 [2026-05-10 16:08:42.493839] Reporte generado correctamente | Tipo: REPORTE
 [2026-05-10 16:09:08.199990] Reporte generado correctamente | Tipo: ESTADISTICA
+[2026-05-18 18:31:55.170973] Reporte generado correctamente | Tipo: RESUMEN
+[2026-05-18 18:33:34.485965] Reporte generado correctamente | Tipo: REPORTE
+[2026-05-18 18:36:23.321926] Reporte generado correctamente | Tipo: ESTADISTICA
+[2026-05-18 19:15:51.200895] Reporte generado correctamente | Tipo: RESUMEN
+[2026-05-18 19:16:19.837018] Reporte generado correctamente | Tipo: REPORTE
+[2026-05-18 19:16:48.139118] Reporte generado correctamente | Tipo: ESTADISTICA
+[2026-05-18 20:04:16.942585] Reporte generado correctamente | Tipo: RESUMEN
+[2026-05-18 20:04:33.278555] Reporte generado correctamente | Tipo: REPORTE
+[2026-05-18 20:04:50.825835] Reporte generado correctamente | Tipo: ESTADISTICA
