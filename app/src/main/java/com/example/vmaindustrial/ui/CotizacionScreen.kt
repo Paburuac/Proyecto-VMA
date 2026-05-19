@@ -123,6 +123,7 @@ fun NuevaSolicitudTab(
                 placeholder = "Tu nombre completo",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
+                brandGreen = brandGreen,
                 errorRed = errorRed,
                 showError = viewModel.hasAttemptedSubmit
             )
@@ -134,6 +135,7 @@ fun NuevaSolicitudTab(
                 placeholder = "Nombre de la empresa",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
+                brandGreen = brandGreen,
                 errorRed = errorRed,
                 showError = viewModel.hasAttemptedSubmit,
                 isRequired = false
@@ -150,6 +152,7 @@ fun NuevaSolicitudTab(
                 placeholder = "correo@empresa.cl",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
+                brandGreen = brandGreen,
                 errorRed = errorRed,
                 showError = viewModel.hasAttemptedSubmit
             )
@@ -161,6 +164,7 @@ fun NuevaSolicitudTab(
                 placeholder = "+56 9 XXXX XXXX",
                 modifier = Modifier.weight(1f),
                 brandBlue = brandBlue,
+                brandGreen = brandGreen,
                 errorRed = errorRed,
                 showError = viewModel.hasAttemptedSubmit,
                 isRequired = false
@@ -175,6 +179,7 @@ fun NuevaSolicitudTab(
             onValueChange = { viewModel.productoInteres = it },
             placeholder = "Ej: Acetileno, Soldadora MIG 250A...",
             brandBlue = brandBlue,
+            brandGreen = brandGreen,
             errorRed = errorRed,
             isRequired = false,
             showError = viewModel.hasAttemptedSubmit
@@ -188,6 +193,7 @@ fun NuevaSolicitudTab(
             onValueChange = { viewModel.mensaje = it },
             placeholder = "Describe tu consulta o solicitud de cotización...",
             brandBlue = brandBlue,
+            brandGreen = brandGreen,
             errorRed = errorRed,
             isSingleLine = false,
             modifier = Modifier.height(150.dp),
@@ -231,6 +237,7 @@ fun CotizacionField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     brandBlue: Color,
+    brandGreen: Color,
     errorRed: Color,
     modifier: Modifier = Modifier,
     isRequired: Boolean = true,
@@ -238,11 +245,25 @@ fun CotizacionField(
     showError: Boolean = false
 ) {
     var hasBeenFocused by remember { mutableStateOf(false) }
+    
+    // Un campo es válido si no es obligatorio o si tiene contenido
+    val isFieldValid = !isRequired || value.isNotBlank()
+    
+    // Mostramos error solo si se ha intentado enviar o si el usuario lo tocó y lo dejó vacío
+    // Pero NO mostramos error si el valor está vacío porque se acaba de limpiar (showError es false)
+    val showFieldError = isRequired && value.isBlank() && (hasBeenFocused || showError) && showError
+
+    // Mostramos éxito (verde) si el campo tiene contenido y es válido
+    val showFieldSuccess = value.isNotBlank() && isFieldValid
 
     Column(modifier = modifier) {
         Text(
             text = label,
-            color = brandBlue,
+            color = when {
+                showFieldError -> errorRed
+                showFieldSuccess -> brandGreen
+                else -> brandBlue
+            },
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
         )
@@ -255,14 +276,16 @@ fun CotizacionField(
                 .onFocusChanged { if (it.isFocused) hasBeenFocused = true },
             placeholder = { Text(placeholder, fontSize = 14.sp) },
             singleLine = isSingleLine,
-            isError = (isRequired && value.isBlank() && (hasBeenFocused || showError)),
+            isError = showFieldError,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = brandBlue,
-                unfocusedBorderColor = Color.LightGray,
-                errorBorderColor = errorRed
+                focusedBorderColor = if (showFieldSuccess) brandGreen else brandBlue,
+                unfocusedBorderColor = if (showFieldSuccess) brandGreen else Color.LightGray,
+                errorBorderColor = errorRed,
+                focusedLabelColor = if (showFieldSuccess) brandGreen else brandBlue,
+                unfocusedLabelColor = if (showFieldSuccess) brandGreen else Color.Gray
             )
         )
-        if (isRequired && value.isBlank() && (hasBeenFocused || showError)) {
+        if (showFieldError) {
             Text(
                 text = "Este campo es obligatorio.",
                 color = errorRed,

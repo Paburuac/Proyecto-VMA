@@ -32,6 +32,7 @@ fun LoginScreen(
     }
 
     val brandBlue = Color(0xFF002E4F)
+    val brandGreen = Color(0xFF7CB342)
     val errorRed = Color(0xFFD32F2F)
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -61,6 +62,7 @@ fun LoginScreen(
                 onValueChange = { viewModel.email = it },
                 placeholder = "tu@correo.com",
                 brandBlue = brandBlue,
+                brandGreen = brandGreen,
                 errorRed = errorRed
             )
 
