@@ -26,12 +26,20 @@ from collections import defaultdict
 from pathlib import Path
 
 # ── Cargar .env ──────────────────────────────────────────────────
-try:
-    from dotenv import load_dotenv
-    load_dotenv(Path(__file__).parent.parent / "vma-vite" / ".env.txt")
-    load_dotenv(Path(__file__).parent.parent / "vma-vite" / ".env")
-except ImportError:
-    pass
+def _load_env_file(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip())
+    except FileNotFoundError:
+        pass
+
+_load_env_file(Path(__file__).parent / ".env")
+_load_env_file(Path(__file__).parent.parent / "vma-vite" / ".env.txt")
+_load_env_file(Path(__file__).parent.parent / "vma-vite" / ".env")
 
 # ── Intentar conectar a Supabase; si falla usar productos.json ───
 def cargar_productos():
@@ -40,13 +48,31 @@ def cargar_productos():
 
     if url and key and "xxxxx" not in url and "tu-proyecto" not in url:
         try:
-            from supabase import create_client
-            sb = create_client(url, key)
-            data = sb.table("producto").select(
-                "id_producto, codigo, descripcion, id_categoria"
-            ).order("descripcion").execute().data or []
-            print(f"[OK] Cargados {len(data)} productos desde Supabase")
-            return data, "supabase"
+            try:
+                import requests
+            except ImportError:
+                import subprocess
+                subprocess.check_call([sys.executable, "-m", "pip", "install", "requests", "-q"])
+                import requests
+            headers = {"apikey": key, "Authorization": f"Bearer {key}"}
+            todos = []
+            limit = 1000
+            offset = 0
+            while True:
+                resp = requests.get(
+                    f"{url}/rest/v1/producto",
+                    headers={**headers, "Range-Unit": "items", "Range": f"{offset}-{offset+limit-1}"},
+                    params={"select": "id_producto,codigo,descripcion,id_categoria", "order": "descripcion.asc"},
+                    timeout=15
+                )
+                resp.raise_for_status()
+                lote = resp.json()
+                todos.extend(lote)
+                if len(lote) < limit:
+                    break
+                offset += limit
+            print(f"[OK] Cargados {len(todos)} productos desde Supabase")
+            return todos, "supabase"
         except Exception as e:
             print(f"[WARN] Supabase no disponible ({e}), usando productos.json")
 
