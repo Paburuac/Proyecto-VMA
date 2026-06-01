@@ -331,30 +331,19 @@ async function cargarProductos() {
   adminState.productos  = prodRes.data  || []
   adminState.categorias = catRes.data   || []
 
-  renderTablaProductos(cont)
-}
-
-function renderTablaProductos(cont) {
-  const busq  = adminState.busquedaProducto.toLowerCase()
-  const prods = busq
-    ? adminState.productos.filter(p =>
-        p.descripcion?.toLowerCase().includes(busq) ||
-        p.codigo?.toLowerCase().includes(busq))
-    : adminState.productos
-
   const catOpts = adminState.categorias.map(c =>
     `<option value="${c.id_categoria}">${escHtml(c.nombre_categoria)}</option>`
   ).join('')
 
+  // Toolbar y formulario se renderizan UNA sola vez para no interrumpir el foco
   cont.innerHTML = `
     <div class="admin-toolbar">
-      <input type="text" class="admin-search" placeholder="🔍 Buscar por nombre o código..."
-        value="${escHtml(adminState.busquedaProducto)}"
-        oninput="adminBuscarProducto(this.value)">
+      <input type="text" id="admin-search-prod" class="admin-search"
+        placeholder="🔍 Buscar por nombre o código..."
+        value="${escHtml(adminState.busquedaProducto)}">
       <button class="admin-btn admin-btn-ok" onclick="adminAbrirFormProducto()">+ Nuevo producto</button>
     </div>
 
-    <!-- Formulario crear/editar producto -->
     <div id="admin-form-producto" class="admin-form-box" style="display:none">
       <h4 id="admin-form-prod-title">Nuevo producto</h4>
       <div class="admin-form-grid">
@@ -397,6 +386,30 @@ function renderTablaProductos(cont) {
       </div>
     </div>
 
+    <div id="admin-tabla-productos"></div>
+  `
+
+  // Listener de búsqueda en el input estático (no se re-crea al filtrar)
+  document.getElementById('admin-search-prod').addEventListener('input', function() {
+    adminState.busquedaProducto = this.value
+    renderTablaProductos()
+  })
+
+  renderTablaProductos()
+}
+
+function renderTablaProductos() {
+  const wrap = document.getElementById('admin-tabla-productos')
+  if (!wrap) return
+
+  const busq  = adminState.busquedaProducto.toLowerCase()
+  const prods = busq
+    ? adminState.productos.filter(p =>
+        p.descripcion?.toLowerCase().includes(busq) ||
+        p.codigo?.toLowerCase().includes(busq))
+    : adminState.productos
+
+  wrap.innerHTML = `
     <div class="admin-table-wrap">
       <table class="admin-table">
         <thead>
@@ -451,8 +464,7 @@ window.adminQuitarImagen = function() {
 
 window.adminBuscarProducto = function(val) {
   adminState.busquedaProducto = val
-  const cont = document.getElementById('admin-productos-content')
-  if (cont) renderTablaProductos(cont)
+  renderTablaProductos()
 }
 
 window.adminAbrirFormProducto = function() {
