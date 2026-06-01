@@ -30,6 +30,7 @@ const PRODUCTO_SELECT = `
   distribuidor,
   stock,
   imagen_url,
+  medidas,
   categoria (
     id_categoria,
     nombre_categoria
@@ -45,6 +46,7 @@ export async function obtenerProductos() {
   const { data, error } = await supabase
     .from('producto')
     .select(PRODUCTO_SELECT)
+    .or('es_variante.is.null,es_variante.eq.false')
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -98,6 +100,7 @@ export async function obtenerProductosPorCategoria(nombreCategoria) {
     .from('producto')
     .select(PRODUCTO_SELECT)
     .eq('id_categoria', catData.id_categoria)
+    .or('es_variante.is.null,es_variante.eq.false')
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -126,6 +129,7 @@ export async function buscarProductos(texto) {
     .from('producto')
     .select(PRODUCTO_SELECT)
     .or(`descripcion.ilike.%${termino}%,codigo.ilike.%${termino}%`)
+    .or('es_variante.is.null,es_variante.eq.false')
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -187,6 +191,7 @@ export function construirCatalogo(productos) {
       descripcion:  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
       // ✅ imagen_url desde Supabase — usado por renderProdCard y openModal
       imagen_url:   prod.imagen_url || null,
+      medidas:      prod.medidas || null,
       // Campos extra de Supabase
       id_producto:  prod.id_producto,
       id_categoria: prod.categoria?.id_categoria,

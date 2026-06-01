@@ -341,7 +341,7 @@ function renderProductos() {
   if (counter) counter.textContent = `${totalVisible} producto${totalVisible !== 1 ? 's' : ''}`;
 }
 
-/* ✅ CORREGIDO: usa imagen_url si existe, si no muestra el emoji/placeholder */
+/* Renderiza una card de producto. Si tiene medidas muestra badge de variantes */
 function renderProdCard(cat, sub, p) {
   const imgHtml = p.imagen_url
     ? `<img src="${escHtml(p.imagen_url)}" alt="${escHtml(p.nombre)}"
@@ -349,6 +349,9 @@ function renderProdCard(cat, sub, p) {
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     : '';
   const fallbackStyle = p.imagen_url ? 'display:none' : 'display:flex';
+  const variantesBadge = p.medidas?.length > 1
+    ? `<div class="prod-variantes-badge">${p.medidas.length} medidas disponibles</div>`
+    : '';
 
   return `
     <div class="prod-card" onclick="openModal('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}')">
@@ -359,6 +362,7 @@ function renderProdCard(cat, sub, p) {
       <div class="prod-info">
         <div class="prod-codigo">#${escHtml(p.codigo)}</div>
         <div class="prod-nombre">${escHtml(p.nombre)}</div>
+        ${variantesBadge}
         <div class="prod-precio">Precio: ${escHtml(p.precio)}</div>
         <button class="prod-btn-add" onclick="event.stopPropagation(); addToCart('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}',1)">
           + Agregar al carrito
@@ -384,9 +388,14 @@ function toggleSub(header) {
    MODAL DE PRODUCTO
 ----------------------------------------------- */
 
+// Código actualmente seleccionado en el modal (puede cambiar al elegir medida)
+let _modalCodigoActual = ''
+
 function openModal(codigo, cat, sub) {
   const prod = findProduct(codigo, cat, sub);
   if (!prod) return;
+
+  _modalCodigoActual = prod.codigo
 
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -400,7 +409,7 @@ function openModal(codigo, cat, sub) {
   document.getElementById('modal-precio').textContent = prod.precio;
   document.getElementById('modal-qty').value = 1;
 
-  // ✅ CORREGIDO: mostrar imagen real en el modal
+  // Imagen
   const modalImgEl = document.getElementById('modal-img');
   if (modalImgEl) {
     if (prod.imagen_url) {
@@ -412,15 +421,40 @@ function openModal(codigo, cat, sub) {
     }
   }
 
+  // Meta (distribuidor / stock)
   const metaEl = document.getElementById('modal-meta');
   let metaHtml = '';
   if (prod.distribuidor) metaHtml += `Distribuidor: <span>${escHtml(prod.distribuidor)}</span> &nbsp;`;
   if (prod.stock) metaHtml += `Stock: <span>${escHtml(prod.stock)}</span>`;
   metaEl.innerHTML = metaHtml || 'Consulte disponibilidad.';
 
+  // ── Selector de medidas ──────────────────────────────────────
+  const medidaWrap = document.getElementById('modal-medidas-wrap');
+  if (medidaWrap) {
+    if (prod.medidas && prod.medidas.length > 1) {
+      const opts = prod.medidas.map(m =>
+        `<option value="${escHtml(m.codigo)}" ${m.codigo === prod.codigo ? 'selected' : ''}>${escHtml(m.label)}</option>`
+      ).join('');
+      medidaWrap.innerHTML = `
+        <div class="modal-medida-label">Medida / Variante</div>
+        <select id="modal-medida-select" class="modal-medida-select">
+          ${opts}
+        </select>`;
+      medidaWrap.style.display = 'block';
+
+      document.getElementById('modal-medida-select').addEventListener('change', function() {
+        _modalCodigoActual = this.value
+        document.getElementById('modal-codigo').textContent = this.value
+      })
+    } else {
+      medidaWrap.innerHTML = '';
+      medidaWrap.style.display = 'none';
+    }
+  }
+
   document.getElementById('modal-add-cart').onclick = () => {
     const qty = parseInt(document.getElementById('modal-qty').value) || 1;
-    addToCart(codigo, cat, sub, qty);
+    addToCart(_modalCodigoActual, cat, sub, qty);
     closeModal();
   };
 

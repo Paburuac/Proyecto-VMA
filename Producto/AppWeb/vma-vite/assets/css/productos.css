@@ -431,6 +431,37 @@
 .modal-meta { font-size: 0.82rem; color: var(--gris-texto); margin-bottom: 1rem; }
 .modal-meta span { font-weight: 600; color: var(--azul); }
 .modal-desc { font-size: 0.9rem; color: var(--gris-texto); line-height: 1.6; margin-bottom: 1.2rem; border-top: 1px solid var(--gris-medio); padding-top: 1.2rem; }
+
+/* ─── Selector de medidas/variantes ─── */
+.modal-medida-label { font-size: 0.78rem; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.4rem; font-weight: 700; }
+.modal-medida-select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 2px solid var(--verde);
+  border-radius: var(--radio);
+  font-size: 0.92rem;
+  font-family: var(--font-main);
+  font-style: italic;
+  color: var(--azul);
+  background: var(--blanco);
+  cursor: pointer;
+  outline: none;
+  transition: var(--trans);
+}
+.modal-medida-select:focus { border-color: var(--azul); }
+
+/* ─── Badge de variantes en la card ─── */
+.prod-variantes-badge {
+  display: inline-block;
+  background: rgba(132,189,0,0.15);
+  color: #5a8a00;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-bottom: 0.4rem;
+}
+
 .modal-precio-label { font-size: 0.78rem; color: var(--gris-texto); text-transform: uppercase; letter-spacing: 1px; }
 .modal-precio { font-size: 1.5rem; font-weight: 700; color: var(--azul); margin-bottom: 1.2rem; }
 .qty-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }

@@ -1,0 +1,2557 @@
+{
+  "FILTRO DE AIRE 200L 3HP": {
+    "base_nombre": "FILTRO DE AIRE 200L 3HP",
+    "padre": {
+      "id": 5,
+      "codigo": "44491",
+      "nombre": "FILTRO DE AIRE 200L 3HP"
+    },
+    "medidas": [
+      {
+        "codigo": "44491",
+        "label": "FILTRO DE AIRE 200L 3HP",
+        "id": 5
+      },
+      {
+        "codigo": "444911",
+        "label": "FILTRO DE AIRE 200L 3HP",
+        "id": 70
+      }
+    ]
+  },
+  "REGULADOR FLUJOMETRO DE ARGON": {
+    "base_nombre": "REGULADOR FLUJOMETRO DE ARGON",
+    "padre": {
+      "id": 25,
+      "codigo": "1013045",
+      "nombre": "REGULADOR FLUJOMETRO DE ARGON"
+    },
+    "medidas": [
+      {
+        "codigo": "1013045",
+        "label": "REGULADOR FLUJOMETRO DE ARGON",
+        "id": 25
+      },
+      {
+        "codigo": "1015724",
+        "label": "REGULADOR FLUJOMETRO DE ARGON",
+        "id": 28
+      }
+    ]
+  },
+  "REGULADOR FLUJOMETRO DUAL ARGON (CAJA)": {
+    "base_nombre": "REGULADOR FLUJOMETRO DUAL ARGON (CAJA)",
+    "padre": {
+      "id": 29,
+      "codigo": "1016477",
+      "nombre": "REGULADOR FLUJOMETRO DUAL ARGON (CAJA)"
+    },
+    "medidas": [
+      {
+        "codigo": "1016477",
+        "label": "REGULADOR FLUJOMETRO DUAL ARGON (CAJA)",
+        "id": 29
+      },
+      {
+        "codigo": "1053469",
+        "label": "REGULADOR FLUJOMETRO DUAL ARGON (CAJA)",
+        "id": 63
+      }
+    ]
+  },
+  "CILINDRO ALTA PRESION PARA OXIGENO": {
+    "base_nombre": "CILINDRO ALTA PRESION PARA OXIGENO",
+    "padre": {
+      "id": 31,
+      "codigo": "1023771",
+      "nombre": "CILINDRO ALTA PRESION PARA OXIGENO 10 M3"
+    },
+    "medidas": [
+      {
+        "codigo": "1023771",
+        "label": "10 M3",
+        "id": 31
+      },
+      {
+        "codigo": "1023773",
+        "label": "2 M3",
+        "id": 33
+      },
+      {
+        "codigo": "1023786",
+        "label": "3 M3",
+        "id": 46
+      },
+      {
+        "codigo": "1023779",
+        "label": "6 M3",
+        "id": 39
+      }
+    ]
+  },
+  "CILINDRO ALTA PRESION PARA ARGON": {
+    "base_nombre": "CILINDRO ALTA PRESION PARA ARGON",
+    "padre": {
+      "id": 38,
+      "codigo": "1023778",
+      "nombre": "CILINDRO ALTA PRESION PARA ARGON 10 M3"
+    },
+    "medidas": [
+      {
+        "codigo": "1023778",
+        "label": "10 M3",
+        "id": 38
+      },
+      {
+        "codigo": "1023774",
+        "label": "2 M3",
+        "id": 34
+      },
+      {
+        "codigo": "1023788",
+        "label": "3 M3",
+        "id": 48
+      },
+      {
+        "codigo": "1023772",
+        "label": "6 M3",
+        "id": 32
+      }
+    ]
+  },
+  "CILINDRO ALTA PRESION PARA MEZCLA": {
+    "base_nombre": "CILINDRO ALTA PRESION PARA MEZCLA",
+    "padre": {
+      "id": 42,
+      "codigo": "1023782",
+      "nombre": "CILINDRO ALTA PRESION PARA MEZCLA 10 M3"
+    },
+    "medidas": [
+      {
+        "codigo": "1023782",
+        "label": "10 M3",
+        "id": 42
+      },
+      {
+        "codigo": "1023775",
+        "label": "2 M3",
+        "id": 35
+      },
+      {
+        "codigo": "1023787",
+        "label": "3 M3",
+        "id": 47
+      },
+      {
+        "codigo": "102378",
+        "label": "6 M3",
+        "id": 40
+      }
+    ]
+  },
+  "CILINDRO ALTA PRESION PARA NITROGENO": {
+    "base_nombre": "CILINDRO ALTA PRESION PARA NITROGENO",
+    "padre": {
+      "id": 36,
+      "codigo": "1023776",
+      "nombre": "CILINDRO ALTA PRESION PARA NITROGENO 10 M3"
+    },
+    "medidas": [
+      {
+        "codigo": "1023776",
+        "label": "10 M3",
+        "id": 36
+      },
+      {
+        "codigo": "1023785",
+        "label": "3 M3",
+        "id": 45
+      },
+      {
+        "codigo": "1023781",
+        "label": "6 M3",
+        "id": 41
+      }
+    ]
+  },
+  "FILTRO 3M 6004 AMONIACO Y METI": {
+    "base_nombre": "FILTRO 3M 6004 AMONIACO Y METI",
+    "padre": {
+      "id": 51,
+      "codigo": "1029119",
+      "nombre": "FILTRO 3M 6004 AMONIACO Y METI"
+    },
+    "medidas": [
+      {
+        "codigo": "1029119",
+        "label": "FILTRO 3M 6004 AMONIACO Y METI",
+        "id": 51
+      },
+      {
+        "codigo": "1018438",
+        "label": "FILTRO 3M 6004 AMONIACO Y METI",
+        "id": 975
+      }
+    ]
+  },
+  "FILTRO 3M 2091 PARTICULAS": {
+    "base_nombre": "FILTRO 3M 2091 PARTICULAS",
+    "padre": {
+      "id": 52,
+      "codigo": "1029126",
+      "nombre": "FILTRO 3M 2091 PARTICULAS"
+    },
+    "medidas": [
+      {
+        "codigo": "1029126",
+        "label": "FILTRO 3M 2091 PARTICULAS",
+        "id": 52
+      },
+      {
+        "codigo": "240104",
+        "label": "FILTRO 3M 2091 PARTICULAS",
+        "id": 1247
+      }
+    ]
+  },
+  "CILINDRO DE ACETILENO": {
+    "base_nombre": "CILINDRO DE ACETILENO",
+    "padre": {
+      "id": 74,
+      "codigo": "10018461",
+      "nombre": "CILINDRO DE ACETILENO"
+    },
+    "medidas": [
+      {
+        "codigo": "10018461",
+        "label": "CILINDRO DE ACETILENO",
+        "id": 74
+      },
+      {
+        "codigo": "15-MED",
+        "label": "CILINDRO DE ACETILENO",
+        "id": 97
+      }
+    ]
+  },
+  "REGULADOR CO2 C/FLUJOMETRO 601D 30 FAR": {
+    "base_nombre": "REGULADOR CO2 C/FLUJOMETRO 601D 30 FAR",
+    "padre": {
+      "id": 78,
+      "codigo": "10083022",
+      "nombre": "REGULADOR CO2 C/FLUJOMETRO 601D 30 FAR"
+    },
+    "medidas": [
+      {
+        "codigo": "10083022",
+        "label": "REGULADOR CO2 C/FLUJOMETRO 601D 30 FAR",
+        "id": 78
+      },
+      {
+        "codigo": "100267",
+        "label": "REGULADOR CO2 C/FLUJOMETRO 601D 30 FAR",
+        "id": 199
+      }
+    ]
+  },
+  "OXIGENO INDUSTRIAL 6 M3 (CL. 2.2 NU 1072)": {
+    "base_nombre": "OXIGENO INDUSTRIAL 6 M3 (CL. 2.2 NU 1072)",
+    "padre": {
+      "id": 101,
+      "codigo": "1-K",
+      "nombre": "OXIGENO INDUSTRIAL 6 M3 (CL. 2.2 NU 1072)"
+    },
+    "medidas": [
+      {
+        "codigo": "1-K",
+        "label": "OXIGENO INDUSTRIAL 6 M3 (CL. 2.2 NU 1072)",
+        "id": 101
+      },
+      {
+        "codigo": "1-N",
+        "label": "OXIGENO INDUSTRIAL 6 M3 (CL. 2.2 NU 1072)",
+        "id": 102
+      }
+    ]
+  },
+  "MEZCLA AR/CO2 10 M3  (CL. 2.2 NU 1956)": {
+    "base_nombre": "MEZCLA AR/CO2 10 M3  (CL. 2.2 NU 1956)",
+    "padre": {
+      "id": 107,
+      "codigo": "278-H",
+      "nombre": "MEZCLA AR/CO2 10 M3  (CL. 2.2 NU 1956)"
+    },
+    "medidas": [
+      {
+        "codigo": "278-H",
+        "label": "MEZCLA AR/CO2 10 M3  (CL. 2.2 NU 1956)",
+        "id": 107
+      },
+      {
+        "codigo": "P278-H",
+        "label": "MEZCLA AR/CO2 10 M3  (CL. 2.2 NU 1956)",
+        "id": 167
+      }
+    ]
+  },
+  "OXIGENO 6 M3 TIPO K PART (CL. 2.2 NU 1072)": {
+    "base_nombre": "OXIGENO 6 M3 TIPO K PART (CL. 2.2 NU 1072)",
+    "padre": {
+      "id": 151,
+      "codigo": "P1-K",
+      "nombre": "OXIGENO 6 M3 TIPO K PART (CL. 2.2 NU 1072)"
+    },
+    "medidas": [
+      {
+        "codigo": "P1-K",
+        "label": "OXIGENO 6 M3 TIPO K PART (CL. 2.2 NU 1072)",
+        "id": 151
+      },
+      {
+        "codigo": "PC1-K",
+        "label": "OXIGENO 6 M3 TIPO K PART (CL. 2.2 NU 1072)",
+        "id": 188
+      }
+    ]
+  },
+  "ARGON GASEOSO 7 M3 PART (CL. 2.2 NU 1006)": {
+    "base_nombre": "ARGON GASEOSO 7 M3 PART (CL. 2.2 NU 1006)",
+    "padre": {
+      "id": 161,
+      "codigo": "P24-N",
+      "nombre": "ARGON GASEOSO 7 M3 PART (CL. 2.2 NU 1006)"
+    },
+    "medidas": [
+      {
+        "codigo": "P24-N",
+        "label": "ARGON GASEOSO 7 M3 PART (CL. 2.2 NU 1006)",
+        "id": 161
+      },
+      {
+        "codigo": "PC24-N",
+        "label": "ARGON GASEOSO 7 M3 PART (CL. 2.2 NU 1006)",
+        "id": 189
+      }
+    ]
+  },
+  "MEZCLA AR/CO2 7 M3  (CL. 2.2 NU 1956)": {
+    "base_nombre": "MEZCLA AR/CO2 7 M3  (CL. 2.2 NU 1956)",
+    "padre": {
+      "id": 169,
+      "codigo": "P278-N",
+      "nombre": "MEZCLA AR/CO2 7 M3  (CL. 2.2 NU 1956)"
+    },
+    "medidas": [
+      {
+        "codigo": "P278-N",
+        "label": "MEZCLA AR/CO2 7 M3  (CL. 2.2 NU 1956)",
+        "id": 169
+      },
+      {
+        "codigo": "PC278-N",
+        "label": "MEZCLA AR/CO2 7 M3  (CL. 2.2 NU 1956)",
+        "id": 190
+      }
+    ]
+  },
+  "NITROGENO  6 M3 PART (CL. 2.2 NU 1066)": {
+    "base_nombre": "NITROGENO  6 M3 PART (CL. 2.2 NU 1066)",
+    "padre": {
+      "id": 184,
+      "codigo": "P44-K",
+      "nombre": "NITROGENO  6 M3 PART (CL. 2.2 NU 1066)"
+    },
+    "medidas": [
+      {
+        "codigo": "P44-K",
+        "label": "NITROGENO  6 M3 PART (CL. 2.2 NU 1066)",
+        "id": 184
+      },
+      {
+        "codigo": "PC44-K",
+        "label": "NITROGENO  6 M3 PART (CL. 2.2 NU 1066)",
+        "id": 192
+      }
+    ]
+  },
+  "EQUIPO CORTE PLASMA CUT": {
+    "base_nombre": "EQUIPO CORTE PLASMA CUT-45",
+    "padre": {
+      "id": 196,
+      "codigo": "100045",
+      "nombre": "EQUIPO CORTE PLASMA CUT-45"
+    },
+    "medidas": [
+      {
+        "codigo": "100045",
+        "label": "EQUIPO CORTE PLASMA CUT-45",
+        "id": 196
+      },
+      {
+        "codigo": "1035397",
+        "label": "EQUIPO CORTE PLASMA CUT-45",
+        "id": 355
+      }
+    ]
+  },
+  "PISTOLA TIG 125 AMP.WP-9V-12-R(12 LARGO)": {
+    "base_nombre": "PISTOLA TIG 125 AMP.WP-9V-12-R(12 LARGO)",
+    "padre": {
+      "id": 223,
+      "codigo": "1000194",
+      "nombre": "PISTOLA TIG 125 AMP.WP-9V-12-R(12 LARGO)"
+    },
+    "medidas": [
+      {
+        "codigo": "1000194",
+        "label": "PISTOLA TIG 125 AMP.WP-9V-12-R(12 LARGO)",
+        "id": 223
+      },
+      {
+        "codigo": "1014709",
+        "label": "PISTOLA TIG 125 AMP.WP-9V-12-R(12 LARGO)",
+        "id": 315
+      }
+    ]
+  },
+  "ADITAMENTO DE CORTE 72": {
+    "base_nombre": "ADITAMENTO DE CORTE 72-3",
+    "padre": {
+      "id": 233,
+      "codigo": "1001524",
+      "nombre": "ADITAMENTO DE CORTE 72-3"
+    },
+    "medidas": [
+      {
+        "codigo": "1001524",
+        "label": "ADITAMENTO DE CORTE 72-3",
+        "id": 233
+      },
+      {
+        "codigo": "1036183",
+        "label": "ADITAMENTO DE CORTE 72-3",
+        "id": 357
+      }
+    ]
+  },
+  "EQUIPO SOLDAR Y CORTAR FLAMEPOWER": {
+    "base_nombre": "EQUIPO SOLDAR Y CORTAR FLAMEPOWER",
+    "padre": {
+      "id": 290,
+      "codigo": "1007322",
+      "nombre": "EQUIPO SOLDAR Y CORTAR FLAMEPOWER"
+    },
+    "medidas": [
+      {
+        "codigo": "1007322",
+        "label": "EQUIPO SOLDAR Y CORTAR FLAMEPOWER",
+        "id": 290
+      },
+      {
+        "codigo": "1009349",
+        "label": "EQUIPO SOLDAR Y CORTAR FLAMEPOWER",
+        "id": 305
+      }
+    ]
+  },
+  "PISTOLA TIG 150A WP-17V-12-R": {
+    "base_nombre": "PISTOLA TIG 150A WP-17V-12-R",
+    "padre": {
+      "id": 316,
+      "codigo": "1014711",
+      "nombre": "PISTOLA TIG 150A WP-17V-12-R"
+    },
+    "medidas": [
+      {
+        "codigo": "1014711",
+        "label": "PISTOLA TIG 150A WP-17V-12-R",
+        "id": 316
+      },
+      {
+        "codigo": "1040843",
+        "label": "PISTOLA TIG 150A WP-17V-12-R",
+        "id": 365
+      },
+      {
+        "codigo": "10408432",
+        "label": "PISTOLA TIG 150A WP-17V-12-R",
+        "id": 537
+      }
+    ]
+  },
+  "REGULADOR Y FLUJOMETRO 0-15 LPM GCE": {
+    "base_nombre": "REGULADOR Y FLUJOMETRO 0-15 LPM GCE",
+    "padre": {
+      "id": 322,
+      "codigo": "10152",
+      "nombre": "REGULADOR Y FLUJOMETRO 0-15 LPM GCE"
+    },
+    "medidas": [
+      {
+        "codigo": "10152",
+        "label": "REGULADOR Y FLUJOMETRO 0-15 LPM GCE",
+        "id": 322
+      },
+      {
+        "codigo": "1015201",
+        "label": "REGULADOR Y FLUJOMETRO 0-15 LPM GCE",
+        "id": 323
+      }
+    ]
+  },
+  "ANILLO DIFUSOR": {
+    "base_nombre": "ANILLO DIFUSOR 220",
+    "padre": {
+      "id": 361,
+      "codigo": "1039218",
+      "nombre": "ANILLO DIFUSOR 220857"
+    },
+    "medidas": [
+      {
+        "codigo": "1039218",
+        "label": "857",
+        "id": 361
+      },
+      {
+        "codigo": "1039219",
+        "label": "994",
+        "id": 362
+      }
+    ]
+  },
+  "ELECTRODO 6010 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 6010 3/32 (2.4 MM)",
+    "padre": {
+      "id": 391,
+      "codigo": "200005",
+      "nombre": "ELECTRODO 6010 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "200005",
+        "label": "ELECTRODO 6010 3/32 (2.4 MM)",
+        "id": 391
+      },
+      {
+        "codigo": "2000050H",
+        "label": "ELECTRODO 6010 3/32 (2.4 MM)",
+        "id": 544
+      },
+      {
+        "codigo": "2000050L",
+        "label": "ELECTRODO 6010 3/32 (2.4 MM)",
+        "id": 545
+      }
+    ]
+  },
+  "ELECTRODO 6010 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 6010 1/8 (3.2 MM)",
+    "padre": {
+      "id": 392,
+      "codigo": "2000051",
+      "nombre": "ELECTRODO 6010 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000051",
+        "label": "ELECTRODO 6010 1/8 (3.2 MM)",
+        "id": 392
+      },
+      {
+        "codigo": "2000051H",
+        "label": "ELECTRODO 6010 1/8 (3.2 MM)",
+        "id": 546
+      },
+      {
+        "codigo": "2000051L",
+        "label": "ELECTRODO 6010 1/8 (3.2 MM)",
+        "id": 547
+      }
+    ]
+  },
+  "ELECTRODO 6010 5/32 (4.0 MM)": {
+    "base_nombre": "ELECTRODO 6010 5/32 (4.0 MM)",
+    "padre": {
+      "id": 393,
+      "codigo": "2000052",
+      "nombre": "ELECTRODO 6010 5/32 (4.0 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000052",
+        "label": "ELECTRODO 6010 5/32 (4.0 MM)",
+        "id": 393
+      },
+      {
+        "codigo": "2000052H",
+        "label": "ELECTRODO 6010 5/32 (4.0 MM)",
+        "id": 548
+      }
+    ]
+  },
+  "ELECTRODO 6011 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 6011 3/32 (2.4 MM)",
+    "padre": {
+      "id": 399,
+      "codigo": "2000093",
+      "nombre": "ELECTRODO 6011 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000093",
+        "label": "ELECTRODO 6011 3/32 (2.4 MM)",
+        "id": 399
+      },
+      {
+        "codigo": "2000093H",
+        "label": "ELECTRODO 6011 3/32 (2.4 MM)",
+        "id": 549
+      }
+    ]
+  },
+  "ELECTRODO 6011 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 6011 1/8 (3.2 MM)",
+    "padre": {
+      "id": 400,
+      "codigo": "2000094",
+      "nombre": "ELECTRODO 6011 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000094",
+        "label": "ELECTRODO 6011 1/8 (3.2 MM)",
+        "id": 400
+      },
+      {
+        "codigo": "2000094H",
+        "label": "ELECTRODO 6011 1/8 (3.2 MM)",
+        "id": 550
+      }
+    ]
+  },
+  "ELECTRODO 8018-C1 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 8018-C1 1/8 (3.2 MM)",
+    "padre": {
+      "id": 410,
+      "codigo": "2000134",
+      "nombre": "ELECTRODO 8018-C1 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000134",
+        "label": "ELECTRODO 8018-C1 1/8 (3.2 MM)",
+        "id": 410
+      },
+      {
+        "codigo": "2000134H",
+        "label": "ELECTRODO 8018-C1 1/8 (3.2 MM)",
+        "id": 556
+      }
+    ]
+  },
+  "ELECTRODO 110-18M  1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 110-18M  1/8 (3.2 MM)",
+    "padre": {
+      "id": 412,
+      "codigo": "2000141",
+      "nombre": "ELECTRODO 110-18M  1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000141",
+        "label": "ELECTRODO 110-18M  1/8 (3.2 MM)",
+        "id": 412
+      },
+      {
+        "codigo": "2000141H",
+        "label": "ELECTRODO 110-18M  1/8 (3.2 MM)",
+        "id": 557
+      }
+    ]
+  },
+  "ELECTRODO 309-L 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 309-L 3/32 (2.4 MM)",
+    "padre": {
+      "id": 414,
+      "codigo": "2000154",
+      "nombre": "ELECTRODO 309-L 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000154",
+        "label": "ELECTRODO 309-L 3/32 (2.4 MM)",
+        "id": 414
+      },
+      {
+        "codigo": "2000154H",
+        "label": "ELECTRODO 309-L 3/32 (2.4 MM)",
+        "id": 558
+      }
+    ]
+  },
+  "ELECTRODO 309-L 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 309-L 1/8 (3.2 MM)",
+    "padre": {
+      "id": 415,
+      "codigo": "2000155",
+      "nombre": "ELECTRODO 309-L 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000155",
+        "label": "ELECTRODO 309-L 1/8 (3.2 MM)",
+        "id": 415
+      },
+      {
+        "codigo": "2000155H",
+        "label": "ELECTRODO 309-L 1/8 (3.2 MM)",
+        "id": 559
+      }
+    ]
+  },
+  "ELECTRODO NI-99 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO NI-99 1/8 (3.2 MM)",
+    "padre": {
+      "id": 428,
+      "codigo": "2000236",
+      "nombre": "ELECTRODO NI-99 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000236",
+        "label": "ELECTRODO NI-99 1/8 (3.2 MM)",
+        "id": 428
+      },
+      {
+        "codigo": "2000236H",
+        "label": "ELECTRODO NI-99 1/8 (3.2 MM)",
+        "id": 560
+      }
+    ]
+  },
+  "ELECTRODO NI-99 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO NI-99 3/32 (2.4 MM)",
+    "padre": {
+      "id": 429,
+      "codigo": "2000237",
+      "nombre": "ELECTRODO NI-99 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000237",
+        "label": "ELECTRODO NI-99 3/32 (2.4 MM)",
+        "id": 429
+      },
+      {
+        "codigo": "2000237H",
+        "label": "ELECTRODO NI-99 3/32 (2.4 MM)",
+        "id": 561
+      }
+    ]
+  },
+  "ELECTRODO OVERLAY 60 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO OVERLAY 60 1/8 (3.2 MM)",
+    "padre": {
+      "id": 432,
+      "codigo": "2000254",
+      "nombre": "ELECTRODO OVERLAY 60 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000254",
+        "label": "ELECTRODO OVERLAY 60 1/8 (3.2 MM)",
+        "id": 432
+      },
+      {
+        "codigo": "2000254H",
+        "label": "ELECTRODO OVERLAY 60 1/8 (3.2 MM)",
+        "id": 562
+      }
+    ]
+  },
+  "ELECTRODO OVERLAY 60 5/32 (4.0 MM)": {
+    "base_nombre": "ELECTRODO OVERLAY 60 5/32 (4.0 MM)",
+    "padre": {
+      "id": 433,
+      "codigo": "2000255",
+      "nombre": "ELECTRODO OVERLAY 60 5/32 (4.0 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000255",
+        "label": "ELECTRODO OVERLAY 60 5/32 (4.0 MM)",
+        "id": 433
+      },
+      {
+        "codigo": "2000255H",
+        "label": "ELECTRODO OVERLAY 60 5/32 (4.0 MM)",
+        "id": 563
+      }
+    ]
+  },
+  "ELECTRODO SUPER ALLOY 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO SUPER ALLOY 1/8 (3.2 MM)",
+    "padre": {
+      "id": 435,
+      "codigo": "2000261",
+      "nombre": "ELECTRODO SUPER ALLOY 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000261",
+        "label": "ELECTRODO SUPER ALLOY 1/8 (3.2 MM)",
+        "id": 435
+      },
+      {
+        "codigo": "20002611",
+        "label": "ELECTRODO SUPER ALLOY 1/8 (3.2 MM)",
+        "id": 539
+      }
+    ]
+  },
+  "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)",
+    "padre": {
+      "id": 436,
+      "codigo": "2000264",
+      "nombre": "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000264",
+        "label": "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)",
+        "id": 436
+      },
+      {
+        "codigo": "20002641",
+        "label": "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)",
+        "id": 540
+      },
+      {
+        "codigo": "2000264H",
+        "label": "ELECTRODO SUPER ALLOY 3/32 (2.4 MM)",
+        "id": 564
+      }
+    ]
+  },
+  "ELECTRODO NI-55 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO NI-55 3/32 (2.4 MM)",
+    "padre": {
+      "id": 437,
+      "codigo": "2000265",
+      "nombre": "ELECTRODO NI-55 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000265",
+        "label": "ELECTRODO NI-55 3/32 (2.4 MM)",
+        "id": 437
+      },
+      {
+        "codigo": "2000265H",
+        "label": "ELECTRODO NI-55 3/32 (2.4 MM)",
+        "id": 565
+      }
+    ]
+  },
+  "ELECTRODO NI-55 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO NI-55 1/8 (3.2 MM)",
+    "padre": {
+      "id": 438,
+      "codigo": "2000266",
+      "nombre": "ELECTRODO NI-55 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000266",
+        "label": "ELECTRODO NI-55 1/8 (3.2 MM)",
+        "id": 438
+      },
+      {
+        "codigo": "2000266H",
+        "label": "ELECTRODO NI-55 1/8 (3.2 MM)",
+        "id": 566
+      }
+    ]
+  },
+  "ELECTRODO 312-16 29-9S 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 312-16 29-9S 3/32 (2.4 MM)",
+    "padre": {
+      "id": 441,
+      "codigo": "2000321",
+      "nombre": "ELECTRODO 312-16 29-9S 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000321",
+        "label": "ELECTRODO 312-16 29-9S 3/32 (2.4 MM)",
+        "id": 441
+      },
+      {
+        "codigo": "2000321H",
+        "label": "ELECTRODO 312-16 29-9S 3/32 (2.4 MM)",
+        "id": 567
+      }
+    ]
+  },
+  "ELECTRODO 308-L 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 308-L 3/32 (2.4 MM)",
+    "padre": {
+      "id": 442,
+      "codigo": "2000325",
+      "nombre": "ELECTRODO 308-L 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000325",
+        "label": "ELECTRODO 308-L 3/32 (2.4 MM)",
+        "id": 442
+      },
+      {
+        "codigo": "2000325H",
+        "label": "ELECTRODO 308-L 3/32 (2.4 MM)",
+        "id": 569
+      }
+    ]
+  },
+  "ELECTRODO 308-L 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 308-L 1/8 (3.2 MM)",
+    "padre": {
+      "id": 443,
+      "codigo": "2000326",
+      "nombre": "ELECTRODO 308-L 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000326",
+        "label": "ELECTRODO 308-L 1/8 (3.2 MM)",
+        "id": 443
+      },
+      {
+        "codigo": "2000326H",
+        "label": "ELECTRODO 308-L 1/8 (3.2 MM)",
+        "id": 570
+      }
+    ]
+  },
+  "ELECTRODO 316-L 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 316-L 3/32 (2.4 MM)",
+    "padre": {
+      "id": 444,
+      "codigo": "200033",
+      "nombre": "ELECTRODO 316-L 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "200033",
+        "label": "ELECTRODO 316-L 3/32 (2.4 MM)",
+        "id": 444
+      },
+      {
+        "codigo": "2000330H",
+        "label": "ELECTRODO 316-L 3/32 (2.4 MM)",
+        "id": 571
+      }
+    ]
+  },
+  "ELECTRODO 316-L 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 316-L 1/8 (3.2 MM)",
+    "padre": {
+      "id": 445,
+      "codigo": "2000331",
+      "nombre": "ELECTRODO 316-L 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000331",
+        "label": "ELECTRODO 316-L 1/8 (3.2 MM)",
+        "id": 445
+      },
+      {
+        "codigo": "2000331H",
+        "label": "ELECTRODO 316-L 1/8 (3.2 MM)",
+        "id": 572
+      },
+      {
+        "codigo": "2000331S",
+        "label": "ELECTRODO 316-L 1/8 (3.2 MM)",
+        "id": 573
+      }
+    ]
+  },
+  "PORTAELECTRODO 500 AMPS": {
+    "base_nombre": "PORTAELECTRODO 500 AMPS",
+    "padre": {
+      "id": 534,
+      "codigo": "10211721",
+      "nombre": "PORTAELECTRODO 500 AMPS"
+    },
+    "medidas": [
+      {
+        "codigo": "10211721",
+        "label": "PORTAELECTRODO 500 AMPS",
+        "id": 534
+      },
+      {
+        "codigo": "1021172",
+        "label": "PORTAELECTRODO 500 AMPS",
+        "id": 979
+      }
+    ]
+  },
+  "ELECTRODO 7018 3/32 (2.4 MM)": {
+    "base_nombre": "ELECTRODO 7018 3/32 (2.4 MM)",
+    "padre": {
+      "id": 551,
+      "codigo": "2000121H",
+      "nombre": "ELECTRODO 7018 3/32 (2.4 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000121H",
+        "label": "ELECTRODO 7018 3/32 (2.4 MM)",
+        "id": 551
+      },
+      {
+        "codigo": "2000121L",
+        "label": "ELECTRODO 7018 3/32 (2.4 MM)",
+        "id": 552
+      }
+    ]
+  },
+  "ELECTRODO 7018 1/8 (3.2 MM)": {
+    "base_nombre": "ELECTRODO 7018 1/8 (3.2 MM)",
+    "padre": {
+      "id": 553,
+      "codigo": "2000122H",
+      "nombre": "ELECTRODO 7018 1/8 (3.2 MM)"
+    },
+    "medidas": [
+      {
+        "codigo": "2000122H",
+        "label": "ELECTRODO 7018 1/8 (3.2 MM)",
+        "id": 553
+      },
+      {
+        "codigo": "2000122L",
+        "label": "ELECTRODO 7018 1/8 (3.2 MM)",
+        "id": 554
+      }
+    ]
+  },
+  "BROCA ADDISON HSS": {
+    "base_nombre": "BROCA ADDISON HSS",
+    "padre": {
+      "id": 581,
+      "codigo": "10179",
+      "nombre": "BROCA ADDISON HSS 10 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "10179",
+        "label": "10 MM",
+        "id": 581
+      },
+      {
+        "codigo": "10281",
+        "label": "4 MM",
+        "id": 582
+      },
+      {
+        "codigo": "11486",
+        "label": "8 MM",
+        "id": 584
+      }
+    ]
+  },
+  "ALAMBRE MIG 316L": {
+    "base_nombre": "ALAMBRE MIG 316L",
+    "padre": {
+      "id": 655,
+      "codigo": "1022723",
+      "nombre": "ALAMBRE MIG 316L 0.9"
+    },
+    "medidas": [
+      {
+        "codigo": "1022723",
+        "label": "0.9",
+        "id": 655
+      },
+      {
+        "codigo": "1023668",
+        "label": "1.2",
+        "id": 661
+      }
+    ]
+  },
+  "ALAMBRE MIG 70S-6": {
+    "base_nombre": "ALAMBRE MIG 70S-6",
+    "padre": {
+      "id": 678,
+      "codigo": "1052961",
+      "nombre": "ALAMBRE MIG 70S-6 0.8 X 15"
+    },
+    "medidas": [
+      {
+        "codigo": "1052961",
+        "label": "0.8 X 15",
+        "id": 678
+      },
+      {
+        "codigo": "1052961H",
+        "label": "0.8 X 15",
+        "id": 713
+      },
+      {
+        "codigo": "1052961N",
+        "label": "0.8 X 15",
+        "id": 714
+      },
+      {
+        "codigo": "1052962",
+        "label": "0.9 X 15",
+        "id": 679
+      },
+      {
+        "codigo": "1052962H",
+        "label": "0.9 X 15",
+        "id": 715
+      },
+      {
+        "codigo": "1052962N",
+        "label": "0.9 X 15",
+        "id": 716
+      },
+      {
+        "codigo": "1052963",
+        "label": "1.0 X 15",
+        "id": 680
+      },
+      {
+        "codigo": "1052963H",
+        "label": "1.0 X 15",
+        "id": 717
+      },
+      {
+        "codigo": "1052963K",
+        "label": "1.0 X 15",
+        "id": 718
+      },
+      {
+        "codigo": "1052963L",
+        "label": "1.0 X 15",
+        "id": 719
+      },
+      {
+        "codigo": "1052963N",
+        "label": "1.0 X 15",
+        "id": 720
+      },
+      {
+        "codigo": "1052964",
+        "label": "1.2 X 15",
+        "id": 681
+      },
+      {
+        "codigo": "1052964H",
+        "label": "1.2 X 15",
+        "id": 721
+      },
+      {
+        "codigo": "1052964N",
+        "label": "1.2 X 15",
+        "id": 722
+      }
+    ]
+  },
+  "EXTINTOR PQS CERTIFICADO DE": {
+    "base_nombre": "EXTINTOR PQS CERTIFICADO DE",
+    "padre": {
+      "id": 700,
+      "codigo": "679917",
+      "nombre": "EXTINTOR PQS CERTIFICADO DE 1 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679917",
+        "label": "1 KG",
+        "id": 700
+      },
+      {
+        "codigo": "679913",
+        "label": "10 KG",
+        "id": 696
+      },
+      {
+        "codigo": "679916",
+        "label": "2 KG",
+        "id": 699
+      },
+      {
+        "codigo": "679915",
+        "label": "4 KG",
+        "id": 698
+      },
+      {
+        "codigo": "679914",
+        "label": "6 KG",
+        "id": 697
+      }
+    ]
+  },
+  "EXTINTOR CO2 CERTIFICADO DE": {
+    "base_nombre": "EXTINTOR CO2 CERTIFICADO DE",
+    "padre": {
+      "id": 702,
+      "codigo": "679919",
+      "nombre": "EXTINTOR CO2 CERTIFICADO DE 10 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679919",
+        "label": "10 KG",
+        "id": 702
+      },
+      {
+        "codigo": "679921",
+        "label": "2 KG",
+        "id": 704
+      },
+      {
+        "codigo": "67992",
+        "label": "5 KG",
+        "id": 703
+      }
+    ]
+  },
+  "GRATA COPA ACERO TRENZADO C113-H": {
+    "base_nombre": "GRATA COPA ACERO TRENZADO C113-H-50",
+    "padre": {
+      "id": 741,
+      "codigo": "4101",
+      "nombre": "GRATA COPA ACERO TRENZADO C113-H-50"
+    },
+    "medidas": [
+      {
+        "codigo": "4101",
+        "label": "GRATA COPA ACERO TRENZADO C113-H-50",
+        "id": 741
+      },
+      {
+        "codigo": "41012",
+        "label": "GRATA COPA ACERO TRENZADO C113-H-50",
+        "id": 742
+      },
+      {
+        "codigo": "41812",
+        "label": "GRATA COPA ACERO TRENZADO C113-H-50",
+        "id": 746
+      }
+    ]
+  },
+  "GRATA COPA ACERO ONDULADO C505-H": {
+    "base_nombre": "GRATA COPA ACERO ONDULADO C505-H-",
+    "padre": {
+      "id": 748,
+      "codigo": "42085",
+      "nombre": "GRATA COPA ACERO ONDULADO C505-H-35"
+    },
+    "medidas": [
+      {
+        "codigo": "42085",
+        "label": "35",
+        "id": 748
+      },
+      {
+        "codigo": "4211",
+        "label": "50",
+        "id": 749
+      }
+    ]
+  },
+  "FRESA CARBURO TUNGSTENO RECTA": {
+    "base_nombre": "FRESA CARBURO TUNGSTENO RECTA",
+    "padre": {
+      "id": 770,
+      "codigo": "110182",
+      "nombre": "FRESA CARBURO TUNGSTENO RECTA"
+    },
+    "medidas": [
+      {
+        "codigo": "110182",
+        "label": "FRESA CARBURO TUNGSTENO RECTA",
+        "id": 770
+      },
+      {
+        "codigo": "1002118",
+        "label": "FRESA CARBURO TUNGSTENO RECTA",
+        "id": 885
+      }
+    ]
+  },
+  "FRESA CARBURO TUNGSTENO CONICA": {
+    "base_nombre": "FRESA CARBURO TUNGSTENO CONICA",
+    "padre": {
+      "id": 771,
+      "codigo": "110183",
+      "nombre": "FRESA CARBURO TUNGSTENO CONICA"
+    },
+    "medidas": [
+      {
+        "codigo": "110183",
+        "label": "FRESA CARBURO TUNGSTENO CONICA",
+        "id": 771
+      },
+      {
+        "codigo": "1002119",
+        "label": "FRESA CARBURO TUNGSTENO CONICA",
+        "id": 886
+      }
+    ]
+  },
+  "BOQUILLA CORTE 102": {
+    "base_nombre": "BOQUILLA CORTE 102-",
+    "padre": {
+      "id": 805,
+      "codigo": "1000352",
+      "nombre": "BOQUILLA CORTE 102-0"
+    },
+    "medidas": [
+      {
+        "codigo": "1000352",
+        "label": "0",
+        "id": 805
+      },
+      {
+        "codigo": "1000354",
+        "label": "2",
+        "id": 806
+      }
+    ]
+  },
+  "BOQUILLA CORTE PROPANO TIPO 106": {
+    "base_nombre": "BOQUILLA CORTE PROPANO TIPO 106-",
+    "padre": {
+      "id": 807,
+      "codigo": "1000361",
+      "nombre": "BOQUILLA CORTE PROPANO TIPO 106-0"
+    },
+    "medidas": [
+      {
+        "codigo": "1000361",
+        "label": "0",
+        "id": 807
+      },
+      {
+        "codigo": "1001666",
+        "label": "1",
+        "id": 880
+      },
+      {
+        "codigo": "1001481",
+        "label": "2",
+        "id": 870
+      },
+      {
+        "codigo": "1000591",
+        "label": "3",
+        "id": 818
+      },
+      {
+        "codigo": "1000592",
+        "label": "4",
+        "id": 819
+      },
+      {
+        "codigo": "1000593",
+        "label": "5",
+        "id": 820
+      }
+    ]
+  },
+  "BOQUILLA SOLDAR 23-A-90": {
+    "base_nombre": "BOQUILLA SOLDAR 23-A-90-",
+    "padre": {
+      "id": 824,
+      "codigo": "1000616",
+      "nombre": "BOQUILLA SOLDAR 23-A-90-0"
+    },
+    "medidas": [
+      {
+        "codigo": "1000616",
+        "label": "0",
+        "id": 824
+      },
+      {
+        "codigo": "100061",
+        "label": "1",
+        "id": 821
+      },
+      {
+        "codigo": "1000612",
+        "label": "3",
+        "id": 822
+      },
+      {
+        "codigo": "1000614",
+        "label": "5",
+        "id": 823
+      },
+      {
+        "codigo": "1000618",
+        "label": "8",
+        "id": 825
+      },
+      {
+        "codigo": "1001687",
+        "label": "9",
+        "id": 881
+      }
+    ]
+  },
+  "TAPON AUDITIVO 3M": {
+    "base_nombre": "TAPON AUDITIVO 3M 11",
+    "padre": {
+      "id": 902,
+      "codigo": "1008134",
+      "nombre": "TAPON AUDITIVO 3M 1100"
+    },
+    "medidas": [
+      {
+        "codigo": "1008134",
+        "label": "00",
+        "id": 902
+      },
+      {
+        "codigo": "1008135",
+        "label": "10",
+        "id": 903
+      }
+    ]
+  },
+  "BOQUILLA HEAVY DUTY": {
+    "base_nombre": "BOQUILLA HEAVY DUTY",
+    "padre": {
+      "id": 917,
+      "codigo": "1009541",
+      "nombre": "BOQUILLA HEAVY DUTY 0.9 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "1009541",
+        "label": "0.9 MM",
+        "id": 917
+      },
+      {
+        "codigo": "1009542",
+        "label": "1.0 MM",
+        "id": 918
+      }
+    ]
+  },
+  "DISCO DE LAMINA EN PLASTICA 4 1/2": {
+    "base_nombre": "DISCO DE LAMINA EN PLASTICA 4 1/2 N",
+    "padre": {
+      "id": 939,
+      "codigo": "1015827",
+      "nombre": "DISCO DE LAMINA EN PLASTICA 4 1/2 N 120"
+    },
+    "medidas": [
+      {
+        "codigo": "1015827",
+        "label": "120",
+        "id": 939
+      },
+      {
+        "codigo": "1015826N",
+        "label": "120",
+        "id": 1299
+      },
+      {
+        "codigo": "1015831N",
+        "label": "240",
+        "id": 1303
+      },
+      {
+        "codigo": "1015822",
+        "label": "40",
+        "id": 936
+      },
+      {
+        "codigo": "1015822INOXER",
+        "label": "40",
+        "id": 1291
+      },
+      {
+        "codigo": "1015822N",
+        "label": "40",
+        "id": 1292
+      },
+      {
+        "codigo": "1015822NC",
+        "label": "40",
+        "id": 1293
+      },
+      {
+        "codigo": "1015824",
+        "label": "60",
+        "id": 937
+      },
+      {
+        "codigo": "1015824N",
+        "label": "60",
+        "id": 1294
+      },
+      {
+        "codigo": "1015824NC",
+        "label": "60",
+        "id": 1295
+      },
+      {
+        "codigo": "1015825",
+        "label": "80",
+        "id": 938
+      },
+      {
+        "codigo": "1015825INOXER",
+        "label": "80",
+        "id": 1296
+      },
+      {
+        "codigo": "1015825N",
+        "label": "80",
+        "id": 1297
+      },
+      {
+        "codigo": "1015825NC",
+        "label": "80",
+        "id": 1298
+      }
+    ]
+  },
+  "DISCO DESBASTE 4 1/2": {
+    "base_nombre": "DISCO DESBASTE 4 1/2 X6",
+    "padre": {
+      "id": 944,
+      "codigo": "1015949",
+      "nombre": "DISCO DESBASTE 4 1/2 X6"
+    },
+    "medidas": [
+      {
+        "codigo": "1015949",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 944
+      },
+      {
+        "codigo": "1015949CAR",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1304
+      },
+      {
+        "codigo": "1015949INOXER",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1305
+      },
+      {
+        "codigo": "1015949K",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1306
+      },
+      {
+        "codigo": "1015949N",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1307
+      },
+      {
+        "codigo": "1015949NC",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1308
+      },
+      {
+        "codigo": "1015949ROTTLUFF",
+        "label": "DISCO DESBASTE 4 1/2 X6",
+        "id": 1309
+      }
+    ]
+  },
+  "DISCO DESBASTE 7X6.4X22": {
+    "base_nombre": "DISCO DESBASTE 7X6.4X22",
+    "padre": {
+      "id": 945,
+      "codigo": "101595",
+      "nombre": "DISCO DESBASTE 7X6.4X22"
+    },
+    "medidas": [
+      {
+        "codigo": "101595",
+        "label": "DISCO DESBASTE 7X6.4X22",
+        "id": 945
+      },
+      {
+        "codigo": "1015950INOXER",
+        "label": "DISCO DESBASTE 7X6.4X22",
+        "id": 1310
+      },
+      {
+        "codigo": "1015950N",
+        "label": "DISCO DESBASTE 7X6.4X22",
+        "id": 1311
+      },
+      {
+        "codigo": "1015950NC",
+        "label": "DISCO DESBASTE 7X6.4X22",
+        "id": 1312
+      }
+    ]
+  },
+  "DISCO DESBASTE 9X6.4X22": {
+    "base_nombre": "DISCO DESBASTE 9X6.4X22",
+    "padre": {
+      "id": 946,
+      "codigo": "1015951",
+      "nombre": "DISCO DESBASTE 9X6.4X22"
+    },
+    "medidas": [
+      {
+        "codigo": "1015951",
+        "label": "DISCO DESBASTE 9X6.4X22",
+        "id": 946
+      },
+      {
+        "codigo": "1015951INOXER",
+        "label": "DISCO DESBASTE 9X6.4X22",
+        "id": 1313
+      }
+    ]
+  },
+  "DISCO CORTE 4 1/2X3.2X": {
+    "base_nombre": "DISCO CORTE 4 1/2X3.2X",
+    "padre": {
+      "id": 949,
+      "codigo": "1015955",
+      "nombre": "DISCO CORTE 4 1/2X3.2X"
+    },
+    "medidas": [
+      {
+        "codigo": "1015955",
+        "label": "DISCO CORTE 4 1/2X3.2X",
+        "id": 949
+      },
+      {
+        "codigo": "1015955INOXER",
+        "label": "DISCO CORTE 4 1/2X3.2X",
+        "id": 1315
+      },
+      {
+        "codigo": "1015955N",
+        "label": "DISCO CORTE 4 1/2X3.2X",
+        "id": 1316
+      },
+      {
+        "codigo": "1015955NC",
+        "label": "DISCO CORTE 4 1/2X3.2X",
+        "id": 1317
+      }
+    ]
+  },
+  "DISCO CORTE 7X3.2X22.2": {
+    "base_nombre": "DISCO CORTE 7X3.2X22.2",
+    "padre": {
+      "id": 950,
+      "codigo": "1015956",
+      "nombre": "DISCO CORTE 7X3.2X22.2"
+    },
+    "medidas": [
+      {
+        "codigo": "1015956",
+        "label": "DISCO CORTE 7X3.2X22.2",
+        "id": 950
+      },
+      {
+        "codigo": "1015956INOXER",
+        "label": "DISCO CORTE 7X3.2X22.2",
+        "id": 1318
+      },
+      {
+        "codigo": "1015956NC",
+        "label": "DISCO CORTE 7X3.2X22.2",
+        "id": 1319
+      }
+    ]
+  },
+  "DISCO CORTE 9X3.2X22.2": {
+    "base_nombre": "DISCO CORTE 9X3.2X22.2",
+    "padre": {
+      "id": 951,
+      "codigo": "1015957",
+      "nombre": "DISCO CORTE 9X3.2X22.2"
+    },
+    "medidas": [
+      {
+        "codigo": "1015957",
+        "label": "DISCO CORTE 9X3.2X22.2",
+        "id": 951
+      },
+      {
+        "codigo": "1015957INOXER",
+        "label": "DISCO CORTE 9X3.2X22.2",
+        "id": 1320
+      },
+      {
+        "codigo": "1015957N",
+        "label": "DISCO CORTE 9X3.2X22.2",
+        "id": 1321
+      },
+      {
+        "codigo": "1015957NC",
+        "label": "DISCO CORTE 9X3.2X22.2",
+        "id": 1322
+      }
+    ]
+  },
+  "DISCO CORTE 14X3.2X25.4": {
+    "base_nombre": "DISCO CORTE 14X3.2X25.4",
+    "padre": {
+      "id": 952,
+      "codigo": "1015958",
+      "nombre": "DISCO CORTE 14X3.2X25.4"
+    },
+    "medidas": [
+      {
+        "codigo": "1015958",
+        "label": "DISCO CORTE 14X3.2X25.4",
+        "id": 952
+      },
+      {
+        "codigo": "1015958INOXER",
+        "label": "DISCO CORTE 14X3.2X25.4",
+        "id": 1323
+      },
+      {
+        "codigo": "1015958N",
+        "label": "DISCO CORTE 14X3.2X25.4",
+        "id": 1324
+      }
+    ]
+  },
+  "BOQUILLA PROPANO VICTOR": {
+    "base_nombre": "BOQUILLA PROPANO VICTOR",
+    "padre": {
+      "id": 962,
+      "codigo": "1017211",
+      "nombre": "BOQUILLA PROPANO VICTOR 0"
+    },
+    "medidas": [
+      {
+        "codigo": "1017211",
+        "label": "0",
+        "id": 962
+      },
+      {
+        "codigo": "1017212",
+        "label": "1",
+        "id": 963
+      },
+      {
+        "codigo": "1017213",
+        "label": "2",
+        "id": 964
+      },
+      {
+        "codigo": "1017214",
+        "label": "3",
+        "id": 965
+      }
+    ]
+  },
+  "BOQUILLA ACETILENO VICTOR": {
+    "base_nombre": "BOQUILLA ACETILENO VICTOR",
+    "padre": {
+      "id": 966,
+      "codigo": "1017215",
+      "nombre": "BOQUILLA ACETILENO VICTOR 1"
+    },
+    "medidas": [
+      {
+        "codigo": "1017215",
+        "label": "1",
+        "id": 966
+      },
+      {
+        "codigo": "1017216",
+        "label": "2",
+        "id": 967
+      }
+    ]
+  },
+  "FILTRO 3M 60923 MIXTO P100": {
+    "base_nombre": "FILTRO 3M 60923 MIXTO P100",
+    "padre": {
+      "id": 976,
+      "codigo": "1018442",
+      "nombre": "FILTRO 3M 60923 MIXTO P100"
+    },
+    "medidas": [
+      {
+        "codigo": "1018442",
+        "label": "FILTRO 3M 60923 MIXTO P100",
+        "id": 976
+      },
+      {
+        "codigo": "24011202",
+        "label": "FILTRO 3M 60923 MIXTO P100",
+        "id": 1249
+      }
+    ]
+  },
+  "GRAMPA TIERRA 500 AMPS": {
+    "base_nombre": "GRAMPA TIERRA 500 AMPS",
+    "padre": {
+      "id": 981,
+      "codigo": "1021175",
+      "nombre": "GRAMPA TIERRA 500 AMPS"
+    },
+    "medidas": [
+      {
+        "codigo": "1021175",
+        "label": "GRAMPA TIERRA 500 AMPS",
+        "id": 981
+      },
+      {
+        "codigo": "10211751",
+        "label": "GRAMPA TIERRA 500 AMPS",
+        "id": 1171
+      }
+    ]
+  },
+  "JUEGO CARBONES ESMERILES": {
+    "base_nombre": "JUEGO CARBONES ESMERILES",
+    "padre": {
+      "id": 983,
+      "codigo": "1021943",
+      "nombre": "JUEGO CARBONES ESMERILES"
+    },
+    "medidas": [
+      {
+        "codigo": "1021943",
+        "label": "JUEGO CARBONES ESMERILES",
+        "id": 983
+      },
+      {
+        "codigo": "1021944",
+        "label": "JUEGO CARBONES ESMERILES",
+        "id": 984
+      }
+    ]
+  },
+  "DISCO CORTE FINO 41/2X1.0 MM": {
+    "base_nombre": "DISCO CORTE FINO 41/2X1.0 MM",
+    "padre": {
+      "id": 990,
+      "codigo": "1023398",
+      "nombre": "DISCO CORTE FINO 41/2X1.0 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "1023398",
+        "label": "DISCO CORTE FINO 41/2X1.0 MM",
+        "id": 990
+      },
+      {
+        "codigo": "1023398INOXER",
+        "label": "DISCO CORTE FINO 41/2X1.0 MM",
+        "id": 1325
+      },
+      {
+        "codigo": "1023398N",
+        "label": "DISCO CORTE FINO 41/2X1.0 MM",
+        "id": 1326
+      },
+      {
+        "codigo": "1023398NC",
+        "label": "DISCO CORTE FINO 41/2X1.0 MM",
+        "id": 1327
+      }
+    ]
+  },
+  "DISCO CORTE FINO 7X1.6 MM": {
+    "base_nombre": "DISCO CORTE FINO 7X1.6 MM",
+    "padre": {
+      "id": 991,
+      "codigo": "1023399",
+      "nombre": "DISCO CORTE FINO 7X1.6 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "1023399",
+        "label": "DISCO CORTE FINO 7X1.6 MM",
+        "id": 991
+      },
+      {
+        "codigo": "1023399INOXER",
+        "label": "DISCO CORTE FINO 7X1.6 MM",
+        "id": 1328
+      },
+      {
+        "codigo": "1023399N",
+        "label": "DISCO CORTE FINO 7X1.6 MM",
+        "id": 1329
+      },
+      {
+        "codigo": "1023399NC",
+        "label": "DISCO CORTE FINO 7X1.6 MM",
+        "id": 1330
+      }
+    ]
+  },
+  "TAPA MEDIANA 300M": {
+    "base_nombre": "TAPA MEDIANA 300M",
+    "padre": {
+      "id": 994,
+      "codigo": "1023665",
+      "nombre": "TAPA MEDIANA 300M"
+    },
+    "medidas": [
+      {
+        "codigo": "1023665",
+        "label": "TAPA MEDIANA 300M",
+        "id": 994
+      },
+      {
+        "codigo": "3042901",
+        "label": "TAPA MEDIANA 300M",
+        "id": 1087
+      }
+    ]
+  },
+  "MANGUERA PVC": {
+    "base_nombre": "MANGUERA PVC",
+    "padre": {
+      "id": 997,
+      "codigo": "1023805",
+      "nombre": "MANGUERA PVC"
+    },
+    "medidas": [
+      {
+        "codigo": "1023805",
+        "label": "MANGUERA PVC",
+        "id": 997
+      },
+      {
+        "codigo": "10238051",
+        "label": "MANGUERA PVC",
+        "id": 1173
+      }
+    ]
+  },
+  "DISCO LAMINADO INDURA HQ ACERO 7": {
+    "base_nombre": "DISCO LAMINADO INDURA HQ ACERO 7 N",
+    "padre": {
+      "id": 1013,
+      "codigo": "1031669",
+      "nombre": "DISCO LAMINADO INDURA HQ ACERO 7 N60"
+    },
+    "medidas": [
+      {
+        "codigo": "1031669",
+        "label": "60",
+        "id": 1013
+      },
+      {
+        "codigo": "103168",
+        "label": "80",
+        "id": 1014
+      }
+    ]
+  },
+  "ESCUDO FRONTAL": {
+    "base_nombre": "ESCUDO FRONTAL 220",
+    "padre": {
+      "id": 1024,
+      "codigo": "1039276",
+      "nombre": "ESCUDO FRONTAL 220818"
+    },
+    "medidas": [
+      {
+        "codigo": "1039276",
+        "label": "818",
+        "id": 1024
+      },
+      {
+        "codigo": "1039277",
+        "label": "992",
+        "id": 1025
+      }
+    ]
+  },
+  "LLAVE PUNTA CORONA": {
+    "base_nombre": "LLAVE PUNTA CORONA",
+    "padre": {
+      "id": 1042,
+      "codigo": "2961733",
+      "nombre": "LLAVE PUNTA CORONA 19 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "2961733",
+        "label": "19 MM",
+        "id": 1042
+      },
+      {
+        "codigo": "3697223",
+        "label": "24 MM",
+        "id": 1118
+      }
+    ]
+  },
+  "TUERCA CGA": {
+    "base_nombre": "TUERCA CGA 5",
+    "padre": {
+      "id": 1096,
+      "codigo": "3046511",
+      "nombre": "TUERCA CGA 580"
+    },
+    "medidas": [
+      {
+        "codigo": "3046511",
+        "label": "80",
+        "id": 1096
+      },
+      {
+        "codigo": "3006814",
+        "label": "90",
+        "id": 1063
+      }
+    ]
+  },
+  "O'RING AS NBR 2-214 M30": {
+    "base_nombre": "O'RING AS NBR 2-214 M30",
+    "padre": {
+      "id": 1092,
+      "codigo": "3046507",
+      "nombre": "O'RING AS NBR 2-214 M30"
+    },
+    "medidas": [
+      {
+        "codigo": "3046507",
+        "label": "O'RING AS NBR 2-214 M30",
+        "id": 1092
+      },
+      {
+        "codigo": "3046508",
+        "label": "O'RING AS NBR 2-214 M30",
+        "id": 1093
+      }
+    ]
+  },
+  "CAMBIO DE VALVULA": {
+    "base_nombre": "CAMBIO DE VALVULA",
+    "padre": {
+      "id": 1120,
+      "codigo": "4000048",
+      "nombre": "CAMBIO DE VALVULA"
+    },
+    "medidas": [
+      {
+        "codigo": "4000048",
+        "label": "CAMBIO DE VALVULA",
+        "id": 1120
+      },
+      {
+        "codigo": "679943",
+        "label": "CAMBIO DE VALVULA",
+        "id": 1424
+      }
+    ]
+  },
+  "KIT POLICARBONATO PROTECCION": {
+    "base_nombre": "KIT POLICARBONATO PROTECCION",
+    "padre": {
+      "id": 1149,
+      "codigo": "10155951",
+      "nombre": "KIT POLICARBONATO PROTECCION"
+    },
+    "medidas": [
+      {
+        "codigo": "10155951",
+        "label": "KIT POLICARBONATO PROTECCION",
+        "id": 1149
+      },
+      {
+        "codigo": "10415721",
+        "label": "KIT POLICARBONATO PROTECCION",
+        "id": 1176
+      }
+    ]
+  },
+  "SET MANGUERA SIMPLE 1/4  25 MT": {
+    "base_nombre": "SET MANGUERA SIMPLE 1/4  25 MT",
+    "padre": {
+      "id": 1164,
+      "codigo": "10164902",
+      "nombre": "SET MANGUERA SIMPLE 1/4  25 MT"
+    },
+    "medidas": [
+      {
+        "codigo": "10164902",
+        "label": "SET MANGUERA SIMPLE 1/4  25 MT",
+        "id": 1164
+      },
+      {
+        "codigo": "10164905",
+        "label": "SET MANGUERA SIMPLE 1/4  25 MT",
+        "id": 1167
+      }
+    ]
+  },
+  "CANDADO DE BRONCE": {
+    "base_nombre": "CANDADO DE BRONCE",
+    "padre": {
+      "id": 1207,
+      "codigo": "14660086",
+      "nombre": "CANDADO DE BRONCE 32 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "14660086",
+        "label": "32 MM",
+        "id": 1207
+      },
+      {
+        "codigo": "14660078",
+        "label": "50 MM",
+        "id": 1199
+      }
+    ]
+  },
+  "ACOPLE CAMLOCK A INOX/316 HI/NPT A": {
+    "base_nombre": "ACOPLE CAMLOCK A INOX/316 HI/NPT A",
+    "padre": {
+      "id": 1238,
+      "codigo": "20810011",
+      "nombre": "ACOPLE CAMLOCK A INOX/316 HI/NPT A 2\""
+    },
+    "medidas": [
+      {
+        "codigo": "20810011",
+        "label": "2\"",
+        "id": 1238
+      },
+      {
+        "codigo": "20810007",
+        "label": "3\"",
+        "id": 1234
+      }
+    ]
+  },
+  "NIPLE TUERCA HEX INOX/316 #150 NPT": {
+    "base_nombre": "NIPLE TUERCA HEX INOX/316 #150 NPT",
+    "padre": {
+      "id": 1236,
+      "codigo": "20810009",
+      "nombre": "NIPLE TUERCA HEX INOX/316 #150 NPT 1/2\""
+    },
+    "medidas": [
+      {
+        "codigo": "20810009",
+        "label": "1/2\"",
+        "id": 1236
+      },
+      {
+        "codigo": "2081001",
+        "label": "2\"",
+        "id": 1237
+      }
+    ]
+  },
+  "BOQUILLA BINZEL M8": {
+    "base_nombre": "BOQUILLA BINZEL M8",
+    "padre": {
+      "id": 1351,
+      "codigo": "20810019",
+      "nombre": "BOQUILLA BINZEL M8 0.8 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "20810019",
+        "label": "0.8 MM",
+        "id": 1351
+      },
+      {
+        "codigo": "20810018",
+        "label": "0.9 MM",
+        "id": 1350
+      },
+      {
+        "codigo": "20810017",
+        "label": "1.0 MM",
+        "id": 1244
+      }
+    ]
+  },
+  "DISCO DE LAMINA EN PLASTICO 7": {
+    "base_nombre": "DISCO DE LAMINA EN PLASTICO 7 N",
+    "padre": {
+      "id": 1300,
+      "codigo": "1015829INOXER",
+      "nombre": "DISCO DE LAMINA EN PLASTICO 7 N 40"
+    },
+    "medidas": [
+      {
+        "codigo": "1015829INOXER",
+        "label": "40",
+        "id": 1300
+      },
+      {
+        "codigo": "1015830INOXER",
+        "label": "80",
+        "id": 1301
+      },
+      {
+        "codigo": "1015830N",
+        "label": "80",
+        "id": 1302
+      }
+    ]
+  },
+  "25AK BOQUILLA BINZEL M6": {
+    "base_nombre": "25AK BOQUILLA BINZEL M6",
+    "padre": {
+      "id": 1347,
+      "codigo": "4457227",
+      "nombre": "25AK BOQUILLA BINZEL M6 0.8 MM"
+    },
+    "medidas": [
+      {
+        "codigo": "4457227",
+        "label": "0.8 MM",
+        "id": 1347
+      },
+      {
+        "codigo": "4457105",
+        "label": "0.9 MM",
+        "id": 1343
+      },
+      {
+        "codigo": "4457103",
+        "label": "1.0 MM",
+        "id": 1341
+      },
+      {
+        "codigo": "4457104",
+        "label": "1.2 MM",
+        "id": 1342
+      },
+      {
+        "codigo": "4457106",
+        "label": "1.6 MM",
+        "id": 1344
+      }
+    ]
+  },
+  "BOTÍN DE SEGURIDAD QUEBEC 250": {
+    "base_nombre": "BOTÍN DE SEGURIDAD QUEBEC 250 N°",
+    "padre": {
+      "id": 1356,
+      "codigo": "25039",
+      "nombre": "Botín DE SEGURIDAD QUEBEC 250 N°39"
+    },
+    "medidas": [
+      {
+        "codigo": "25039",
+        "label": "39",
+        "id": 1356
+      },
+      {
+        "codigo": "2504",
+        "label": "40",
+        "id": 1357
+      },
+      {
+        "codigo": "25041",
+        "label": "41",
+        "id": 1358
+      },
+      {
+        "codigo": "25042",
+        "label": "42",
+        "id": 1359
+      },
+      {
+        "codigo": "25043",
+        "label": "43",
+        "id": 1360
+      },
+      {
+        "codigo": "25044",
+        "label": "44",
+        "id": 1361
+      }
+    ]
+  },
+  "BOTÍN DE SEGURIDAD MAN 350 AISLANTE": {
+    "base_nombre": "BOTÍN DE SEGURIDAD MAN 350 AISLANTE",
+    "padre": {
+      "id": 1363,
+      "codigo": "35039",
+      "nombre": "Botín DE SEGURIDAD MAN 350 AISLANTE 39"
+    },
+    "medidas": [
+      {
+        "codigo": "35039",
+        "label": "39",
+        "id": 1363
+      },
+      {
+        "codigo": "3504",
+        "label": "40",
+        "id": 1364
+      },
+      {
+        "codigo": "35041",
+        "label": "41",
+        "id": 1365
+      },
+      {
+        "codigo": "35042",
+        "label": "42",
+        "id": 1366
+      },
+      {
+        "codigo": "35043",
+        "label": "43",
+        "id": 1367
+      }
+    ]
+  },
+  "AEROSOL LIMPIEZA (TINTAS PENETRANTES)": {
+    "base_nombre": "AEROSOL LIMPIEZA (TINTAS PENETRANTES)",
+    "padre": {
+      "id": 1390,
+      "codigo": "1000376",
+      "nombre": "AEROSOL Limpieza (TINTAS PENETRANTES)"
+    },
+    "medidas": [
+      {
+        "codigo": "1000376",
+        "label": "AEROSOL LIMPIEZA (TINTAS PENETRANTES)",
+        "id": 1390
+      },
+      {
+        "codigo": "10003761",
+        "label": "AEROSOL LIMPIEZA (TINTAS PENETRANTES)",
+        "id": 1399
+      }
+    ]
+  },
+  "AEROSOL PENETRANTE (TINTAS PENETRANTES)": {
+    "base_nombre": "AEROSOL PENETRANTE (TINTAS PENETRANTES)",
+    "padre": {
+      "id": 1391,
+      "codigo": "1000377",
+      "nombre": "AEROSOL PENETRANTE (TINTAS PENETRANTES)"
+    },
+    "medidas": [
+      {
+        "codigo": "1000377",
+        "label": "AEROSOL PENETRANTE (TINTAS PENETRANTES)",
+        "id": 1391
+      },
+      {
+        "codigo": "10003771",
+        "label": "AEROSOL PENETRANTE (TINTAS PENETRANTES)",
+        "id": 1400
+      }
+    ]
+  },
+  "AEROSOL REVELADOR (TINTAS PENETRANTES)": {
+    "base_nombre": "AEROSOL REVELADOR (TINTAS PENETRANTES)",
+    "padre": {
+      "id": 1392,
+      "codigo": "1000378",
+      "nombre": "AEROSOL REVELADOR (TINTAS PENETRANTES)"
+    },
+    "medidas": [
+      {
+        "codigo": "1000378",
+        "label": "AEROSOL REVELADOR (TINTAS PENETRANTES)",
+        "id": 1392
+      },
+      {
+        "codigo": "10003781",
+        "label": "AEROSOL REVELADOR (TINTAS PENETRANTES)",
+        "id": 1401
+      }
+    ]
+  },
+  "MANTENCION PQS DE": {
+    "base_nombre": "MANTENCION PQS DE",
+    "padre": {
+      "id": 1409,
+      "codigo": "679928",
+      "nombre": "MANTENCION PQS DE 1 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679928",
+        "label": "1 KG",
+        "id": 1409
+      },
+      {
+        "codigo": "679932",
+        "label": "10 KG",
+        "id": 1413
+      },
+      {
+        "codigo": "679929",
+        "label": "2 KG",
+        "id": 1410
+      },
+      {
+        "codigo": "67993",
+        "label": "4 KG",
+        "id": 1411
+      },
+      {
+        "codigo": "679931",
+        "label": "6 KG",
+        "id": 1412
+      }
+    ]
+  },
+  "MANTENCION CO2 DE": {
+    "base_nombre": "MANTENCION CO2 DE",
+    "padre": {
+      "id": 1414,
+      "codigo": "679933",
+      "nombre": "MANTENCION CO2 DE 2 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679933",
+        "label": "2 KG",
+        "id": 1414
+      },
+      {
+        "codigo": "679934",
+        "label": "5 KG",
+        "id": 1415
+      }
+    ]
+  },
+  "RECARGA PQS DE": {
+    "base_nombre": "RECARGA PQS DE",
+    "padre": {
+      "id": 1416,
+      "codigo": "679935",
+      "nombre": "RECARGA PQS DE 1 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679935",
+        "label": "1 KG",
+        "id": 1416
+      },
+      {
+        "codigo": "679939",
+        "label": "10 KG",
+        "id": 1420
+      },
+      {
+        "codigo": "679936",
+        "label": "2 KG",
+        "id": 1417
+      },
+      {
+        "codigo": "679937",
+        "label": "4 KG",
+        "id": 1418
+      },
+      {
+        "codigo": "679938",
+        "label": "6 KG",
+        "id": 1419
+      }
+    ]
+  },
+  "RECARGA CO2 DE": {
+    "base_nombre": "RECARGA CO2 DE",
+    "padre": {
+      "id": 1427,
+      "codigo": "679946",
+      "nombre": "RECARGA CO2 DE 2 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679946",
+        "label": "2 KG",
+        "id": 1427
+      },
+      {
+        "codigo": "679945",
+        "label": "5 KG",
+        "id": 1426
+      }
+    ]
+  },
+  "MANTENCION PQS CARRO": {
+    "base_nombre": "MANTENCION PQS CARRO",
+    "padre": {
+      "id": 1432,
+      "codigo": "679955",
+      "nombre": "MANTENCION PQS CARRO 50 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679955",
+        "label": "50 KG",
+        "id": 1432
+      },
+      {
+        "codigo": "679948",
+        "label": "75 KG",
+        "id": 1429
+      }
+    ]
+  },
+  "MANTENCION ACETATO DE": {
+    "base_nombre": "MANTENCION ACETATO DE",
+    "padre": {
+      "id": 1435,
+      "codigo": "679958",
+      "nombre": "MANTENCION ACETATO DE 10 LT"
+    },
+    "medidas": [
+      {
+        "codigo": "679958",
+        "label": "10 LT",
+        "id": 1435
+      },
+      {
+        "codigo": "67996",
+        "label": "6 LT",
+        "id": 1437
+      }
+    ]
+  },
+  "SOPORTE TRIPODE EXTINTOR": {
+    "base_nombre": "SOPORTE TRIPODE EXTINTOR",
+    "padre": {
+      "id": 1443,
+      "codigo": "679965",
+      "nombre": "SOPORTE TRIPODE EXTINTOR 10 KG"
+    },
+    "medidas": [
+      {
+        "codigo": "679965",
+        "label": "10 KG",
+        "id": 1443
+      },
+      {
+        "codigo": "679964",
+        "label": "6 KG",
+        "id": 1442
+      }
+    ]
+  }
+}
