@@ -85,9 +85,15 @@ Catálogo de productos. Incluida en [`Script VMA.txt`](Script%20VMA.txt).
 | `distribuidor` | varchar(150) (nullable) | Distribuidor/fabricante |
 | `stock` | int (nullable) | Unidades en stock |
 | `imagen_url` | text (nullable) | URL pública en Supabase Storage (bucket `productos`) |
+| `tiene_variantes` | boolean (default FALSE) | TRUE si el producto es padre de variantes (ej. botín en tallas N°39–44) |
+| `id_padre` | int (FK → producto, nullable) | Si no es NULL, este producto es una variante del producto padre indicado |
+| `label_variante` | varchar(150) (nullable) | Etiqueta legible de esta variante ("N°39", "1/8 (3.2 MM)", "T.XL", etc.) |
 
 **Notas:**
-- Los productos con variantes (ej. distintas medidas de un mismo artículo) comparten descripción base y se agrupan en el catálogo por ese campo.
+- El catálogo solo muestra productos donde `id_padre IS NULL`. Los productos variante quedan ocultos hasta que el usuario los selecciona en el modal.
+- Al abrir el modal de un producto con `tiene_variantes = TRUE`, el frontend llama a `obtenerVariantes(id_producto)` que retorna el padre + todos sus hijos, para construir el selector desplegable.
+- Al agregar al carrito desde el modal, se usa el `codigo` del variante seleccionado, no del padre.
+- Migración inicial: ver [`migracion_variantes_productos.sql`](migracion_variantes_productos.sql).
 - Las imágenes se suben al bucket `productos` con nombre `{id}_{timestamp}.{ext}`.
 
 ---

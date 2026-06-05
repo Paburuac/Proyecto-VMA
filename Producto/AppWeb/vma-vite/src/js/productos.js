@@ -341,7 +341,7 @@ function renderProductos() {
   if (counter) counter.textContent = `${totalVisible} producto${totalVisible !== 1 ? 's' : ''}`;
 }
 
-/* Renderiza una card de producto. Si tiene medidas muestra badge de variantes */
+/* Renderiza una card de producto */
 function renderProdCard(cat, sub, p) {
   const imgHtml = p.imagen_url
     ? `<img src="${escHtml(p.imagen_url)}" alt="${escHtml(p.nombre)}"
@@ -349,8 +349,8 @@ function renderProdCard(cat, sub, p) {
           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     : '';
   const fallbackStyle = p.imagen_url ? 'display:none' : 'display:flex';
-  const variantesBadge = p.medidas?.length > 1
-    ? `<div class="prod-variantes-badge">${p.medidas.length} medidas disponibles</div>`
+  const variantesBadge = p.tiene_variantes
+    ? `<div class="prod-variantes-badge">Múltiples medidas disponibles</div>`
     : '';
 
   return `
@@ -364,8 +364,8 @@ function renderProdCard(cat, sub, p) {
         <div class="prod-nombre">${escHtml(p.nombre)}</div>
         ${variantesBadge}
         <div class="prod-precio">Precio: ${escHtml(p.precio)}</div>
-        <button class="prod-btn-add" onclick="event.stopPropagation(); addToCart('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}',1)">
-          + Agregar al carrito
+        <button class="prod-btn-add" onclick="event.stopPropagation(); openModal('${escHtml(p.codigo)}','${escHtml(cat)}','${escHtml(sub)}')">
+          ${p.tiene_variantes ? 'Ver medidas' : '+ Agregar al carrito'}
         </button>
       </div>
     </div>`;
@@ -388,10 +388,10 @@ function toggleSub(header) {
    MODAL DE PRODUCTO
 ----------------------------------------------- */
 
-// Código actualmente seleccionado en el modal (puede cambiar al elegir medida)
+// Código actualmente seleccionado en el modal (puede cambiar al elegir variante)
 let _modalCodigoActual = ''
 
-function openModal(codigo, cat, sub) {
+async function openModal(codigo, cat, sub) {
   const prod = findProduct(codigo, cat, sub);
   if (!prod) return;
 
@@ -428,24 +428,49 @@ function openModal(codigo, cat, sub) {
   if (prod.stock) metaHtml += `Stock: <span>${escHtml(prod.stock)}</span>`;
   metaEl.innerHTML = metaHtml || 'Consulte disponibilidad.';
 
-  // ── Selector de medidas ──────────────────────────────────────
+  // ── Selector de variantes ────────────────────────────────────
   const medidaWrap = document.getElementById('modal-medidas-wrap');
   if (medidaWrap) {
-    if (prod.medidas && prod.medidas.length > 1) {
-      const opts = prod.medidas.map(m =>
-        `<option value="${escHtml(m.codigo)}" ${m.codigo === prod.codigo ? 'selected' : ''}>${escHtml(m.label)}</option>`
-      ).join('');
+    if (prod.tiene_variantes) {
+      // Mostrar spinner mientras cargan las variantes
       medidaWrap.innerHTML = `
         <div class="modal-medida-label">Medida / Variante</div>
-        <select id="modal-medida-select" class="modal-medida-select">
-          ${opts}
+        <select class="modal-medida-select" disabled>
+          <option>Cargando variantes…</option>
         </select>`;
       medidaWrap.style.display = 'block';
 
-      document.getElementById('modal-medida-select').addEventListener('change', function() {
-        _modalCodigoActual = this.value
-        document.getElementById('modal-codigo').textContent = this.value
-      })
+      const { data: variantes, error } = await window.productoService.obtenerVariantes(prod.id_producto)
+
+      if (error || !variantes?.length) {
+        medidaWrap.innerHTML = '';
+        medidaWrap.style.display = 'none';
+      } else {
+        const opts = variantes.map(v =>
+          `<option value="${escHtml(v.codigo)}"
+                   data-precio="${v.precio ?? ''}"
+                   ${v.codigo === prod.codigo ? 'selected' : ''}>
+             ${escHtml(v.label_variante || v.codigo)}
+           </option>`
+        ).join('');
+        medidaWrap.innerHTML = `
+          <div class="modal-medida-label">Medida / Variante</div>
+          <select id="modal-medida-select" class="modal-medida-select">
+            ${opts}
+          </select>`;
+
+        const sel = document.getElementById('modal-medida-select')
+        sel.addEventListener('change', function () {
+          const opt = this.options[this.selectedIndex]
+          _modalCodigoActual = this.value
+          document.getElementById('modal-codigo').textContent = this.value
+          // Actualizar precio si la variante tiene precio propio
+          const precioVariante = opt.dataset.precio
+          if (precioVariante) {
+            document.getElementById('modal-precio').textContent = precioVariante
+          }
+        })
+      }
     } else {
       medidaWrap.innerHTML = '';
       medidaWrap.style.display = 'none';

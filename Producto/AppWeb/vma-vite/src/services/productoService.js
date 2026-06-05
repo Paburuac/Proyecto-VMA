@@ -6,10 +6,11 @@
  *
  * Tablas en uso:
  *   producto  → id_producto, codigo, descripcion, id_categoria,
- *               precio, distribuidor, stock, imagen_url
+ *               precio, distribuidor, stock, imagen_url,
+ *               tiene_variantes, id_padre, label_variante
  *   categoria → id_categoria, nombre_categoria
  *
- * Cada función retorna: { data, error, loading }
+ * Cada función retorna: { data, error }
  * El componente que la llama decide qué hacer con cada estado.
  * ─────────────────────────────────────────────
  */
@@ -18,8 +19,9 @@ import { supabase } from './supabase.js'
 
 /* ─────────────────────────────────────────────
    CONSULTA BASE reutilizable
-   Incluye la relación categoria para evitar
-   duplicar el select en cada función.
+   Solo trae productos padre (id_padre IS NULL).
+   Las variantes se cargan bajo demanda con
+   obtenerVariantes(idPadre).
 ───────────────────────────────────────────── */
 
 const PRODUCTO_SELECT = `
@@ -30,7 +32,9 @@ const PRODUCTO_SELECT = `
   distribuidor,
   stock,
   imagen_url,
-  medidas,
+  tiene_variantes,
+  id_padre,
+  label_variante,
   categoria (
     id_categoria,
     nombre_categoria
@@ -46,7 +50,7 @@ export async function obtenerProductos() {
   const { data, error } = await supabase
     .from('producto')
     .select(PRODUCTO_SELECT)
-    .or('es_variante.is.null,es_variante.eq.false')
+    .is('id_padre', null)
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -100,7 +104,7 @@ export async function obtenerProductosPorCategoria(nombreCategoria) {
     .from('producto')
     .select(PRODUCTO_SELECT)
     .eq('id_categoria', catData.id_categoria)
-    .or('es_variante.is.null,es_variante.eq.false')
+    .is('id_padre', null)
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -129,7 +133,7 @@ export async function buscarProductos(texto) {
     .from('producto')
     .select(PRODUCTO_SELECT)
     .or(`descripcion.ilike.%${termino}%,codigo.ilike.%${termino}%`)
-    .or('es_variante.is.null,es_variante.eq.false')
+    .is('id_padre', null)
     .order('descripcion', { ascending: true })
 
   if (error) {
@@ -138,6 +142,29 @@ export async function buscarProductos(texto) {
   }
 
   console.log(`[VMA] buscarProductos("${termino}") →`, data)
+  return { data, error: null }
+}
+
+/* ─────────────────────────────────────────────
+   obtenerVariantes(idPadre)
+   Retorna todas las variantes de un producto padre,
+   ordenadas por label_variante.
+   Incluye al padre mismo como primera opción.
+───────────────────────────────────────────── */
+
+export async function obtenerVariantes(idPadre) {
+  const { data, error } = await supabase
+    .from('producto')
+    .select('id_producto, codigo, label_variante, precio, stock')
+    .or(`id_producto.eq.${idPadre},id_padre.eq.${idPadre}`)
+    .order('label_variante', { ascending: true })
+
+  if (error) {
+    console.error('[VMA] obtenerVariantes() error:', error)
+    return { data: null, error }
+  }
+
+  console.log(`[VMA] obtenerVariantes(${idPadre}) →`, data)
   return { data, error: null }
 }
 
@@ -183,18 +210,20 @@ export function construirCatalogo(productos) {
     if (!catalogo[cat][sub])  catalogo[cat][sub] = []
 
     catalogo[cat][sub].push({
-      codigo:       String(prod.codigo ?? ''),
-      nombre:       prod.descripcion ?? '',
-      distribuidor: prod.distribuidor ?? '',
-      stock:        String(prod.stock ?? ''),
-      precio:       prod.precio != null ? String(prod.precio) : 'Consultar',
-      descripcion:  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
-      // ✅ imagen_url desde Supabase — usado por renderProdCard y openModal
-      imagen_url:   prod.imagen_url || null,
-      medidas:      prod.medidas || null,
+      codigo:          String(prod.codigo ?? ''),
+      nombre:          prod.descripcion ?? '',
+      distribuidor:    prod.distribuidor ?? '',
+      stock:           String(prod.stock ?? ''),
+      precio:          prod.precio != null ? String(prod.precio) : 'Consultar',
+      descripcion:     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
+      imagen_url:      prod.imagen_url || null,
+      // Campos de variantes
+      tiene_variantes: prod.tiene_variantes ?? false,
+      label_variante:  prod.label_variante ?? null,
+      id_padre:        prod.id_padre ?? null,
       // Campos extra de Supabase
-      id_producto:  prod.id_producto,
-      id_categoria: prod.categoria?.id_categoria,
+      id_producto:     prod.id_producto,
+      id_categoria:    prod.categoria?.id_categoria,
     })
   })
 
