@@ -130,18 +130,25 @@ export async function buscarProductos(texto) {
   // Dividir en palabras individuales (ignorar espacios extra)
   const palabras = texto.trim().split(/\s+/).filter(p => p.length > 0)
 
-  // Construir query base
+  // Para una sola palabra: buscar en descripcion O codigo
+  // Para múltiples palabras: cada palabra debe aparecer en la descripcion
+  // (encadenando .ilike() que Supabase trata como AND garantizado)
   let query = supabase
     .from('producto')
     .select(PRODUCTO_SELECT)
     .is('id_padre', null)
     .order('descripcion', { ascending: true })
 
-  // Cada palabra debe aparecer en descripcion O en codigo (AND entre palabras)
-  // Ej: "casco evo" → (desc ILIKE %casco% OR cod ILIKE %casco%)
-  //                AND (desc ILIKE %evo%   OR cod ILIKE %evo%)
-  for (const palabra of palabras) {
-    query = query.or(`descripcion.ilike.%${palabra}%,codigo.ilike.%${palabra}%`)
+  if (palabras.length === 1) {
+    // Búsqueda simple: descripcion O codigo contienen la palabra
+    query = query.or(
+      `descripcion.ilike.%${palabras[0]}%,codigo.ilike.%${palabras[0]}%`
+    )
+  } else {
+    // Búsqueda multi-palabra: todas las palabras deben estar en la descripcion
+    for (const palabra of palabras) {
+      query = query.ilike('descripcion', `%${palabra}%`)
+    }
   }
 
   const { data, error } = await query
