@@ -289,10 +289,13 @@ function renderProductos() {
 
     subs.forEach(sub => {
       const productos = catalogo[cat][sub] || [];
-      const filtrados = search
+      const palabras = search ? search.split(/\s+/).filter(w => w.length > 0) : []
+      const filtrados = palabras.length > 0
         ? productos.filter(p =>
-            p.nombre.toLowerCase().includes(search) ||
-            p.codigo.toLowerCase().includes(search))
+            palabras.every(w =>
+              p.nombre.toLowerCase().includes(w) ||
+              p.codigo.toLowerCase().includes(w)
+            ))
         : productos;
 
       if (filtrados.length === 0) return;

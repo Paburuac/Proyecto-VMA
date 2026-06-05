@@ -127,21 +127,31 @@ export async function buscarProductos(texto) {
     return obtenerProductos()
   }
 
-  const termino = texto.trim()
+  // Dividir en palabras individuales (ignorar espacios extra)
+  const palabras = texto.trim().split(/\s+/).filter(p => p.length > 0)
 
-  const { data, error } = await supabase
+  // Construir query base
+  let query = supabase
     .from('producto')
     .select(PRODUCTO_SELECT)
-    .or(`descripcion.ilike.%${termino}%,codigo.ilike.%${termino}%`)
     .is('id_padre', null)
     .order('descripcion', { ascending: true })
+
+  // Cada palabra debe aparecer en descripcion O en codigo (AND entre palabras)
+  // Ej: "casco evo" → (desc ILIKE %casco% OR cod ILIKE %casco%)
+  //                AND (desc ILIKE %evo%   OR cod ILIKE %evo%)
+  for (const palabra of palabras) {
+    query = query.or(`descripcion.ilike.%${palabra}%,codigo.ilike.%${palabra}%`)
+  }
+
+  const { data, error } = await query
 
   if (error) {
     console.error('[VMA] buscarProductos() error:', error)
     return { data: null, error }
   }
 
-  console.log(`[VMA] buscarProductos("${termino}") →`, data)
+  console.log(`[VMA] buscarProductos("${texto}") [${palabras.length} palabras] →`, data)
   return { data, error: null }
 }
 
