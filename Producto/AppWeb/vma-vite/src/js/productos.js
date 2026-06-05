@@ -17,7 +17,8 @@ const state = window.state || {
   activeSub: null,
   search: '',
   filterCat: '',
-  filterSub: ''
+  filterSub: '',
+  soloConImagen: false
 };
 window.state = state;
 
@@ -41,6 +42,16 @@ function initProductos() {
   renderProductos();
   initSearch();
   initFilters();
+  initFiltroImagen();
+}
+
+function initFiltroImagen() {
+  const chk = document.getElementById('filter-con-imagen');
+  if (!chk) return;
+  chk.addEventListener('change', () => {
+    state.soloConImagen = chk.checked;
+    renderProductos();
+  });
 }
 
 /* --- SIDEBAR --- */
@@ -290,13 +301,17 @@ function renderProductos() {
     subs.forEach(sub => {
       const productos = catalogo[cat][sub] || [];
       const palabras = search ? search.split(/\s+/).filter(w => w.length > 0) : []
-      const filtrados = palabras.length > 0
+      let filtrados = palabras.length > 0
         ? productos.filter(p =>
             palabras.every(w =>
               p.nombre.toLowerCase().includes(w) ||
               p.codigo.toLowerCase().includes(w)
             ))
         : productos;
+
+      if (state.soloConImagen) {
+        filtrados = filtrados.filter(p => p.imagen_url);
+      }
 
       if (filtrados.length === 0) return;
       catTotal += filtrados.length;

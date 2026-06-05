@@ -145,6 +145,31 @@
   font-style: italic;
 }
 .filter-select:focus { border-color: var(--verde); }
+
+/* Toggle "solo con imagen" — temporal para revisión */
+.filter-imagen-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: var(--blanco);
+  border: 2px solid var(--gris-medio);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--gris-texto);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--trans);
+  user-select: none;
+}
+.filter-imagen-toggle:has(input:checked) {
+  border-color: var(--verde);
+  color: var(--verde);
+  background: #f0fff4;
+}
+.filter-imagen-toggle input { cursor: pointer; accent-color: var(--verde); }
+
 .productos-count {
   font-size: 0.85rem;
   color: var(--gris-texto);
