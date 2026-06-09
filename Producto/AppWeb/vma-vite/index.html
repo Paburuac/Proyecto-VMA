@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="assets/css/admin.css">
   <link rel="stylesheet" href="assets/css/misCotizaciones.css">
   <link rel="stylesheet" href="assets/css/panelTrabajador.css">
+  <link rel="stylesheet" href="assets/css/pagoResultado.css">
   <!-- jsPDF para descarga de PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- SheetJS para exportar Excel -->
@@ -525,6 +526,24 @@
   </div>
 
 </div><!-- /page-mis-cotizaciones -->
+
+<!-- ============================================================
+     PÁGINA: RESULTADO DE PAGO TRANSBANK
+============================================================ -->
+<div id="page-pago-resultado" class="page">
+  <div class="pr-hero">
+    <div class="pr-hero-inner">
+      <h1>Resultado del <span>Pago</span></h1>
+      <p class="pr-hero-sub">Verificación de tu transacción con Transbank Webpay Plus</p>
+    </div>
+  </div>
+  <div class="pr-body">
+    <div id="pago-result-content" class="pr-estado pr-neutral">
+      <div class="pr-spinner"></div>
+      <p>Verificando tu pago...</p>
+    </div>
+  </div>
+</div><!-- /page-pago-resultado -->
 
 <!-- Modal detalle cotización -->
 <div id="mc-modal" role="dialog" aria-modal="true" onclick="if(event.target===this) mcCerrarModal()">

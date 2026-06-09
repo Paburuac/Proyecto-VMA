@@ -51,7 +51,7 @@ export async function obtenerCotizaciones(filtroEstado = '') {
   try {
     let query = supabase
       .from('cotizaciones')
-      .select('id, nombre, empresa, email, telefono, mensaje, productos_solicitados, estado, created_at, usuario_id')
+      .select('id, nombre, empresa, email, telefono, mensaje, productos_solicitados, estado, precio_final, created_at, usuario_id')
       .order('created_at', { ascending: false })
 
     if (filtroEstado) query = query.eq('estado', filtroEstado)

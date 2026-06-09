@@ -1,0 +1,109 @@
+/* ============================================================
+   pagoResultado.css — Página de resultado de pago Transbank
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.pr-hero {
+  background: linear-gradient(135deg, var(--azul) 0%, #005580 100%);
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  color: #fff;
+}
+
+.pr-hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin: 0 0 .5rem;
+}
+
+.pr-hero h1 span { color: var(--verde); }
+
+.pr-hero-sub {
+  font-size: .95rem;
+  opacity: .85;
+  margin: 0;
+}
+
+/* ── Cuerpo ───────────────────────────────────────────────── */
+.pr-body {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+/* ── Estado (bloque central) ─────────────────────────────── */
+.pr-estado {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+
+.pr-icono {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+}
+
+.pr-estado h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--azul);
+  margin: 0 0 .75rem;
+}
+
+.pr-estado p {
+  color: #556;
+  margin: 0 0 .5rem;
+  line-height: 1.5;
+}
+
+.pr-sub {
+  font-size: .9rem;
+  opacity: .75;
+}
+
+.pr-monto {
+  font-size: 1.1rem;
+  margin-top: .5rem;
+}
+
+.pr-monto strong { color: var(--azul); }
+
+/* ── Estados de color ────────────────────────────────────── */
+.pr-aprobado  { border-top: 4px solid #27ae60; }
+.pr-rechazado { border-top: 4px solid #e74c3c; }
+.pr-neutral   { border-top: 4px solid var(--azul); }
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.pr-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e0e7ef;
+  border-top-color: var(--azul);
+  border-radius: 50%;
+  animation: pr-spin .9s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes pr-spin { to { transform: rotate(360deg); } }
+
+.pr-verificando h2 { color: #445; }
+.pr-verificando p  { color: #778; font-size: .9rem; }
+
+/* ── Botón ───────────────────────────────────────────────── */
+.pr-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: .7rem 1.75rem;
+  background: var(--azul);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s;
+}
+
+.pr-btn:hover { background: #005580; }

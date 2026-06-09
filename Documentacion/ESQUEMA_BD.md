@@ -122,11 +122,28 @@ Solicitudes de cotización enviadas por clientes.
 |--------|-------------|
 | `pendiente` | Recién enviada, sin revisar |
 | `revisada` | Vista por admin/trabajador, en proceso |
-| `respondida` | Atendida y respondida al cliente |
+| `respondida` | Respondida al cliente; incluye `precio_final` si hay pago habilitado |
 
 **Notas:**
 - Al crear una cotización se llama a la Edge Function `notificar-cotizacion` para enviar email de notificación (sin bloquear el flujo).
 - Los clientes anónimos (sin cuenta) pueden cotizar; en ese caso `usuario_id` es null.
+- El campo `precio_final` (integer CLP) lo ingresa el trabajador/admin al marcar como "respondida". Habilita el botón de pago Transbank en el panel del cliente.
+
+---
+
+### `pagos`
+
+Transacciones Transbank Webpay Plus asociadas a cotizaciones. Ver [`migracion_transbank.sql`](migracion_transbank.sql).
+
+| Columna | Tipo | Descripción |
+|---------|------|-------------|
+| `id` | int (PK, IDENTITY) | Identificador |
+| `cotizacion_id` | int (FK → cotizaciones.id) | Cotización pagada |
+| `token_ws` | varchar(100) UNIQUE | Token de sesión Transbank |
+| `estado` | varchar | `pendiente` \| `aprobado` \| `rechazado` \| `anulado` |
+| `monto` | integer | Monto cobrado en CLP |
+| `respuesta_tb` | jsonb | Respuesta completa de Transbank al confirmar |
+| `created_at` | timestamptz | Fecha de la transacción |
 
 ---
 
@@ -142,3 +159,9 @@ Ruta de archivos: `{id_producto}_{timestamp}.{ext}`
 
 **`notificar-cotizacion`**  
 Disparada al crear una cotización. Envía email de notificación al equipo VMA con los datos del solicitante y los productos pedidos.
+
+**`crear-transaccion`** *(pendiente de implementar)*  
+Recibe `cotizacion_id`, valida que el usuario es dueño y que hay `precio_final`, crea la transacción en Transbank y retorna `token_ws` + URL de pago.
+
+**`confirmar-transaccion`** *(pendiente de implementar)*  
+Recibe `token_ws` desde la `return_url` de Transbank, confirma la transacción, guarda resultado en `pagos` y actualiza el estado de la cotización.

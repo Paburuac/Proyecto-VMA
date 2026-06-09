@@ -208,7 +208,7 @@ function twRenderFila(c) {
           🔍 Revisar
         </button>` : ''}
         ${c.estado !== 'respondida' ? `
-        <button class="tw-btn tw-btn-responder" onclick="twCambiarEstado(${c.id}, 'respondida')" title="Marcar como respondida">
+        <button class="tw-btn tw-btn-responder" onclick="twMostrarFormResponder(${c.id})" title="Marcar como respondida">
           ✅ Responder
         </button>` : ''}
         ${c.estado === 'respondida' ? `
@@ -335,7 +335,7 @@ window.twVerDetalle = function(id) {
             🔍 Marcar en revisión
           </button>
           <button class="tw-btn tw-btn-responder tw-btn-lg ${c.estado === 'respondida' ? 'disabled' : ''}"
-            onclick="twCambiarEstado(${c.id}, 'respondida');twCerrarModal()"
+            onclick="twMostrarFormResponder(${c.id})"
             ${c.estado === 'respondida' ? 'disabled' : ''}>
             ✅ Marcar como respondida
           </button>
@@ -363,6 +363,89 @@ window.twCerrarModal = function() {
   const modal = document.getElementById('tw-modal')
   modal.classList.remove('visible')
   setTimeout(() => { modal.style.display = 'none' }, 220)
+}
+
+/* ═══════════════════════════════════════════════
+   FORMULARIO RESPONDER (con precio final)
+═══════════════════════════════════════════════ */
+window.twMostrarFormResponder = function(id) {
+  const c = twState.cotizaciones.find(x => x.id === id)
+  if (!c) return
+
+  document.getElementById('tw-modal-title').innerHTML =
+    `Responder Cotización <strong>#${c.id}</strong>`
+
+  document.getElementById('tw-modal-body').innerHTML = `
+    <div class="tw-detalle">
+      <div class="tw-detalle-seccion">
+        <h4 class="tw-detalle-titulo">💰 Precio final acordado</h4>
+        <p style="margin-bottom:1.25rem;color:#556;font-size:.95rem;line-height:1.5">
+          Ingresa el monto total que pagará el cliente. Este valor aparecerá en su panel
+          y habilitará el botón de pago con Transbank Webpay Plus.
+        </p>
+        <div>
+          <label style="display:block;margin-bottom:.5rem;font-weight:600;font-size:.9rem;color:#003B5C">
+            Monto (CLP)
+          </label>
+          <input
+            type="number"
+            id="tw-precio-input"
+            min="1"
+            step="1"
+            placeholder="Ej: 150000"
+            value="${c.precio_final || ''}"
+            style="width:100%;padding:.65rem .9rem;border:2px solid #d0d7e2;border-radius:8px;
+                   font-size:1rem;outline:none;transition:border-color .2s"
+            onfocus="this.style.borderColor='#003B5C'"
+            onblur="this.style.borderColor='#d0d7e2'"
+            onkeydown="if(event.key==='Enter')twConfirmarRespuesta(${c.id})"
+          >
+        </div>
+      </div>
+    </div>
+    <div class="tw-modal-footer">
+      <button class="tw-btn tw-btn-responder tw-btn-lg" onclick="twConfirmarRespuesta(${c.id})">
+        ✅ Confirmar y marcar como respondida
+      </button>
+      <button class="tw-btn tw-btn-neutral tw-btn-lg" onclick="twCerrarModal()">
+        Cancelar
+      </button>
+    </div>
+  `
+
+  const modal = document.getElementById('tw-modal')
+  modal.style.display = 'flex'
+  requestAnimationFrame(() => modal.classList.add('visible'))
+  setTimeout(() => document.getElementById('tw-precio-input')?.focus(), 150)
+}
+
+window.twConfirmarRespuesta = async function(id) {
+  const input  = document.getElementById('tw-precio-input')
+  const precio = parseInt(input?.value || '0', 10)
+
+  if (!precio || precio <= 0) {
+    showToast('⚠️ Ingresa un precio válido mayor a $0.')
+    input?.focus()
+    return
+  }
+
+  if (input) input.disabled = true
+
+  const { error } = await window.cotizacionService.actualizarConPrecioFinal(id, precio)
+
+  if (error) {
+    showToast('❌ Error al actualizar la cotización.')
+    if (input) input.disabled = false
+    return
+  }
+
+  const cot = twState.cotizaciones.find(c => c.id === id)
+  if (cot) { cot.estado = 'respondida'; cot.precio_final = precio }
+
+  showToast(`✅ Cotización #${id} respondida — Precio: $${precio.toLocaleString('es-CL')}`)
+  twCerrarModal()
+  twRenderFiltros()
+  twRenderTabla()
 }
 
 /* ═══════════════════════════════════════════════

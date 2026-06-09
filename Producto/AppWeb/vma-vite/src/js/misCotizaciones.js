@@ -168,6 +168,11 @@ function renderTarjeta(c) {
           <span class="mc-info-label">Productos</span>
           <span class="mc-info-val mc-prods-resumen">${escHtml(resumenProds)}</span>
         </div>
+        ${c.precio_final > 0 ? `
+        <div class="mc-info-row mc-precio-row">
+          <span class="mc-info-label">Precio acordado</span>
+          <span class="mc-info-val mc-precio-final">$${Number(c.precio_final).toLocaleString('es-CL')}</span>
+        </div>` : ''}
         ${c.mensaje ? `
         <div class="mc-info-row">
           <span class="mc-info-label">Mensaje</span>
@@ -184,6 +189,10 @@ function renderTarjeta(c) {
           <button class="mc-btn mc-btn-pdf" onclick="mcDescargarPDF(${c.id})">
             ⬇️ Descargar PDF
           </button>
+          ${c.precio_final > 0 ? `
+          <button class="mc-btn mc-btn-pagar" onclick="mcIniciarPago(${c.id})">
+            💳 Pagar $${Number(c.precio_final).toLocaleString('es-CL')}
+          </button>` : ''}
         </div>
       </div>
     </div>
@@ -234,6 +243,11 @@ window.mcVerDetalle = function(id) {
             <span class="mc-detalle-label">Fecha de envío</span>
             <span class="mc-detalle-val">${fecha}</span>
           </div>
+          ${c.precio_final > 0 ? `
+          <div class="mc-detalle-item mc-detalle-full">
+            <span class="mc-detalle-label">Precio final acordado</span>
+            <span class="mc-detalle-val mc-precio-acordado">$${Number(c.precio_final).toLocaleString('es-CL')}</span>
+          </div>` : ''}
           ${c.mensaje ? `
           <div class="mc-detalle-item mc-detalle-full">
             <span class="mc-detalle-label">Mensaje adicional</span>
@@ -310,6 +324,10 @@ window.mcVerDetalle = function(id) {
     </div>
 
     <div class="mc-modal-footer">
+      ${c.precio_final > 0 ? `
+      <button class="mc-btn mc-btn-pagar mc-btn-lg" onclick="mcIniciarPago(${c.id});mcCerrarModal()">
+        💳 Pagar $${Number(c.precio_final).toLocaleString('es-CL')}
+      </button>` : ''}
       <button class="mc-btn mc-btn-pdf mc-btn-lg" onclick="mcDescargarPDF(${c.id});mcCerrarModal()">
         ⬇️ Descargar PDF
       </button>
@@ -556,6 +574,25 @@ window.mcDescargarPDF = function(id) {
   // ── GUARDAR ───────────────────────────────
   doc.save(`VMA-Cotizacion-${c.id}.pdf`)
   showToast('✅ PDF descargado correctamente.')
+}
+
+/* ═══════════════════════════════════════════════
+   PAGO CON TRANSBANK
+═══════════════════════════════════════════════ */
+window.mcIniciarPago = async function(id) {
+  const c = mcState.cotizaciones.find(x => x.id === id)
+  if (!c || !c.precio_final) return
+
+  // TODO (Fase 2): llamar Edge Function crear-transaccion y redirigir a Transbank
+  // const resp = await fetch('https://<proyecto>.supabase.co/functions/v1/crear-transaccion', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+  //   body: JSON.stringify({ cotizacion_id: c.id }),
+  // })
+  // const { url, token_ws } = await resp.json()
+  // window.location.href = `${url}?token_ws=${token_ws}`
+
+  showToast('⚙️ El sistema de pago está siendo configurado. Pronto estará disponible.')
 }
 
 /* ═══════════════════════════════════════════════

@@ -173,7 +173,7 @@ function renderTablaCotzaciones(cont) {
         <thead>
           <tr>
             <th>#</th><th>Fecha</th><th>Nombre</th><th>Empresa</th>
-            <th>Email</th><th>Teléfono</th><th>Productos</th><th>Estado</th><th>Acciones</th>
+            <th>Email</th><th>Teléfono</th><th>Productos</th><th>Estado</th><th>Precio</th><th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -191,6 +191,9 @@ function renderTablaCotzaciones(cont) {
                 </button>
               </td>
               <td>${estadoBadge(c.estado)}</td>
+              <td style="font-weight:${c.precio_final ? '700' : '400'};color:${c.precio_final ? '#1a7cdd' : '#aaa'}">
+                ${c.precio_final ? '$' + Number(c.precio_final).toLocaleString('es-CL') : '—'}
+              </td>
               <td class="admin-acciones">
                 <select class="admin-select-estado" onchange="adminCambiarEstadoCotizacion(${c.id}, this.value)">
                   <option value="pendiente"  ${c.estado==='pendiente'  ? 'selected':''}>Pendiente</option>
@@ -208,11 +211,78 @@ function renderTablaCotzaciones(cont) {
 }
 
 window.adminCambiarEstadoCotizacion = async function(id, nuevoEstado) {
+  if (nuevoEstado === 'respondida') {
+    adminMostrarFormPrecio(id)
+    return
+  }
   const { error } = await window.adminService.actualizarEstadoCotizacion(id, nuevoEstado)
   if (error) { showToast('❌ Error al actualizar estado.'); return }
   showToast(`✅ Cotización #${id} → ${nuevoEstado}`)
   const item = adminState.cotizaciones.find(c => c.id === id)
   if (item) item.estado = nuevoEstado
+  const cont = document.getElementById('admin-cotizaciones-content')
+  if (cont) renderTablaCotzaciones(cont)
+}
+
+function adminMostrarFormPrecio(id) {
+  const cot = adminState.cotizaciones.find(c => c.id === id)
+  if (!cot) return
+
+  document.getElementById('admin-modal-title').textContent = `Responder Cotización #${id}`
+  document.getElementById('admin-modal-body').innerHTML = `
+    <p style="margin-bottom:1rem;color:#445;line-height:1.5">
+      Ingresa el <strong>precio final acordado</strong>. El cliente verá este monto
+      y podrá pagar con Transbank Webpay Plus.
+    </p>
+    <div style="margin-bottom:1.25rem">
+      <label style="display:block;margin-bottom:.4rem;font-weight:600;font-size:.9rem">
+        Monto (CLP)
+      </label>
+      <input
+        type="number"
+        id="admin-precio-input"
+        min="1"
+        step="1"
+        placeholder="Ej: 150000"
+        value="${cot.precio_final || ''}"
+        style="width:100%;padding:.6rem .8rem;border:2px solid #d0d7e2;border-radius:8px;
+               font-size:1rem;outline:none"
+        onkeydown="if(event.key==='Enter')adminConfirmarPrecio(${id})"
+      >
+    </div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <button class="admin-btn admin-btn-ok" onclick="adminConfirmarPrecio(${id})">
+        ✅ Confirmar
+      </button>
+      <button class="admin-btn" onclick="document.getElementById('admin-modal').style.display='none';adminRecargarSelect(${id})">
+        Cancelar
+      </button>
+    </div>
+  `
+  document.getElementById('admin-modal').style.display = 'flex'
+  setTimeout(() => document.getElementById('admin-precio-input')?.focus(), 100)
+}
+
+window.adminConfirmarPrecio = async function(id) {
+  const precio = parseInt(document.getElementById('admin-precio-input')?.value || '0', 10)
+  if (!precio || precio <= 0) { showToast('⚠️ Ingresa un precio válido.'); return }
+
+  const { error } = await window.cotizacionService.actualizarConPrecioFinal(id, precio)
+  if (error) { showToast('❌ Error al actualizar.'); return }
+
+  const item = adminState.cotizaciones.find(c => c.id === id)
+  if (item) { item.estado = 'respondida'; item.precio_final = precio }
+
+  document.getElementById('admin-modal').style.display = 'none'
+  showToast(`✅ Cotización #${id} respondida — $${precio.toLocaleString('es-CL')}`)
+  const cont = document.getElementById('admin-cotizaciones-content')
+  if (cont) renderTablaCotzaciones(cont)
+}
+
+window.adminRecargarSelect = function(id) {
+  // Restaura el select al estado real de la cotización si se canceló
+  const item = adminState.cotizaciones.find(c => c.id === id)
+  if (!item) return
   const cont = document.getElementById('admin-cotizaciones-content')
   if (cont) renderTablaCotzaciones(cont)
 }

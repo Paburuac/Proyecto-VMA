@@ -14,7 +14,8 @@ const rutasProtegidas = {
   'page-admin':            () => typeof window.isAdmin      === 'function' && window.isAdmin(),
   'page-trabajador':       () => typeof window.isTrabajador === 'function' && window.isTrabajador(),
   'page-mis-cotizaciones': () => window.authState?.loggedIn === true,
-  'page-cotizacion':       () => true,   // accesible para todos, pero pre-llena si logueado
+  'page-cotizacion':       () => true,
+  'page-pago-resultado':   () => true,
 }
 
 /* -----------------------------------------------
@@ -53,6 +54,10 @@ function showPage(id) {
         window.prellenarFormContacto()
       }
     }, 100)
+  }
+
+  if (id === 'page-pago-resultado') {
+    if (typeof window.initPagoResultado === 'function') window.initPagoResultado()
   }
 }
 

@@ -87,7 +87,7 @@ export async function obtenerMisCotizaciones() {
 
     const { data, error } = await supabase
       .from('cotizaciones')
-      .select('id, nombre, empresa, email, telefono, mensaje, estado, productos_solicitados, created_at')
+      .select('id, nombre, empresa, email, telefono, mensaje, estado, precio_final, productos_solicitados, created_at')
       .eq('usuario_id', usuarioId)
       .order('created_at', { ascending: false })
 
@@ -123,6 +123,7 @@ export async function obtenerTodasCotizaciones() {
         mensaje,
         productos_solicitados,
         estado,
+        precio_final,
         created_at,
         updated_at
       `)
@@ -138,6 +139,37 @@ export async function obtenerTodasCotizaciones() {
   } catch (err) {
     console.error('[VMA Cotizacion] obtenerTodasCotizaciones excepción:', err)
     return { data: null, error: err }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   actualizarConPrecioFinal(id, precioFinal)
+   Solo para admin y trabajador.
+   Marca la cotización como 'respondida' y guarda
+   el precio final acordado (CLP entero).
+───────────────────────────────────────────── */
+export async function actualizarConPrecioFinal(id, precioFinal) {
+  try {
+    const { error } = await supabase
+      .from('cotizaciones')
+      .update({
+        estado:       'respondida',
+        precio_final: precioFinal,
+        updated_at:   new Date().toISOString(),
+      })
+      .eq('id', id)
+
+    if (error) {
+      console.error('[VMA Cotizacion] actualizarConPrecioFinal error:', error.message)
+      return { error }
+    }
+
+    console.log('[VMA Cotizacion] cotización respondida con precio – id:', id, 'precio:', precioFinal)
+    return { error: null }
+
+  } catch (err) {
+    console.error('[VMA Cotizacion] actualizarConPrecioFinal excepción:', err)
+    return { error: err }
   }
 }
 

@@ -19,6 +19,7 @@ import * as adminService from './services/adminService.js'
 import './js/admin.js'
 import './js/misCotizaciones.js'
 import './js/panelTrabajador.js'
+import './js/pagoResultado.js'
 
 // Exponer carritoService globalmente para que carrito.js pueda usarlo
 window.carritoService    = carritoService
@@ -124,10 +125,23 @@ function inicializarApp() {
       initProductos()
     }
   }
+
+  // Si Transbank redirigió al usuario de vuelta con un token, ir a resultado
+  if (sessionStorage.getItem('transbank_token_ws')) {
+    window.showPage('page-pago-resultado')
+  }
 }
 
 // ─── Arrancar ────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  // Capturar token_ws de Transbank antes de que la URL desaparezca
+  const urlParams = new URLSearchParams(window.location.search)
+  const tokenWs   = urlParams.get('token_ws')
+  if (tokenWs) {
+    sessionStorage.setItem('transbank_token_ws', tokenWs)
+    window.history.replaceState({}, document.title, window.location.pathname)
+  }
+
   // 1. Verificar sesión existente PRIMERO (antes de mostrar UI)
   await inicializarAuth()
 

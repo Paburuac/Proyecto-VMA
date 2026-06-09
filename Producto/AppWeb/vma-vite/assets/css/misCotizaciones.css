@@ -254,6 +254,28 @@
 }
 .mc-btn-neutral:hover { background: #b0b9c4; }
 
+.mc-btn-pagar {
+  background: #1a7cdd;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 2px 8px rgba(26,124,221,.25);
+}
+.mc-btn-pagar:hover { background: #1567c0; }
+
+/* Precio acordado en tarjeta */
+.mc-precio-row { border-top: 1px solid #e8edf3; padding-top: .4rem; }
+.mc-precio-final {
+  font-weight: 700;
+  color: #1a7cdd;
+  font-size: 1.05rem;
+}
+.mc-precio-acordado {
+  font-weight: 700;
+  color: #1a7cdd;
+  font-size: 1.1rem;
+}
+
 .mc-btn-lg {
   padding: 0.6rem 1.4rem;
   font-size: 0.9rem;
