@@ -591,16 +591,32 @@ window.mcIniciarPago = async function(id) {
   const c = mcState.cotizaciones.find(x => x.id === id)
   if (!c || !c.precio_final) return
 
-  // TODO (Fase 2): llamar Edge Function crear-transaccion y redirigir a Transbank
-  // const resp = await fetch('https://<proyecto>.supabase.co/functions/v1/crear-transaccion', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-  //   body: JSON.stringify({ cotizacion_id: c.id }),
-  // })
-  // const { url, token_ws } = await resp.json()
-  // window.location.href = `${url}?token_ws=${token_ws}`
+  showToast('⏳ Iniciando pago...')
 
-  showToast('⚙️ El sistema de pago está siendo configurado. Pronto estará disponible.')
+  try {
+    const { data: { session } } = await window.supabaseClient.auth.getSession()
+    const token = session?.access_token
+    if (!token) { showToast('❌ Debes iniciar sesión para pagar.'); return }
+
+    const resp = await fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/crear-transaccion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ cotizacion_id: c.id }),
+    })
+
+    const data = await resp.json()
+    if (!resp.ok || !data.url || !data.token_ws) {
+      console.error('[VMA Pago] crear-transaccion error:', data)
+      showToast('❌ Error al iniciar el pago. Intenta nuevamente.')
+      return
+    }
+
+    window.location.href = `${data.url}?token_ws=${data.token_ws}`
+
+  } catch (err) {
+    console.error('[VMA Pago] mcIniciarPago excepción:', err)
+    showToast('❌ Error al conectar con el servidor de pago.')
+  }
 }
 
 /* ═══════════════════════════════════════════════

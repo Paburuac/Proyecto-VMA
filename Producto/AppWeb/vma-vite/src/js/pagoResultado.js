@@ -30,18 +30,18 @@ export async function initPagoResultado() {
 
 async function confirmarPago(tokenWs, cont) {
   try {
-    // TODO: Llamar Edge Function confirmar-transaccion (Fase 2)
-    // const resp = await fetch('https://<proyecto>.supabase.co/functions/v1/confirmar-transaccion', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ token_ws: tokenWs }),
-    // })
-    // const result = await resp.json()
-    // if (result.estado === 'aprobado') { cont.innerHTML = renderResultado('aprobado', result) }
-    // else { cont.innerHTML = renderResultado('rechazado', result) }
+    const resp = await fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/confirmar-transaccion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token_ws: tokenWs }),
+    })
 
-    // Placeholder hasta que la Edge Function esté disponible
-    cont.innerHTML = renderResultado('pendiente-configuracion')
+    const result = await resp.json()
+    if (result.estado === 'aprobado') {
+      cont.innerHTML = renderResultado('aprobado', result)
+    } else {
+      cont.innerHTML = renderResultado('rechazado', result)
+    }
 
   } catch (err) {
     console.error('[VMA Pago] Error al confirmar transacción:', err)

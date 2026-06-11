@@ -16,6 +16,7 @@ import * as carritoService from './services/carritoService.js'
 import * as cotizacionService from './services/cotizacionService.js'
 import { inicializarAuth } from './js/auth.js'
 import * as adminService from './services/adminService.js'
+import { supabase } from './services/supabase.js'
 import './js/admin.js'
 import './js/misCotizaciones.js'
 import './js/panelTrabajador.js'
@@ -26,6 +27,7 @@ window.carritoService    = carritoService
 window.cotizacionService = cotizacionService
 window.adminService      = adminService
 window.productoService   = { buscarProductos, construirCatalogo, obtenerVariantes }
+window.supabaseClient    = supabase
 import './js/router.js'
 import './js/productos.js'
 import './js/carrito.js'
