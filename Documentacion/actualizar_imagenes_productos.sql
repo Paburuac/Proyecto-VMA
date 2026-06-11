@@ -1,322 +1,196 @@
--- ================================================================
--- Actualización de imagen_url para productos del catálogo VMA
--- Fuente imágenes: kupfer.cl CDN (URLs estables)
--- Fecha: 2026-06-05
---
--- Solo actualiza productos que NO tienen imagen (imagen_url IS NULL)
--- y que sean productos padre (id_padre IS NULL).
--- ================================================================
+-- Script: Actualizar imagen_url de productos sin imagen
+-- Generado: 2026-06-10
+-- Fuente: búsqueda web de imágenes representativas por categoría/fabricante
+-- Instrucciones: ejecutar en Supabase SQL Editor
 
-BEGIN;
+-- HERRAMIENTAS - Brocas Makita concreto
+UPDATE producto SET imagen_url = 'https://www.sodimac.cl/sodimac-cl/product/3433900/Broca-para-concreto-6x150-mm/3433900' WHERE codigo IN ('5234', '5262') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.chrisco.cl/productos/brocas/brocas-hss-metal/broca-hss-metal-acero-aleaciones-10-mm-diametro.php' WHERE codigo IN ('9721', '10179', '10281', '11486', '11539') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 1. SOLDADORAS MMA / ARCO MANUAL / INVERSORAS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/i/n/inversora_200_led_katto.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '(SOLDADORA|MAQUINA.*SOLD|INVERSORA).*(MMA|ARC\s|ARC\d|LED|VRD|PRO|LCD|200|300|400|GLINT|INDURARC|KATANA|SAMURAI|FLASH)'
-  AND descripcion !~* '\bMIG\b|\bTIG\b|PLASMA|OXICORTE';
+-- GRATAS / ESCOBILLAS - Escobillas de mano
+UPDATE producto SET imagen_url = 'https://isesacl.vtexassets.com/arquivos/ids/156804-800-800?v=637178055922830000&width=800&height=800&aspect=true' WHERE codigo IN ('11055', '12050', '13100', '13200', '13500', '14115') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 2. SOLDADORAS MIG / MAG
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/k/a/katto_mig_180_1.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '(SOLDADORA|MAQUINA.*SOLD).*(MIG|MAG)|AMIGO.*453|COMPACTMIG|MEGAMIG|MULTIPRO.*200';
+-- GRATAS / ESCOBILLAS - Gratas circulares
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/r/b/rbg-11512-22-2-st-0-50-rgb_1.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo IN ('20510','21030','21040','21095','21565','21580','29510','31033','31037','31040','31053','31101','31116','31151','31170','31360','33574','33805','41010','41012','41025','41332','41356','41812','42020','42085','42110','44021','44785','50275','50610') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 3. SOLDADORAS TIG
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/t/i/tig_acdc.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '(SOLDADORA|MAQUINA.*SOLD).*(TIG|HF)|MASTERTIG|MINARC.*TIG|SYNCROWAVE|ARCTIG|PROTIG';
+-- CUIDADO PERSONAL - Lentes 3M
+UPDATE producto SET imagen_url = 'https://redsuministros.com/wp-content/uploads/2021/08/3M_11796_a-570x570.jpg' WHERE codigo = '11873' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 4. EQUIPOS CORTE PLASMA
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/n/antorcha_plasma_autom_tica_lc_65m_de_7_5m_1_uvhxk6lsvnlol3ed.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* 'EQUIPO.*CORTE.*PLASMA|CORTE.*PLASMA.*CUT|PLASMA.*CUT\-\d|POWERMAX|INVERCUT';
+-- ACCESORIOS - Cinta ducto
+UPDATE producto SET imagen_url = 'https://dosestrellas-ecommerce.s3.amazonaws.com/imagenes/productos/3003043808_43.jpg' WHERE codigo = '12587' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 5. EQUIPOS OXICORTE COMPLETOS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/k/i/kit_de_oxi_-_propano_heavy_duty_1.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* 'EQUIPO.*(SOLDAR.*CORTAR|CORTAR.*SOLDAR|FLAMEPOWER|OXIGAS|MASTER.*KIT|MASTER.*CORTE|JOURNEYMAN|TORCHAR|OXI.*PROPANO|OXI.*LPG)|MALETA.*(CORTE|SOLDAR)|RANA.*CORTE|CARRO.*OXICORTE';
+-- CALZADO - Botín Quebec 250
+UPDATE producto SET imagen_url = 'https://www.apro.cl/cdn/shop/files/441790-800-auto.jpg?v=1712602875&width=1200' WHERE codigo IN ('25039','25040','25041','25042','25043','25044') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 6. HORNOS PARA ELECTRODOS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/h/o/horno_para_soldadura_.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^HORNO\b';
+-- CALZADO - Botín Nazca Roble
+UPDATE producto SET imagen_url = 'https://www.apro.cl/cdn/shop/files/image-24b3b5ac18724723a8bbe8ddfe797ba5.jpg?v=1751899226&width=1200' WHERE codigo = '30840' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 7. ELECTRODOS DE SOLDADURA
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/e/l/electrodo-power-k-plus-6011-3_32_-_kg_-edited_lxvtk4jlg5wvlywm.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^ELECTRODO\b';
+-- CALZADO - Botín Quebec 400
+UPDATE producto SET imagen_url = 'https://www.apro.cl/cdn/shop/files/441790-800-auto.jpg?v=1712602875&width=1200' WHERE codigo IN ('40039','40040','40041','40042','40043','40044') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 8. VARILLAS TIG Y APORTE
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/v/a/varilla_tig_er-316l__1_1.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^VARILLA\b|^APORTE.*TIG\b|^GRAFITO\b';
+-- CALZADO - Botín Puelche II
+UPDATE producto SET imagen_url = 'https://rac.cl/cdn/shop/files/9e28f414-5f9f-4272-be4a-2800beb0e14e.jpg?v=1779127112&width=1445' WHERE codigo = '302040' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 9. ALAMBRE MIG SÓLIDO (bobina)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/l/alambre_katto_4_1.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^ALAMBRE\s+MIG\b'
-  AND descripcion !~* 'TUBULAR';
+-- CALZADO - Zapatilla Redbrick Comet
+UPDATE producto SET imagen_url = 'https://www.tecnoboga.cl/zapatilla-redbrick-comet/p' WHERE codigo = '203742' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 10. ALAMBRE TUBULAR / FCW
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/l/alambre-tubular-power-k-plus-e71t-1m-1_6mm-edited_2_ydkfbhr1obigv388.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '(ALAMBRE|A\.).*TUBULAR|^A\.TUBULAR\b';
+-- SOLDADURA - Máquinas Hyundai HG200
+UPDATE producto SET imagen_url = 'https://bpmac.cl/products/maquina-soldar-mig-5-kg-200-amp-hg-200-hyundai' WHERE codigo IN ('37200','37201') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 11. DISCOS DE CORTE
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/c/o/corte_inox_4_5_x_1.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^DISCO\s+(CORTE|CORTE\s+FINO|CORTE\s+INOX)\b'
-  AND descripcion !~* 'LAMINADO|LAMINA|DIAMANT|DESBASTE';
+-- HERRAMIENTAS - Equipo Journeyman acetileno
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/CEC-111140660-EQUIPO-JOURNEYMAN-ADGE-ACETILENO-0384-2101.jpg?v=1706028295&width=1500' WHERE codigo = '40660' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 12. DISCOS DE DESBASTE
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/d/e/desbaste_carbono_7_x_6_4.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^DISCO\s+DESBASTE\b';
+-- DIFUSORES / BOQUILLAS - Binzel 36
+UPDATE producto SET imagen_url = 'https://cimex.cl/225-large_default/porta-boquilla-mig-binzel-36-m6-m8-md0131.webp' WHERE codigo IN ('100013','100014','100018') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.repuestosoldadoras.cl/wp-content/uploads/2026/04/boquilla-binzel.jpg' WHERE codigo IN ('100016','100017') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 13. DISCOS LAMINADOS / FLAP DISC
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/d/i/discopowerk-estandar_5_zu4uyhsivq7jkwoq.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^DISCO\s+(LAMINADO|DE\s+LAMINA|TRASLAPADO)\b';
+-- SOLDADURA - Equipos de corte plasma
+UPDATE producto SET imagen_url = 'https://weldfan.cl/wp-content/uploads/2024/08/cut-45-600x600.jpg' WHERE codigo IN ('100045','1000045') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.dplas.cl/329-large_default/maquina-corte-plasma-cut100-mitech.jpg' WHERE codigo = '100201' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MER-0000160-MAQUINA-CORTE-PLASMA-WTC-CUT160-380V160A.jpg?v=1706028413&width=1500' WHERE codigo = '220370' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 14. GRATAS CIRCULARES Y COPA
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/r/b/rbg-15013-22-2-st-0-60-rgb_1.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^GRATA\b';
+-- SOLDADURA - Reguladores de gas
+UPDATE producto SET imagen_url = 'https://sermaind.cl/wp-content/uploads/2023/04/IND1510044.jpg' WHERE codigo IN ('100267','1000397','1000622','1001701','1002225','1008054','1009203') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://cdnx.jumpseller.com/mia-parweld1/image/53562185/801DB-10-0X_harris.png?1726848653' WHERE codigo IN ('1007336','1007337') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://images.tcdn.com.br/img/img_prod/469103/regulador_de_pressao_para_oxigenio_md_10_ox_1077185_1_20161010104941.jpg' WHERE codigo = '407782' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 15. ESCOBILLAS (circulares y de mano)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/r/b/rbg-15013-22-2-st-0-60-rgb_1.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^ESCOBILLA\b|^CEPILLO\s+(BRONCE|ACERO)\b';
+-- SOLDADURA - Máquinas MITECH
+UPDATE producto SET imagen_url = 'https://www.dplas.cl/321-large_default/maquina-soldar-tig-250a-mitech.jpg' WHERE codigo IN ('101270','201065') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 16. REGULADORES Y FLUJÓMETROS DE GAS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/p/h/photo_for_119999_200-15fl-ar_.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^REGULADOR\b';
+-- SOLDADURA - Inversoras KATTO
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/r/arc400.png?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo IN ('108826','162192') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/m/a/maquina_de_soldar_katto_mig_350_380v.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo = '157545' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 17. PISTOLAS TIG (antorchas TIG)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/1/1/119831.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^PISTOLA\s+TIG\b';
+-- SOLDADURA - Máquinas WTC / GLINT (soltec.cl)
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEM-220335-MAQUINA-SOLDADORA-A.MANUAL-WTC-140-MMA-D220V-140A.png?v=1706028420&width=1500' WHERE codigo IN ('220140','220320') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEM-220241-MAQUINA-SOLDADORA-A.-MANUAL-WTC-300-MMA-D380V-300A.png?v=1706028416&width=1500' WHERE codigo = '220241' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEI-220300-MAQUINA-SOLDADORA-MIG-MOD.-WTC-300-220V-300A.jpg?v=1706028434&width=1500' WHERE codigo IN ('220300','220355') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEM-220338-MAQUINA-SOLDAR-A.MANUAL-GLINT-180-MMA-D-220V-180A.png?v=1706028680&width=1500' WHERE codigo = '220338' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/Diseno-sin-titulo-78.png?v=1706028687&width=1500' WHERE codigo = '220339' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEM-220340-MAQUINA-SOLDADORA-A.MANUAL-WTC-200-MMA-D220V-200A.png?v=1706028424&width=1500' WHERE codigo = '220340' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MET-2200220-MAQUINA-SOLDADORA-TIG-MOD.-GLINT-200HF-220V-200A.jpg?v=1706028673&width=1500' WHERE codigo = '220380' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEI-380350-MAQUINA-SOLDADORA-MIG-MOD.-WTC-350M-380V-350A.png?v=1706028437&width=1500' WHERE codigo IN ('380350','380351') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEI-220365-MAQUINA-SOLDADORA-MIG-WTC-500-DE-380V-500A.png?v=1706028441&width=1500' WHERE codigo = '380352' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.patioferretero.cl/soldadora-tig-mma-wtc-215hfr-200a-weltec-mem-220242.html' WHERE codigo = '220242' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 18. PISTOLAS MIG (antorchas MIG)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/p/i/pistola_magnum_400_k479-4_oferta.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(PISTOLA|PIST\.)\s+MIG\b';
+-- SOLDADURA - Máquina SOLDADORA MITECH A/M 400A
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/MEI-380350-MAQUINA-SOLDADORA-MIG-MOD.-WTC-350M-380V-350A.png?v=1706028437&width=1500' WHERE codigo = '201065' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 19. SOPLETES DE CORTE Y CALENTAMIENTO
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/s/o/soplete_cortador_acetileno_90_grados_62-3_hd.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^SOPLETE\b|^MANGO\s+(PARA\s+SOLDAR|CORTADOR)\b|^ADITAMENTO\s+DE\s+CORTE\b|^MEZCLADOR\b';
+-- CUIDADO PERSONAL - Raytan protector solar
+UPDATE producto SET imagen_url = 'https://www.globalseguridad.cl/wp-content/uploads/2023/04/Raytan-protector-solar-FPS-50-1-lt.png' WHERE codigo IN ('543001','543003') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://toolwork.cl/cdn/shop/files/Disenosintitulo-2025-04-28T180549.482.png?v=1745877968&width=1000' WHERE codigo = '543004' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 20. BOQUILLAS DE CORTE Y CALENTAR (oxiacetilenicas)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/c/a/captura_de_pantalla_2020-01-06_a_la_s_16.56.20_1_1.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^BOQUILLA\s+(CORTE|CALENTAR|SOLDAR)\b';
+-- SOLDADURA - Pistolas TIG WP (Parweld genérico)
+UPDATE producto SET imagen_url = 'https://cdnx.jumpseller.com/mia-parweld1/image/74840384/wp26vparweld_2.png?1773881610' WHERE codigo IN ('1000194','1000195','1000789','1002215','1006650') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 21. TOBERAS (TIG/MIG/plasma)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/p/r/pr22820bi12650_50876_tobera_ceramica_pistola_pt_31_p06003_imd_qbxiv5jepktjn6sc.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^TOBERA\b|^23-62\s+TOBERA\b';
+-- MANGUERAS - Manguera doble acetileno
+UPDATE producto SET imagen_url = 'https://htochile.cl/wp-content/uploads/2025/08/Solda-Dupla-Oxigenio_Acetileno-Verde-e-Vermelho-scaled.jpg' WHERE codigo = '1000251' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 22. DIFUSORES DE GAS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/p/r/pr22821bi12859_50877_anillo_difusor_pistola_pt_31_p06002_imd_i6qpzsgywg34cmpb.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^DIFUSOR\b';
+-- ACCESORIOS - Máscara HSL2
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/m/_/m_scara_soldar_jackson_3002580_hsl2_va.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo = '1000256' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 23. PORTAELECTRODO Y GRAMPA TIERRA
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/k/i/kit_accesorios_arco_manual.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^PORTAELECTRODO\b|^GRAMPA\b|^GRAMPA\s+(A\s+TIERRA|BRONCE|TIERRA)\b|^PRENSA\s+BRONCE\b';
+-- HERRAMIENTAS - Regleta medición soldaduras
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/07/galga-basica-600x600.jpg' WHERE codigo = '1000262' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 24. CABLES DE SOLDAR
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/c/a/cable_soldar_1__oferta.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^CABLE\s+(SOLDAR|DE\s+SOLDAR)\b';
+-- ACCESORIOS - Antiparra soldador
+UPDATE producto SET imagen_url = 'https://isesacl.vtexassets.com/arquivos/ids/155512-800-800?v=637178013800600000&width=800&height=800&aspect=true' WHERE codigo = '1000427' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 25. CONECTORES (DINSE, TWECO, Texas)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/c/l/clavija_macho_2_.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^CONECTOR\b|^ENCHUFE\s+(DINCE|MAQUINA)\b|TERMINAL\s+\d+';
+-- HERRAMIENTAS - Grampa a tierra
+UPDATE producto SET imagen_url = 'https://www.mersud.cl/wp-content/uploads/2015/06/PR-Lenco-300-web.jpg' WHERE codigo IN ('1000470','100091') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 26. ANTISALPICADURAS / ANTISPATTER
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/g/e/gel_antisalpicaduras_2_.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* 'ANTISALPICADURAS|ANTI.SPATTER|ANTISPATTER';
+-- ACCESORIOS - Cortina inactínica
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/463-Cortina-Inactinica-Amarilla-1.8X2.4-mts.jpg' WHERE codigo = '1000559' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 27. MÁSCARAS FOTOSENSIBLES (auto-oscurantes)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/m/a/mascara_para_soldar_fotosensible_optech_graf.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '(MASCARA|CARETA).*(FOTOSENSIBLE|AUTO|WELDER|STARFACE|LEOPARD|NEXXO|WTC|OSCUREC)'
-  AND descripcion !~* 'FRENTE.*MOVIL|VISOR.*ALZABLE|CASCO|ADOSABLE';
+-- SOLDADURA - Sopletes de corte Harris
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/438-Soplete-de-Corte-Manual-Acetileno-62-5-Harris-600x600.jpg' WHERE codigo IN ('1000625','1006640') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 28. MÁSCARAS FRENTE MÓVIL / ALZABLES
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/m/_/m_scara_soldar_visor_alzable_apollo_econ_mica.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* 'MASCARA.*(HSL|FRENTE.*MOVIL|HSL2|VISOR.*ALZABLE|CASCO.*OPTECH|ADOSABLE)|PANTALLA.*SOLAR.*CASCO';
+-- SOLDADURA - Equipos portátiles oxigas / corte
+UPDATE producto SET imagen_url = 'https://weldfan.cl/wp-content/uploads/2024/08/Portable-torch-oxicorte-600x600.jpg' WHERE codigo IN ('1000710','1001847','1007322','1009349') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/CEC-111140660-EQUIPO-JOURNEYMAN-ADGE-ACETILENO-0384-2101.jpg?v=1706028295&width=1500' WHERE codigo IN ('1001520','1002227','1007860') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 29. LENTES DE SEGURIDAD
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/n/anteojo_getpro_freeze.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^LENTE\b';
+-- HORNOS para electrodos
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/h/o/horno_para_soldadura_.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo IN ('1001474','1001475','1008050') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 30. ANTIPARRAS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/a/n/anteojo_getpro_twins.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^ANTIPARRA\b';
+-- EPP - Coleto / polaina / chaqueta cuero
+UPDATE producto SET imagen_url = 'https://www.apro.cl/cdn/shop/files/83700001320200-Greenway-Coleto-Descarne-F1.jpg?v=1777317182&width=1200' WHERE codigo IN ('1001494','1002288') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.apro.cl/cdn/shop/files/83700001412100-Greenway-Polaina-Descarne-F1.jpg?v=1777318410&width=1200' WHERE codigo = '1002287' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/5/9/59141-web-1617974752_gwbayqmqe5vby5qg.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=560&width=700&canvas=700:560' WHERE codigo = '1002292' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 31. CASCOS DE SEGURIDAD
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/c/a/casco_msa_top-gard_blanco.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^CASCO\s+(DE\s+SEGURIDAD|MSA|PROSEG|EVO)\b';
+-- SOLDADURA - Válvulas antirretroceso
+UPDATE producto SET imagen_url = 'https://toolwork.cl/cdn/shop/files/a8495200_70a01149-ca6c-42ae-bc43-ad2f3b27407b.webp?v=1766128318&width=475' WHERE codigo IN ('1001529','1001530','1001531','1001767') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 32. GUANTES SOLDADOR (cuero / descarne / TIG)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/6/4/6403_1_ebev6zxqfgualz6w.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^GUANTE\s+SOLDADOR\b|^GUANTE\s+(AT19|CABRITILLA|DESCARNE|TIG|INDURA|CUERO|CRIOGEN|MANGUILLA)'
-  AND descripcion !~* 'NITRILO|LATEX|ROCK|FORTE|MULTIFLEX|ANTICORTE|ALUMIN';
+-- LIMPIADORES - Antisalpicaduras / tintas penetrantes
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/GEL-ANTISALPICADURAS.jpg' WHERE codigo IN ('1002095','1009306','1009307') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/kit-tintas-penetrantes.jpg' WHERE codigo IN ('1000376','1000377','1000378') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 33. GUANTES DE SEGURIDAD GENERAL (nitrilo, latex, mecánicos)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/t/o/touch-n-tuff-92-600-1565970223_2_pr7dz5bp7nmjcffk.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^GUANTE\b'
-  AND descripcion ~* 'NITRILO|LATEX|ROCK|FORTE|MULTIFLEX|ANTICORTE|YELLOW|ORANGE|KRONN'
-  AND descripcion !~* 'SOLDADOR|DESCARNE|CABRITILLA|TIG';
+-- SOLDADURA - Tungstenos
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/07/TUNGSTENOS-PUNTO-ROJO-CODINSA-600x600.jpg' WHERE codigo IN ('1002695','1002696','1002697','1007340') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 34. BOTINES Y CALZADO DE SEGURIDAD
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/1/6/167337_1_4_ue5z6p3u0nccdn9e.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(BOTIN|ZAPATO|ZAPATILLA|CALCETIN|METATARSO)\b';
+-- SOLDADURA - Carro cilindro
+UPDATE producto SET imagen_url = 'https://plasticosqb.cl/assets/upload/imagenes-productos/74-6253482.jpg' WHERE codigo = '1003088' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 35. OVEROLES Y ROPA DE TRABAJO
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/1/1/115291-ficha-1611847504_5_06yz0bgmpnh0dh61.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(OVEROL|BUZO|SLACK|PANTALON|CHAQUETA|BALACLAVA|TRAJE.*AGUA)\b'
-  AND descripcion !~* '^BUZO.*(IGNIFUGO|ANTIACID)';
+-- SOLDADURA - Varillas TIG aluminio / acero
+UPDATE producto SET imagen_url = 'https://weldfan.cl/wp-content/uploads/2024/08/aluminio-5356-600x600.jpg' WHERE codigo IN ('1005908','1005909','1006003','1007612') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/ELECTRODOS-ESPECIAL_3676a420-6444-4da5-893d-08d7b2f84aad.png?v=1706028237&width=1500' WHERE codigo IN ('1007302','1007335') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.pernossaez.cl/wp-content/uploads/2023/11/2-34.jpg' WHERE codigo = '1005893' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 36. CHALECOS REFLECTANTES
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/5/5/5560_9.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^CHALECO\s+(REFLECTANTE|GEOLOGO)\b';
+-- ALAMBRE MIG
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/5356-2kg-1.jpg' WHERE codigo IN ('1005925','1006004') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://soltec.cl/cdn/shop/products/2-ALAMBRE-MIG-MAG-ACERO-CARBONO_caa96c85-9411-489d-946b-c9535cace1dc.png?v=1706027867&width=1500' WHERE codigo IN ('1006044','1006052','1007826') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 37. RESPIRADORES Y MASCARILLAS
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/r/e/respirador_3m_serie_6000__1.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(RESPIRADOR|MASCARILLA|FILTRO\s+3M|FILTRO\s+AIR)\b';
+-- ACCESORIOS - Toberas / difusores Tregaskiss
+UPDATE producto SET imagen_url = 'https://comercialdaille.cl/wp-content/uploads/2021/01/punta-de-contacto-0045-403-20-45-tregaskiss.jpg' WHERE codigo IN ('1009282','1009541','1009542') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.dplas.cl/238-large_default/pistola-soldar-mig-tregaskiss.jpg' WHERE codigo IN ('1009294','1009311','1009312') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 38. ROPA SOLDADOR (coletos, chaquetas cuero, mantas)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/6/4/6403_1_ebev6zxqfgualz6w.png'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(COLETO|POLAINA|MANGUILLA|MANTA\s+(DE\s+)?DESCARNE|MANTA\s+IGNIFUGA|GORRO\s+(SOLDADOR|TELA|CUERO))\b'
-  AND descripcion !~* '^GUANTE';
+-- SOLDADURA - Pistolas MIG Tregaskiss / PEZ / TB
+UPDATE producto SET imagen_url = 'https://cimex.cl/1977-large_default/pistola-mig-blackweld-modelo-tregaskiss-500-500amp45-mts.jpg' WHERE codigo IN ('1009069','1009070','1009277','1009301','1009302','1009309','1002406','1002407') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.dplas.cl/238-large_default/pistola-soldar-mig-tregaskiss.jpg' WHERE codigo = '1009310' AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 39. ESMERILES ANGULARES
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/e/s/esmeril_angular_ga9040s.jpeg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^ESMERIL\s+ANGULAR\b|^RECTIFICADOR\s+MATRICES\b';
+-- SOLDADURA - Portaelectrodo Lenco
+UPDATE producto SET imagen_url = 'https://cdnx.jumpseller.com/mia-parweld1/image/58042430/AF3-LENCO.png?1733406038' WHERE codigo = '1009374' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://cdnx.jumpseller.com/mia-parweld1/image/58048753/AF50-LENCO.jpg?1733420958' WHERE codigo = '1009375' AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.mersud.cl/wp-content/uploads/2015/06/PR-Lenco-300-web.jpg' WHERE codigo IN ('1009376','1009377') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 40. HERRAMIENTAS MANUALES (llaves, alicates, dados, huinchas)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/1/1/111z_11t.jpeg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^(LLAVE\s+(FRANCESA|PUNTA)|ALICATE|DADO\s+\d|HUINCHA|MAZO|MARTILLO|JUEGO.*EXTRACTOR|PORTA.*POWER|LAPIZ.*MEDIC|PIEDRA\s+SPENCIL|NIVEL\s+\d|ESCUADRA)\b';
+-- ACCESORIOS - Boquillas genéricas (Binzel / Tweco)
+UPDATE producto SET imagen_url = 'https://www.repuestosoldadoras.cl/wp-content/uploads/2026/04/boquilla-binzel.jpg' WHERE codigo IN ('1009182','1000450','1000261','1000063','1000064','1000109','1000110','1000795','1000809','1000810','1000811') AND imagen_url IS NULL;
 
--- ────────────────────────────────────────────────────────────────
--- 41. TECLES (cadena y palanca)
--- ────────────────────────────────────────────────────────────────
-UPDATE producto SET imagen_url = 'https://www.kupfer.cl/media/catalog/product/t/e/tecle-cadena-kito-cb_1_1_mhyj7frxszika1g3.jpg'
-WHERE id_padre IS NULL AND imagen_url IS NULL
-  AND descripcion ~* '^TECLE\b';
+-- ACCESORIOS - Difusores / toberas Bernard genérico
+UPDATE producto SET imagen_url = 'https://cimex.cl/225-large_default/porta-boquilla-mig-binzel-36-m6-m8-md0131.webp' WHERE codigo IN ('1006316','1000060','1000061') AND imagen_url IS NULL;
 
--- ================================================================
--- VERIFICACIÓN
--- ================================================================
--- Descomentar para ver cuántos productos se actualizaron:
-/*
-SELECT COUNT(*) AS productos_con_imagen
-FROM producto
-WHERE imagen_url IS NOT NULL AND id_padre IS NULL;
+-- GUANTES soldador
+UPDATE producto SET imagen_url = 'https://codinsa.cl/wp-content/uploads/2023/05/cabritilla-largo-1.jpg' WHERE codigo IN ('1001706','1008013','1008015','1008020') AND imagen_url IS NULL;
 
-SELECT COUNT(*) AS productos_sin_imagen
-FROM producto
-WHERE imagen_url IS NULL AND id_padre IS NULL;
-*/
+-- EPP - Tapones auditivos 3M
+UPDATE producto SET imagen_url = 'https://alcosafe.cl/wp-content/uploads/2023/10/tapones-auditivos-1-600x810.webp' WHERE codigo IN ('1008134','1008135','1008136','1008137','1008138') AND imagen_url IS NULL;
 
-COMMIT;
+-- DISCOS de corte/desbaste Indura
+UPDATE producto SET imagen_url = 'https://www.weitzler.cl/bitobee/wp-content/uploads/2022/12/28000700073-1.jpg' WHERE codigo IN ('1006737','1006738') AND imagen_url IS NULL;
+UPDATE producto SET imagen_url = 'https://www.weitzler.cl/bitobee/wp-content/uploads/2022/12/28000700069-1.jpg' WHERE codigo = '1006743' AND imagen_url IS NULL;
+
+-- SOLDADURA - Cable soldar Nehering
+UPDATE producto SET imagen_url = 'https://rhona.cl/uploads/2013/05/20130528131205-producto-cable-maquina-de-soldar-800x515.jpg' WHERE codigo IN ('1000249','1001654','1001813') AND imagen_url IS NULL;
+
+-- HERRAMIENTAS - Flexible MIG Bernard
+UPDATE producto SET imagen_url = 'https://cimex.cl/1977-large_default/pistola-mig-blackweld-modelo-tregaskiss-500-500amp45-mts.jpg' WHERE codigo IN ('1000126','1001551','1001639') AND imagen_url IS NULL;
+
+-- HERRAMIENTAS - Huinchas de medir
+UPDATE producto SET imagen_url = 'https://construplaza.cl/media/catalog/product/h/u/huimed231083_108_2i21rndrtheqdygw.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=420&width=600&canvas=600:420' WHERE codigo IN ('62060','62070','62080','62090') AND imagen_url IS NULL;
+
+-- HERRAMIENTAS - Alicates Stanley
+UPDATE producto SET imagen_url = 'https://www.construmart.cl/alicate-universal-stanley-8/p' WHERE codigo IN ('69315','69316') AND imagen_url IS NULL;
+
+-- HERRAMIENTAS - Dado hexagonal Stanley
+UPDATE producto SET imagen_url = 'https://co.stanleytools.global/producto/4-89-190/dadocubo-de-punta-hexagonal-10-mm-mando-12' WHERE codigo = '86542' AND imagen_url IS NULL;
+
+-- FRESAS carburo de tungsteno
+UPDATE producto SET imagen_url = 'https://dojiw2m9tvv09.cloudfront.net/13089/product/M_conica5154.jpg?41&t=1781128507' WHERE codigo IN ('110182','110183','1002118','1002119') AND imagen_url IS NULL;
+
+-- HERRAMIENTAS - Mazo de goma
+UPDATE producto SET imagen_url = 'https://construplaza.cl/media/catalog/product/1/0/1003358309-1_0vm0cim6q0ru7uui.jpg?optimize=medium&bg-color=255,255,255&fit=bounds&height=420&width=600&canvas=600:420' WHERE codigo = '128015' AND imagen_url IS NULL;
+
+-- ACCESORIOS - Conectores macho/hembra Texas
+UPDATE producto SET imagen_url = 'https://www.mersud.cl/wp-content/uploads/2015/06/PR-Lenco-300-web.jpg' WHERE codigo IN ('1000258','1000285','1000286','1000471','1000478') AND imagen_url IS NULL;
+
+-- Verificar resultado final
+SELECT COUNT(*) AS sin_imagen FROM producto WHERE imagen_url IS NULL AND id_padre IS NULL;
+SELECT codigo, descripcion FROM producto WHERE imagen_url IS NULL AND id_padre IS NULL ORDER BY codigo;

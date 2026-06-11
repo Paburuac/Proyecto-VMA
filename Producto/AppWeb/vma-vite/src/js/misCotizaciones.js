@@ -269,7 +269,8 @@ window.mcVerDetalle = function(id) {
                     <th>Código</th>
                     <th>Producto</th>
                     <th>Cantidad</th>
-                    <th>Precio ref.</th>
+                    <th>Precio unit.</th>
+                    ${c.estado === 'respondida' ? '<th class="mc-th-respondido">Precio acordado</th><th class="mc-th-respondido">Subtotal</th>' : ''}
                   </tr>
                 </thead>
                 <tbody>
@@ -284,6 +285,13 @@ window.mcVerDetalle = function(id) {
                           ? '$' + Number(p.precio).toLocaleString('es-CL')
                           : 'A consultar'
                       }</td>
+                      ${c.estado === 'respondida' ? `
+                      <td class="mc-prod-precio mc-precio-acordado-cell">
+                        ${p.precio_respondido ? '$' + Number(p.precio_respondido).toLocaleString('es-CL') : '—'}
+                      </td>
+                      <td class="mc-prod-precio mc-precio-acordado-cell" style="font-weight:600">
+                        ${p.precio_respondido ? '$' + (Number(p.precio_respondido) * (p.cantidad||1)).toLocaleString('es-CL') : '—'}
+                      </td>` : ''}
                     </tr>
                   `).join('')}
                 </tbody>

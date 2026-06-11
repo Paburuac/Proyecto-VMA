@@ -227,32 +227,59 @@ window.adminCambiarEstadoCotizacion = async function(id, nuevoEstado) {
 function adminMostrarFormPrecio(id) {
   const cot = adminState.cotizaciones.find(c => c.id === id)
   if (!cot) return
+  const prods = cot.productos_solicitados || []
+
+  const filas = prods.map((p, i) => `
+    <tr>
+      <td style="padding:.5rem .6rem;font-size:.82rem;color:#555">${escHtml(p.codigo || '—')}</td>
+      <td style="padding:.5rem .6rem;font-size:.82rem">${escHtml(p.nombre || 'Producto')}</td>
+      <td style="padding:.5rem .6rem;text-align:center;font-size:.82rem">${p.cantidad || 1}</td>
+      <td style="padding:.5rem .4rem">
+        <input
+          type="number" min="0" step="1" placeholder="0"
+          value="${p.precio_respondido || ''}"
+          data-idx="${i}"
+          class="admin-precio-item-input"
+          style="width:110px;padding:.35rem .5rem;border:2px solid #d0d7e2;border-radius:6px;font-size:.88rem;outline:none"
+          oninput="adminRecalcularTotal()"
+        >
+      </td>
+      <td style="padding:.5rem .6rem;text-align:right;font-size:.82rem;font-weight:600;color:#1a7cdd" id="admin-subtotal-${i}">
+        ${p.precio_respondido ? '$' + (p.precio_respondido * (p.cantidad||1)).toLocaleString('es-CL') : '—'}
+      </td>
+    </tr>
+  `).join('')
+
+  const totalActual = prods.reduce((s, p) => s + (p.precio_respondido || 0) * (p.cantidad || 1), 0)
 
   document.getElementById('admin-modal-title').textContent = `Responder Cotización #${id}`
   document.getElementById('admin-modal-body').innerHTML = `
-    <p style="margin-bottom:1rem;color:#445;line-height:1.5">
-      Ingresa el <strong>precio final acordado</strong>. El cliente verá este monto
-      y podrá pagar con Transbank Webpay Plus.
+    <p style="margin-bottom:.75rem;color:#445;font-size:.9rem;line-height:1.5">
+      Ingresa el <strong>precio unitario</strong> para cada producto. El total se calcula automáticamente.
     </p>
-    <div style="margin-bottom:1.25rem">
-      <label style="display:block;margin-bottom:.4rem;font-weight:600;font-size:.9rem">
-        Monto (CLP)
-      </label>
-      <input
-        type="number"
-        id="admin-precio-input"
-        min="1"
-        step="1"
-        placeholder="Ej: 150000"
-        value="${cot.precio_final || ''}"
-        style="width:100%;padding:.6rem .8rem;border:2px solid #d0d7e2;border-radius:8px;
-               font-size:1rem;outline:none"
-        onkeydown="if(event.key==='Enter')adminConfirmarPrecio(${id})"
-      >
+    <div style="overflow-x:auto;margin-bottom:1rem">
+      <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+        <thead>
+          <tr style="background:#f0f4fa;text-align:left">
+            <th style="padding:.5rem .6rem;font-size:.78rem;color:#667">Código</th>
+            <th style="padding:.5rem .6rem;font-size:.78rem;color:#667">Producto</th>
+            <th style="padding:.5rem .6rem;font-size:.78rem;color:#667;text-align:center">Cant.</th>
+            <th style="padding:.5rem .6rem;font-size:.78rem;color:#667">Precio unit. (CLP)</th>
+            <th style="padding:.5rem .6rem;font-size:.78rem;color:#667;text-align:right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>${filas || '<tr><td colspan="5" style="padding:1rem;text-align:center;color:#aaa">Sin productos</td></tr>'}</tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:.75rem;padding:.75rem 0;border-top:2px solid #e8edf4;margin-bottom:1rem">
+      <span style="font-size:.9rem;color:#667">Total cotización:</span>
+      <span id="admin-precio-total" style="font-size:1.25rem;font-weight:700;color:#1a7cdd">
+        $${totalActual.toLocaleString('es-CL')}
+      </span>
     </div>
     <div style="display:flex;gap:.6rem;flex-wrap:wrap">
       <button class="admin-btn admin-btn-ok" onclick="adminConfirmarPrecio(${id})">
-        ✅ Confirmar
+        ✅ Confirmar y responder
       </button>
       <button class="admin-btn" onclick="document.getElementById('admin-modal').style.display='none';adminRecargarSelect(${id})">
         Cancelar
@@ -260,21 +287,48 @@ function adminMostrarFormPrecio(id) {
     </div>
   `
   document.getElementById('admin-modal').style.display = 'flex'
-  setTimeout(() => document.getElementById('admin-precio-input')?.focus(), 100)
+  document.querySelector('.admin-precio-item-input')?.focus()
+}
+
+window.adminRecalcularTotal = function() {
+  const inputs = document.querySelectorAll('.admin-precio-item-input')
+  let total = 0
+  inputs.forEach(input => {
+    const idx = parseInt(input.dataset.idx)
+    const modalId = document.getElementById('admin-modal-title').textContent.match(/\d+/)?.[0]
+    const cot = adminState.cotizaciones.find(c => c.id === parseInt(modalId))
+    const cant = cot?.productos_solicitados?.[idx]?.cantidad || 1
+    const precio = parseInt(input.value || '0', 10)
+    const subtotal = precio * cant
+    total += subtotal
+    const cell = document.getElementById(`admin-subtotal-${idx}`)
+    if (cell) cell.textContent = precio > 0 ? '$' + subtotal.toLocaleString('es-CL') : '—'
+  })
+  const totalEl = document.getElementById('admin-precio-total')
+  if (totalEl) totalEl.textContent = '$' + total.toLocaleString('es-CL')
 }
 
 window.adminConfirmarPrecio = async function(id) {
-  const precio = parseInt(document.getElementById('admin-precio-input')?.value || '0', 10)
-  if (!precio || precio <= 0) { showToast('⚠️ Ingresa un precio válido.'); return }
+  const cot = adminState.cotizaciones.find(c => c.id === id)
+  if (!cot) return
 
-  const { error } = await window.cotizacionService.actualizarConPrecioFinal(id, precio)
-  if (error) { showToast('❌ Error al actualizar.'); return }
+  const inputs = document.querySelectorAll('.admin-precio-item-input')
+  const prods = (cot.productos_solicitados || []).map((p, i) => {
+    const val = parseInt(inputs[i]?.value || '0', 10)
+    return { ...p, precio_respondido: val > 0 ? val : null }
+  })
+
+  const total = prods.reduce((s, p) => s + (p.precio_respondido || 0) * (p.cantidad || 1), 0)
+  if (total <= 0) { showToast('⚠️ Ingresa al menos un precio.'); return }
+
+  const { error } = await window.cotizacionService.responderCotizacion(id, prods, total)
+  if (error) { showToast('❌ Error al guardar.'); return }
 
   const item = adminState.cotizaciones.find(c => c.id === id)
-  if (item) { item.estado = 'respondida'; item.precio_final = precio }
+  if (item) { item.estado = 'respondida'; item.precio_final = total; item.productos_solicitados = prods }
 
   document.getElementById('admin-modal').style.display = 'none'
-  showToast(`✅ Cotización #${id} respondida — $${precio.toLocaleString('es-CL')}`)
+  showToast(`✅ Cotización #${id} respondida — $${total.toLocaleString('es-CL')}`)
   const cont = document.getElementById('admin-cotizaciones-content')
   if (cont) renderTablaCotzaciones(cont)
 }

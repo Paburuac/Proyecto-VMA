@@ -174,6 +174,35 @@ export async function actualizarConPrecioFinal(id, precioFinal) {
 }
 
 /* ─────────────────────────────────────────────
+   responderCotizacion(id, productosConPrecios, precioFinal)
+   Guarda precio por producto y precio total.
+   productosConPrecios: array con campo precio_respondido agregado.
+───────────────────────────────────────────── */
+export async function responderCotizacion(id, productosConPrecios, precioFinal) {
+  try {
+    const { error } = await supabase
+      .from('cotizaciones')
+      .update({
+        estado:                'respondida',
+        precio_final:          precioFinal,
+        productos_solicitados: productosConPrecios,
+        updated_at:            new Date().toISOString(),
+      })
+      .eq('id', id)
+
+    if (error) {
+      console.error('[VMA Cotizacion] responderCotizacion error:', error.message)
+      return { error }
+    }
+
+    return { error: null }
+  } catch (err) {
+    console.error('[VMA Cotizacion] responderCotizacion excepción:', err)
+    return { error: err }
+  }
+}
+
+/* ─────────────────────────────────────────────
    actualizarEstado(id, nuevoEstado)
    Solo para admin y trabajador.
    nuevoEstado: 'pendiente' | 'revisada' | 'respondida'
