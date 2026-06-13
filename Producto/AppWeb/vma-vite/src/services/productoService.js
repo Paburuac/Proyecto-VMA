@@ -28,6 +28,7 @@ const PRODUCTO_SELECT = `
   id_producto,
   codigo,
   descripcion,
+  descripcion_corta,
   precio,
   distribuidor,
   stock,
@@ -232,7 +233,7 @@ export function construirCatalogo(productos) {
       distribuidor:    prod.distribuidor ?? '',
       stock:           String(prod.stock ?? ''),
       precio:          prod.precio != null ? String(prod.precio) : 'Consultar',
-      descripcion:     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Producto industrial de alta calidad.',
+      descripcion:     prod.descripcion_corta || 'Producto industrial. Consultar disponibilidad.',
       imagen_url:      prod.imagen_url || null,
       // Campos de variantes
       tiene_variantes: prod.tiene_variantes ?? false,

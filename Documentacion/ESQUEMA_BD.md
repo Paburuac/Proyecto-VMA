@@ -88,6 +88,7 @@ Catálogo de productos. Incluida en [`Script VMA.txt`](Script%20VMA.txt).
 | `tiene_variantes` | boolean (default FALSE) | TRUE si el producto es padre de variantes (ej. botín en tallas N°39–44) |
 | `id_padre` | int (FK → producto, nullable) | Si no es NULL, este producto es una variante del producto padre indicado |
 | `label_variante` | varchar(150) (nullable) | Etiqueta legible de esta variante ("N°39", "1/8 (3.2 MM)", "T.XL", etc.) |
+| `descripcion_corta` | text (nullable) | Descripción breve para mostrar en el catálogo web (max ~120 chars) |
 
 **Notas:**
 - El catálogo solo muestra productos donde `id_padre IS NULL`. Los productos variante quedan ocultos hasta que el usuario los selecciona en el modal.
