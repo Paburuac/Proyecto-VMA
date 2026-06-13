@@ -23,14 +23,8 @@ import { supabase } from './supabase.js'
 ───────────────────────────────────────────── */
 export async function enviarCotizacion(datos) {
   try {
-    // Si el usuario está logueado, obtener su usuario_id
-    let usuarioId = null
-    if (window.authState?.loggedIn && window.authState?.perfil?.id) {
-      usuarioId = window.authState.perfil.id
-    }
-
     const payload = {
-      usuario_id:            usuarioId,
+      usuario_id:            datos.usuario_id ?? null,
       nombre:                datos.nombre.trim(),
       empresa:               datos.empresa?.trim() || null,
       email:                 datos.email.trim().toLowerCase(),
@@ -80,9 +74,8 @@ export async function enviarCotizacion(datos) {
    obtenerMisCotizaciones()
    Retorna las cotizaciones del usuario logueado.
 ───────────────────────────────────────────── */
-export async function obtenerMisCotizaciones() {
+export async function obtenerMisCotizaciones(usuarioId) {
   try {
-    const usuarioId = window.authState?.perfil?.id
     if (!usuarioId) return { data: [], error: null }
 
     const { data, error } = await supabase
