@@ -12,6 +12,7 @@ import MisCotizaciones   from './pages/MisCotizaciones.jsx'
 import PagoResultado     from './pages/PagoResultado.jsx'
 import Nosotros          from './pages/Nosotros.jsx'
 import Contacto          from './pages/Contacto.jsx'
+import Inicio            from './pages/Inicio.jsx'
 
 function RutaProtegida({ children, check }) {
   const { authState } = useAuth()
@@ -34,7 +35,7 @@ export default function App() {
     <HashRouter>
       <Layout>
         <Routes>
-          <Route path="/"                  element={<Catalogo />} />
+          <Route path="/"                  element={<Inicio />} />
           <Route path="/productos"         element={<Catalogo />} />
           <Route path="/nosotros"          element={<Nosotros />} />
           <Route path="/contacto"          element={<Contacto />} />
