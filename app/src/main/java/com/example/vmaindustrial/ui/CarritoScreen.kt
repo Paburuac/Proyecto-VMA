@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -14,10 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.vmaindustrial.model.CarritoItemConProducto
 import com.example.vmaindustrial.viewmodel.CarritoViewModel
 import java.util.Locale
@@ -151,33 +154,51 @@ fun CarritoItemView(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Imagen del producto en el carrito
+            AsyncImage(
+                model = item.producto.imagen_url ?: "https://via.placeholder.com/100",
+                contentDescription = item.producto.descripcion,
+                modifier = Modifier
+                    .size(60.dp)
+                    .background(Color.LightGray.copy(alpha = 0.2f), RoundedCornerShape(4.dp)),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
             Column(modifier = Modifier.weight(1f)) {
-                Text(text = item.producto.descripcion, style = MaterialTheme.typography.titleMedium)
+                Text(
+                    text = item.producto.descripcion,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
                 Text(
                     text = "$${item.producto.precio ?: 0.0}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color(0xFF002E4F)
+                    color = Color(0xFF002E4F),
+                    fontWeight = FontWeight.Bold
                 )
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 IconButton(onClick = onReducir) {
-                    Icon(Icons.Default.Remove, contentDescription = "Reducir")
+                    Icon(Icons.Default.Remove, contentDescription = "Reducir", modifier = Modifier.size(20.dp))
                 }
                 Text(
                     text = item.cantidad.toString(),
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
                 IconButton(onClick = onAumentar) {
-                    Icon(Icons.Default.Add, contentDescription = "Aumentar")
+                    Icon(Icons.Default.Add, contentDescription = "Aumentar", modifier = Modifier.size(20.dp))
                 }
             }
         }

@@ -112,7 +112,8 @@ class CarritoViewModel : ViewModel() {
                     id_producto = it.producto_id,
                     descripcion = it.producto.descripcion,
                     cantidad = it.cantidad,
-                    precio = it.producto.precio?.toString() ?: "Consultar"
+                    precio = it.producto.precio?.toString() ?: "Consultar",
+                    imagen_url = it.producto.imagen_url
                 )
             }
 

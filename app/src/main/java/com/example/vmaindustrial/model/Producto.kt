@@ -10,6 +10,7 @@ data class Producto(
     val id_categoria: Int,
     val precio: Double?,
     val stock: Int?,
-    val distribuidor: String?
+    val distribuidor: String?,
+    val imagen_url: String? = null
 )
 

@@ -18,8 +18,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.vmaindustrial.model.Producto
 import com.example.vmaindustrial.viewmodel.CarritoViewModel
 import com.example.vmaindustrial.viewmodel.ProductoViewModel
@@ -272,40 +275,60 @@ fun ProductoItem(producto: Producto, onAddToCart: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(text = producto.descripcion, style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "Código: ${producto.codigo}", style = MaterialTheme.typography.bodySmall)
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Imagen del producto
+            AsyncImage(
+                model = producto.imagen_url ?: "https://via.placeholder.com/150",
+                contentDescription = producto.descripcion,
+                modifier = Modifier
+                    .size(80.dp)
+                    .background(Color.LightGray.copy(alpha = 0.3f), RoundedCornerShape(8.dp)),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(text = producto.descripcion, style = MaterialTheme.typography.titleMedium)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = "Código: ${producto.codigo}", style = MaterialTheme.typography.bodySmall)
+                    }
+                    IconButton(onClick = onAddToCart) {
+                        Icon(
+                            Icons.Default.AddShoppingCart,
+                            contentDescription = "Añadir al carrito",
+                            tint = Color(0xFF002E4F)
+                        )
+                    }
                 }
-                IconButton(onClick = onAddToCart) {
-                    Icon(
-                        Icons.Default.AddShoppingCart,
-                        contentDescription = "Añadir al carrito",
-                        tint = MaterialTheme.colorScheme.primary
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "$${producto.precio ?: 0.0}",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = Color(0xFF002E4F),
+                        fontWeight = FontWeight.Bold
                     )
+                    Text(text = "Stock: ${producto.stock ?: 0}", style = MaterialTheme.typography.bodySmall)
                 }
+                Text(text = "Distribuidor: ${producto.distribuidor ?: "Sin asignar"}", style = MaterialTheme.typography.bodySmall)
             }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "$${producto.precio ?: 0.0}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(text = "Stock: ${producto.stock ?: 0}", style = MaterialTheme.typography.bodySmall)
-            }
-            Text(text = "Distribuidor: ${producto.distribuidor ?: "Sin asignar"}", style = MaterialTheme.typography.bodySmall)
         }
     }
 }

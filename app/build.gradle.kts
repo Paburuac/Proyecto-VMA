@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.coil.compose)
     //data base
     implementation("io.github.jan-tennert.supabase:postgrest-kt:2.5.4")
     implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.4")

@@ -17,11 +17,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.vmaindustrial.model.Cotizacion
 import com.example.vmaindustrial.viewmodel.AuthViewModel
 import com.example.vmaindustrial.viewmodel.CotizacionViewModel
@@ -314,14 +316,28 @@ fun CotizacionDetalleDialog(
                             modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.LightGray.copy(alpha = 0.2f))
                         ) {
-                            Column(modifier = Modifier.padding(8.dp)) {
-                                Text(producto.descripcion ?: "Producto", fontWeight = FontWeight.SemiBold)
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text("Cantidad: ${producto.cantidad}", fontSize = 12.sp)
-                                    Text("Precio: ${producto.precio ?: "Consultar"}", fontSize = 12.sp)
+                            Row(
+                                modifier = Modifier.padding(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                AsyncImage(
+                                    model = producto.imagen_url ?: "https://via.placeholder.com/50",
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .background(Color.White, RoundedCornerShape(4.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(producto.descripcion ?: "Producto", fontWeight = FontWeight.SemiBold)
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text("Cantidad: ${producto.cantidad}", fontSize = 12.sp)
+                                        Text("Precio: ${producto.precio ?: "Consultar"}", fontSize = 12.sp)
+                                    }
                                 }
                             }
                         }
