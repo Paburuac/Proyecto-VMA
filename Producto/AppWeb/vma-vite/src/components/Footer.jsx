@@ -8,8 +8,8 @@ export default function Footer() {
       <footer>
         <div className="footer-grid">
           <div className="footer-brand">
-            <div className="logo" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
-              <img src="/logo-vma.png" alt="VMA Retail Industrial" style={{ height: '40px', width: 'auto', display: 'block', filter: 'brightness(0) invert(1)' }} />
+            <div style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
+              <img src="/logo-vma.png" alt="VMA Retail Industrial" style={{ height: '44px', width: 'auto', display: 'block', borderRadius: '6px', padding: '4px 8px', background: 'var(--blanco)' }} />
             </div>
             <p>Proveedor líder de gases industriales, soldaduras, herramientas y equipos de seguridad en Chile. Más de 20 años al servicio de la industria.</p>
           </div>
