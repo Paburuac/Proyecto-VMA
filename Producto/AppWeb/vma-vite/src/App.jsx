@@ -13,6 +13,7 @@ import PagoResultado     from './pages/PagoResultado.jsx'
 import Nosotros          from './pages/Nosotros.jsx'
 import Contacto          from './pages/Contacto.jsx'
 import Inicio            from './pages/Inicio.jsx'
+import Privacidad        from './pages/Privacidad.jsx'
 
 function RutaProtegida({ children, check }) {
   const { authState } = useAuth()
@@ -58,6 +59,7 @@ export default function App() {
             </RutaProtegida>
           } />
           <Route path="/pago-resultado"    element={<PagoResultado />} />
+          <Route path="/privacidad"        element={<Privacidad />} />
           <Route path="*"                  element={<Navigate to="/" replace />} />
         </Routes>
       </Layout>

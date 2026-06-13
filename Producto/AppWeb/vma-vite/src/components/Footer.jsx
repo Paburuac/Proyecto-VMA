@@ -38,6 +38,7 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© 2025 VMA Industrial. Todos los derechos reservados.</span>
+          <span> · <a onClick={() => navigate('/privacidad')} style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'underline' }}>Política de privacidad</a></span>
           <span> · Región de Valparaíso, Chile</span>
         </div>
       </footer>
