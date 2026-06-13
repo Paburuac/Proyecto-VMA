@@ -814,6 +814,41 @@
     set(v) { window._catalogoData = v; },
     configurable: true,
   });
+
+  // Mapeo de IDs legacy → rutas React (HashRouter)
+  const _pageRoutes = {
+    'page-inicio':            '/',
+    'page-productos':         '/productos',
+    'page-cotizacion':        '/cotizacion',
+    'page-login':             '/login',
+    'page-registro':          '/registro',
+    'page-mis-cotizaciones':  '/mis-cotizaciones',
+    'page-trabajador':        '/trabajador',
+    'page-admin':             '/admin',
+    'page-pago-resultado':    '/pago-resultado',
+  };
+
+  window.showPage = function(pageId) {
+    const route = _pageRoutes[pageId];
+    if (route) {
+      window.location.hash = '#' + route;
+    } else {
+      // Páginas solo-legacy (nosotros, contacto): show/hide directo
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const el = document.getElementById(pageId);
+      if (el) el.classList.add('active');
+    }
+  };
+
+  // Stubs de init — la lógica ahora vive en los componentes React
+  window.initMisCotizaciones = function() {};
+  window.initPanelTrabajador = function() {};
+  window.initAdmin          = function() {};
+  window.openCart           = window.openCart  || function() {};
+  window.closeCart          = window.closeCart || function() {};
+  window.goToCategoria      = function(cat) {
+    window.location.hash = '#/productos?categoria=' + encodeURIComponent(cat);
+  };
 </script>
 
 <div id="root"></div>
