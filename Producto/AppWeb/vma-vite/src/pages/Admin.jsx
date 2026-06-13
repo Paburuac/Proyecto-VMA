@@ -103,12 +103,12 @@ function TabDashboard({ onIrA }) {
 function AdminModal({ title, children, onClose }) {
   return (
     <div id="admin-modal" style={{ display: 'flex' }} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="admin-modal-content">
-        <div className="admin-modal-header">
-          <h3 id="admin-modal-title">{title}</h3>
+      <div className="admin-modal-box">
+        <div className="admin-modal-head">
+          <h3>{title}</h3>
           <button className="admin-modal-close" onClick={onClose}>✕</button>
         </div>
-        <div id="admin-modal-body">{children}</div>
+        <div className="admin-modal-body">{children}</div>
       </div>
     </div>
   )
