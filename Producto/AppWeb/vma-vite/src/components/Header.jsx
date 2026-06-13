@@ -36,10 +36,10 @@ export default function Header({ onOpenCart }) {
 
         {/* Links desktop */}
         <div className="nav-links">
-          <a onClick={() => navigate('/')} data-page="page-inicio" style={{ cursor: 'pointer' }}>Inicio</a>
-          <a href="#nosotros" style={{ cursor: 'pointer' }}>Quiénes somos</a>
-          <a onClick={() => navigate('/productos')} data-page="page-productos" style={{ cursor: 'pointer' }}>Nuestros productos</a>
-          <a href="#contacto" style={{ cursor: 'pointer' }}>Contáctenos</a>
+          <a onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>Inicio</a>
+          <a onClick={() => navigate('/nosotros')} style={{ cursor: 'pointer' }}>Quiénes somos</a>
+          <a onClick={() => navigate('/productos')} style={{ cursor: 'pointer' }}>Nuestros productos</a>
+          <a onClick={() => navigate('/contacto')} style={{ cursor: 'pointer' }}>Contáctenos</a>
         </div>
 
         {/* Acciones desktop */}
@@ -82,9 +82,9 @@ export default function Header({ onOpenCart }) {
       {/* Menú móvil */}
       <div className={`nav-mobile${menuOpen ? ' open' : ''}`}>
         <a onClick={() => { navigate('/'); setMenuOpen(false) }} style={{ cursor: 'pointer' }}>Inicio</a>
-        <a href="#nosotros" onClick={() => setMenuOpen(false)}>Quiénes somos</a>
+        <a onClick={() => { navigate('/nosotros'); setMenuOpen(false) }} style={{ cursor: 'pointer' }}>Quiénes somos</a>
         <a onClick={() => { navigate('/productos'); setMenuOpen(false) }} style={{ cursor: 'pointer' }}>Nuestros productos</a>
-        <a href="#contacto" onClick={() => setMenuOpen(false)}>Contáctenos</a>
+        <a onClick={() => { navigate('/contacto'); setMenuOpen(false) }} style={{ cursor: 'pointer' }}>Contáctenos</a>
         {!loggedIn ? (
           <>
             <a id="nav-btn-registro-mob" onClick={() => { navigate('/registro'); setMenuOpen(false) }} style={{ cursor: 'pointer' }}>Registrarse</a>

@@ -10,6 +10,8 @@ import Admin             from './pages/Admin.jsx'
 import PanelTrabajador   from './pages/PanelTrabajador.jsx'
 import MisCotizaciones   from './pages/MisCotizaciones.jsx'
 import PagoResultado     from './pages/PagoResultado.jsx'
+import Nosotros          from './pages/Nosotros.jsx'
+import Contacto          from './pages/Contacto.jsx'
 
 function RutaProtegida({ children, check }) {
   const { authState } = useAuth()
@@ -34,6 +36,8 @@ export default function App() {
         <Routes>
           <Route path="/"                  element={<Catalogo />} />
           <Route path="/productos"         element={<Catalogo />} />
+          <Route path="/nosotros"          element={<Nosotros />} />
+          <Route path="/contacto"          element={<Contacto />} />
           <Route path="/cotizacion"        element={<Cotizacion />} />
           <Route path="/login"             element={<Login />} />
           <Route path="/registro"          element={<Registro />} />
