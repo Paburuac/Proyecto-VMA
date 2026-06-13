@@ -73,61 +73,68 @@ export default function Registro() {
   }
 
   return (
-    <section id="page-registro" className="vma-page">
-      <div className="form-container">
-        <h2>Crear cuenta</h2>
+    <div className="form-page">
+      <div className="form-card">
+        <div className="form-header">
+          <h2>Crear <span>cuenta</span></h2>
+          <p>Únete a VMA Industrial</p>
+        </div>
 
-        {exito && (
-          <div id="success-registro" className="success-msg show">
-            ✅ ¡Cuenta creada! Redirigiendo al inicio de sesión...
-          </div>
-        )}
+        <div className="form-body">
+          {exito && (
+            <div className="success-msg show">
+              ✅ ¡Cuenta creada! Redirigiendo al inicio de sesión...
+            </div>
+          )}
 
-        {registroError && (
-          <div id="registro-error-msg" className="error-banner" style={{ display: 'block' }}>
-            {registroError}
-          </div>
-        )}
+          {registroError && (
+            <div className="error-banner" style={{ display: 'block', marginBottom: '1rem' }}>
+              {registroError}
+            </div>
+          )}
 
-        <form id="form-registro" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="reg-nombre">Nombre completo *</label>
-            <input id="reg-nombre" name="nombre" value={form.nombre} onChange={handleChange} autoComplete="name" />
-            {errors.nombre && <span id="err-reg-nombre" className="error-msg show">{errors.nombre}</span>}
-          </div>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-row two-col">
+              <div>
+                <label htmlFor="reg-nombre">Nombre completo *</label>
+                <input id="reg-nombre" name="nombre" placeholder="Tu nombre completo" value={form.nombre} onChange={handleChange} autoComplete="name" />
+                {errors.nombre && <div className="form-error show">{errors.nombre}</div>}
+              </div>
+              <div>
+                <label htmlFor="reg-telefono">Teléfono</label>
+                <input id="reg-telefono" name="telefono" placeholder="+56 9 XXXX XXXX" value={form.telefono} onChange={handleChange} autoComplete="tel" />
+              </div>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="reg-telefono">Teléfono</label>
-            <input id="reg-telefono" name="telefono" value={form.telefono} onChange={handleChange} autoComplete="tel" />
-          </div>
+            <div className="form-row">
+              <label htmlFor="reg-correo">Correo electrónico *</label>
+              <input id="reg-correo" name="correo" type="email" placeholder="correo@empresa.cl" value={form.correo} onChange={handleChange} autoComplete="email" />
+              {errors.correo && <div className="form-error show">{errors.correo}</div>}
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="reg-correo">Correo electrónico *</label>
-            <input id="reg-correo" name="correo" type="email" value={form.correo} onChange={handleChange} autoComplete="email" />
-            {errors.correo && <span id="err-reg-correo" className="error-msg show">{errors.correo}</span>}
-          </div>
+            <div className="form-row two-col">
+              <div>
+                <label htmlFor="reg-pass">Contraseña *</label>
+                <input id="reg-pass" name="password" type="password" placeholder="Mínimo 6 caracteres" value={form.password} onChange={handleChange} autoComplete="new-password" />
+                {errors.password && <div className="form-error show">{errors.password}</div>}
+              </div>
+              <div>
+                <label htmlFor="reg-pass2">Confirmar contraseña *</label>
+                <input id="reg-pass2" name="password2" type="password" placeholder="Repite la contraseña" value={form.password2} onChange={handleChange} autoComplete="new-password" />
+                {errors.password2 && <div className="form-error show">{errors.password2}</div>}
+              </div>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="reg-pass">Contraseña *</label>
-            <input id="reg-pass" name="password" type="password" value={form.password} onChange={handleChange} autoComplete="new-password" />
-            {errors.password && <span id="err-reg-pass" className="error-msg show">{errors.password}</span>}
-          </div>
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? 'Creando cuenta...' : '✅ Crear cuenta'}
+            </button>
+          </form>
 
-          <div className="form-group">
-            <label htmlFor="reg-pass2">Confirmar contraseña *</label>
-            <input id="reg-pass2" name="password2" type="password" value={form.password2} onChange={handleChange} autoComplete="new-password" />
-            {errors.password2 && <span id="err-reg-pass2" className="error-msg show">{errors.password2}</span>}
-          </div>
-
-          <button id="btn-registro-submit" type="submit" className="btn-primary" disabled={loading} style={{ width: '100%' }}>
-            {loading ? 'Creando cuenta...' : 'Crear cuenta'}
-          </button>
-        </form>
-
-        <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
-          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión aquí</Link>
-        </p>
+          <p style={{ textAlign: 'center', marginTop: '1.2rem', fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
+            ¿Ya tienes cuenta? <Link to="/login" style={{ color: 'var(--verde)', fontWeight: 600 }}>Inicia sesión aquí</Link>
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   )
 }

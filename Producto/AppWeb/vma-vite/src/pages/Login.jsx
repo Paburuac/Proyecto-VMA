@@ -55,52 +55,59 @@ export default function Login() {
   }
 
   return (
-    <section id="page-login" className="vma-page">
-      <div className="form-container">
-        <h2>Iniciar sesión</h2>
+    <div className="form-page">
+      <div className="form-card">
+        <div className="form-header">
+          <h2>Iniciar <span>sesión</span></h2>
+          <p>Ingresa con tu cuenta VMA Industrial</p>
+        </div>
 
-        {loginError && (
-          <div id="login-error-msg" className="error-banner" style={{ display: 'block' }}>
-            {loginError}
-          </div>
-        )}
+        <div className="form-body">
+          {loginError && (
+            <div className="error-banner" style={{ display: 'block', marginBottom: '1rem' }}>
+              {loginError}
+            </div>
+          )}
 
-        <form id="form-login" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="login-correo">Correo electrónico</label>
-            <input
-              id="login-correo"
-              name="correo"
-              type="email"
-              value={form.correo}
-              onChange={handleChange}
-              autoComplete="email"
-            />
-            {errors.correo && <span id="err-login-correo" className="error-msg show">{errors.correo}</span>}
-          </div>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-row">
+              <label htmlFor="login-correo">Correo electrónico</label>
+              <input
+                id="login-correo"
+                name="correo"
+                type="email"
+                placeholder="correo@empresa.cl"
+                value={form.correo}
+                onChange={handleChange}
+                autoComplete="email"
+              />
+              {errors.correo && <div className="form-error show">{errors.correo}</div>}
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="login-pass">Contraseña</label>
-            <input
-              id="login-pass"
-              name="password"
-              type="password"
-              value={form.password}
-              onChange={handleChange}
-              autoComplete="current-password"
-            />
-            {errors.password && <span id="err-login-pass" className="error-msg show">{errors.password}</span>}
-          </div>
+            <div className="form-row">
+              <label htmlFor="login-pass">Contraseña</label>
+              <input
+                id="login-pass"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+              />
+              {errors.password && <div className="form-error show">{errors.password}</div>}
+            </div>
 
-          <button id="btn-login-submit" type="submit" className="btn-primary" disabled={loading} style={{ width: '100%' }}>
-            {loading ? 'Ingresando...' : 'Ingresar'}
-          </button>
-        </form>
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? 'Ingresando...' : '🔐 Ingresar'}
+            </button>
+          </form>
 
-        <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem' }}>
-          ¿No tienes cuenta? <Link to="/registro">Regístrate aquí</Link>
-        </p>
+          <p style={{ textAlign: 'center', marginTop: '1.2rem', fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
+            ¿No tienes cuenta? <Link to="/registro" style={{ color: 'var(--verde)', fontWeight: 600 }}>Regístrate aquí</Link>
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   )
 }
