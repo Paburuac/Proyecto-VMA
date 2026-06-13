@@ -140,6 +140,7 @@ describe('obtenerProductos', () => {
     const mockData = [{ id_producto: 1, descripcion: 'Producto A', categoria: { nombre_categoria: 'Cat A' } }]
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       order:  vi.fn().mockResolvedValue({ data: mockData, error: null }),
     })
 
@@ -152,6 +153,7 @@ describe('obtenerProductos', () => {
     const errorFalso = new Error('DB error')
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       order:  vi.fn().mockResolvedValue({ data: null, error: errorFalso }),
     })
 
@@ -172,6 +174,7 @@ describe('buscarProductos', () => {
     const mockData = [{ id_producto: 1 }]
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       order:  vi.fn().mockResolvedValue({ data: mockData, error: null }),
     })
 
@@ -183,6 +186,7 @@ describe('buscarProductos', () => {
     const mockData = []
     supabase.from.mockReturnValue({
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       order:  vi.fn().mockResolvedValue({ data: mockData, error: null }),
     })
 
@@ -191,12 +195,19 @@ describe('buscarProductos', () => {
   })
 
   it('filtra productos con texto de búsqueda válido', async () => {
+    // buscarProductos encadena .is().order().or() — el mock debe ser thenable
     const mockData = [{ id_producto: 2, descripcion: 'Taladro' }]
-    supabase.from.mockReturnValue({
+    const mockResult = { data: mockData, error: null }
+    const mockChain = {
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       or:     vi.fn().mockReturnThis(),
-      order:  vi.fn().mockResolvedValue({ data: mockData, error: null }),
-    })
+      ilike:  vi.fn().mockReturnThis(),
+      order:  vi.fn().mockReturnThis(),
+      then:   (resolve) => Promise.resolve(mockResult).then(resolve),
+      catch:  (reject)  => Promise.resolve(mockResult).catch(reject),
+    }
+    supabase.from.mockReturnValue(mockChain)
 
     const result = await buscarProductos('taladro')
     expect(result.data).toEqual(mockData)
@@ -205,11 +216,17 @@ describe('buscarProductos', () => {
 
   it('retorna error si Supabase falla en búsqueda', async () => {
     const errorFalso = new Error('search error')
-    supabase.from.mockReturnValue({
+    const mockResult = { data: null, error: errorFalso }
+    const mockChain = {
       select: vi.fn().mockReturnThis(),
+      is:     vi.fn().mockReturnThis(),
       or:     vi.fn().mockReturnThis(),
-      order:  vi.fn().mockResolvedValue({ data: null, error: errorFalso }),
-    })
+      ilike:  vi.fn().mockReturnThis(),
+      order:  vi.fn().mockReturnThis(),
+      then:   (resolve) => Promise.resolve(mockResult).then(resolve),
+      catch:  (reject)  => Promise.resolve(mockResult).catch(reject),
+    }
+    supabase.from.mockReturnValue(mockChain)
 
     const result = await buscarProductos('martillo')
     expect(result.error).toBe(errorFalso)

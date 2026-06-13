@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import { login, logout, getSession, cargarPerfil, registrarCliente } from '../services/authService.js'
 import { supabase } from '../services/supabase.js'
 

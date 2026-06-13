@@ -32,9 +32,11 @@ export default defineConfig({
 
   // Configuración de Vitest
   test: {
-    environment: 'jsdom',   // simula el DOM del navegador
-    globals: true,           // describe, it, expect disponibles sin importar
+    environment: 'jsdom',
+    globals: true,
     setupFiles: ['./src/tests/setup.js'],
+    // Aplicar la transformación JSX automática en el entorno de test
+    transformMode: { web: [/\.[jt]sx?$/] },
     coverage: {
       reporter: ['text', 'html'],
       include: ['src/**/*.{js,jsx}'],

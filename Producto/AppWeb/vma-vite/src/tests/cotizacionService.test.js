@@ -132,15 +132,19 @@ describe('cotizacionService', () => {
   // ════════════════════════════════════════════
   describe('obtenerMisCotizaciones', () => {
 
-    it('retorna array vacío si el usuario no está logueado', async () => {
-      global.window.authState = { loggedIn: false, perfil: null }
-      const result = await obtenerMisCotizaciones()
+    it('retorna array vacío si usuarioId es undefined', async () => {
+      const result = await obtenerMisCotizaciones(undefined)
       expect(result.data).toEqual([])
       expect(result.error).toBeNull()
     })
 
-    it('retorna cotizaciones del usuario logueado', async () => {
-      global.window.authState = { loggedIn: true, perfil: { id: 10 } }
+    it('retorna array vacío si usuarioId es null', async () => {
+      const result = await obtenerMisCotizaciones(null)
+      expect(result.data).toEqual([])
+      expect(result.error).toBeNull()
+    })
+
+    it('retorna cotizaciones del usuario cuando se pasa usuarioId', async () => {
       const mockData = [
         { id: 1, nombre: 'Juan', estado: 'pendiente' },
         { id: 2, nombre: 'Juan', estado: 'respondida' },
@@ -151,13 +155,12 @@ describe('cotizacionService', () => {
         order:  vi.fn().mockResolvedValue({ data: mockData, error: null }),
       })
 
-      const result = await obtenerMisCotizaciones()
+      const result = await obtenerMisCotizaciones(10)
       expect(result.data).toHaveLength(2)
       expect(result.error).toBeNull()
     })
 
     it('retorna error si Supabase falla', async () => {
-      global.window.authState = { loggedIn: true, perfil: { id: 10 } }
       const errorFalso = new Error('query error')
       supabase.from.mockReturnValue({
         select: vi.fn().mockReturnThis(),
@@ -165,7 +168,7 @@ describe('cotizacionService', () => {
         order:  vi.fn().mockResolvedValue({ data: null, error: errorFalso }),
       })
 
-      const result = await obtenerMisCotizaciones()
+      const result = await obtenerMisCotizaciones(10)
       expect(result.error).toBe(errorFalso)
     })
   })

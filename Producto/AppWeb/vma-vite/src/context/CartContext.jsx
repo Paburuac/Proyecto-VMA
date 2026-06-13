@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import React, { createContext, useContext, useState, useCallback } from 'react'
 import { useAuth } from './AuthContext.jsx'
 import * as carritoService from '../services/carritoService.js'
 
