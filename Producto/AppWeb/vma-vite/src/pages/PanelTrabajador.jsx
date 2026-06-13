@@ -257,14 +257,14 @@ export default function PanelTrabajador() {
   }
 
   if (loading) return (
-    <section className="page active"><div className="tw-loading"><div className="tw-spinner"/><p>Cargando cotizaciones...</p></div></section>
+    <section className="vma-page"><div className="tw-loading"><div className="tw-spinner"/><p>Cargando cotizaciones...</p></div></section>
   )
   if (error) return (
-    <section className="page active"><div className="tw-error">❌ Error al cargar cotizaciones. Intenta de nuevo.</div></section>
+    <section className="vma-page"><div className="tw-error">❌ Error al cargar cotizaciones. Intenta de nuevo.</div></section>
   )
 
   return (
-    <section id="page-trabajador" className="page active">
+    <section id="page-trabajador" className="vma-page">
       <div className="tw-container">
         <div className="tw-header-row">
           <h2 className="tw-titulo">Panel de Cotizaciones</h2>

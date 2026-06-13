@@ -67,7 +67,7 @@ export default function Catalogo() {
   }
 
   return (
-    <section id="page-productos" className="page active">
+    <section id="page-productos">
       <div className="productos-layout">
         {/* Sidebar */}
         <Sidebar

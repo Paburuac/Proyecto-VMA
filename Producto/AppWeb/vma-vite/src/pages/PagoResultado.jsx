@@ -47,7 +47,7 @@ export default function PagoResultado() {
   const irACotizaciones = () => navigate('/mis-cotizaciones')
 
   return (
-    <section id="page-pago-resultado" className="page active">
+    <section id="page-pago-resultado" className="vma-page">
       <div id="pago-result-content" className="pr-container">
 
         {estado === 'verificando' && (

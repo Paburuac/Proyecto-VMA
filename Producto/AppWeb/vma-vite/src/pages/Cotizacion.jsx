@@ -89,7 +89,7 @@ export default function Cotizacion() {
   }
 
   return (
-    <section id="page-cotizacion" className="page active">
+    <section id="page-cotizacion" className="vma-page">
       <div className="form-container">
         <h2>Solicitar cotización</h2>
 

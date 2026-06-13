@@ -73,7 +73,7 @@ export default function Registro() {
   }
 
   return (
-    <section id="page-registro" className="page active">
+    <section id="page-registro" className="vma-page">
       <div className="form-container">
         <h2>Crear cuenta</h2>
 

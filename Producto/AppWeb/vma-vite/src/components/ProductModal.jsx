@@ -39,15 +39,14 @@ export default function ProductModal({ producto, cat, sub, catalogo, onClose }) 
   }
 
   return (
-    <div id="modal-overlay" className="open" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal-content">
+    <div className="modal-overlay open" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal-box">
         <button className="modal-close" onClick={onClose}>✕</button>
 
         <div className="modal-badge">{cat} &gt; {sub}</div>
 
         <div className="modal-body">
-          <div className="modal-left">
-            <div id="modal-img" className="modal-img">
+          <div className="modal-img">
               {productoActivo.imagen_url
                 ? <img
                     src={productoActivo.imagen_url}
@@ -56,10 +55,9 @@ export default function ProductModal({ producto, cat, sub, catalogo, onClose }) 
                     onError={e => { e.target.parentElement.innerHTML = '<span style="font-size:4rem">📦</span>' }}
                   />
                 : <span style={{ fontSize: '4rem' }}>📦</span>}
-            </div>
           </div>
 
-          <div className="modal-right">
+          <div className="modal-details">
             <h2 id="modal-title">{productoActivo.nombre}</h2>
             <div className="modal-meta">
               <span>Código: <strong id="modal-codigo">{productoActivo.codigo}</strong></span>

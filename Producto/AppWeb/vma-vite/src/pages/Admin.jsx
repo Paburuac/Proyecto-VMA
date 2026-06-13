@@ -847,7 +847,7 @@ export default function Admin() {
   const [tab, setTab] = useState('dashboard')
 
   return (
-    <section id="page-admin" className="page active">
+    <section id="page-admin" className="vma-page">
       <div className="admin-container">
         <h2 className="admin-titulo">Panel de Administración</h2>
 

@@ -11,9 +11,9 @@ export default function CartDrawer({ open, onClose }) {
   }
 
   return (
-    <div id="cart-overlay" className={open ? 'open' : ''} onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className={`cart-overlay${open ? ' open' : ''}`} onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="cart-drawer">
-        <div className="cart-header">
+        <div className="cart-head">
           <h3>🛒 Tu carrito</h3>
           <span id="cart-total-items">{totalItems} {totalItems === 1 ? 'ítem' : 'ítems'}</span>
           <button className="cart-close" onClick={onClose}>✕</button>

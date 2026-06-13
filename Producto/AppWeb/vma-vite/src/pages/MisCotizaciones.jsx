@@ -330,14 +330,14 @@ export default function MisCotizaciones() {
   const cnt = (estado) => cotizaciones.filter(c => c.estado === estado).length
 
   if (loading) return (
-    <section className="page active"><div className="mc-loading"><div className="mc-spinner"/><p>Cargando tus cotizaciones...</p></div></section>
+    <section className="vma-page"><div className="mc-loading"><div className="mc-spinner"/><p>Cargando tus cotizaciones...</p></div></section>
   )
   if (error) return (
-    <section className="page active"><div className="mc-error">❌ Error al cargar tus cotizaciones. Intenta de nuevo más tarde.</div></section>
+    <section className="vma-page"><div className="mc-error">❌ Error al cargar tus cotizaciones. Intenta de nuevo más tarde.</div></section>
   )
 
   return (
-    <section id="page-mis-cotizaciones" className="page active">
+    <section id="page-mis-cotizaciones" className="vma-page">
       <div className="mc-container">
         <h2 className="mc-titulo">Mis Cotizaciones</h2>
 

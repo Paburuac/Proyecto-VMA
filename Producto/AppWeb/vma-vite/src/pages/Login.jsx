@@ -55,7 +55,7 @@ export default function Login() {
   }
 
   return (
-    <section id="page-login" className="page active">
+    <section id="page-login" className="vma-page">
       <div className="form-container">
         <h2>Iniciar sesión</h2>
 
