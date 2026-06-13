@@ -8,8 +8,10 @@
  */
 
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
+  plugins: [react()],
   // Carpeta raíz del proyecto (donde vive index.html)
   root: '.',
 
@@ -35,7 +37,7 @@ export default defineConfig({
     setupFiles: ['./src/tests/setup.js'],
     coverage: {
       reporter: ['text', 'html'],
-      include: ['src/**/*.js'],
+      include: ['src/**/*.{js,jsx}'],
       exclude: ['src/tests/**'],
     },
   },
