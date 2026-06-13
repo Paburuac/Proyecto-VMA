@@ -4,6 +4,8 @@ import Layout from './components/Layout.jsx'
 
 import Catalogo          from './pages/Catalogo.jsx'
 import Cotizacion        from './pages/Cotizacion.jsx'
+import Login             from './pages/Login.jsx'
+import Registro          from './pages/Registro.jsx'
 import Admin             from './pages/Admin.jsx'
 import PanelTrabajador   from './pages/PanelTrabajador.jsx'
 import MisCotizaciones   from './pages/MisCotizaciones.jsx'
@@ -33,6 +35,8 @@ export default function App() {
           <Route path="/"                  element={<Catalogo />} />
           <Route path="/productos"         element={<Catalogo />} />
           <Route path="/cotizacion"        element={<Cotizacion />} />
+          <Route path="/login"             element={<Login />} />
+          <Route path="/registro"          element={<Registro />} />
           <Route path="/mis-cotizaciones"  element={
             <RutaProtegida check={() => authState.loggedIn}>
               <MisCotizaciones />
