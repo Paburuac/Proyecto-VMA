@@ -89,69 +89,86 @@ export default function Cotizacion() {
   }
 
   return (
-    <section id="page-cotizacion" className="vma-page">
-      <div className="form-container">
-        <h2>Solicitar cotización</h2>
+    <div className="form-page">
+      <div className="form-card form-card-wide">
 
-        {/* Resumen carrito */}
-        {cart.length > 0 && (
-          <div id="cotizacion-productos-info" className="cotizacion-productos-info" style={{ display: 'block' }}>
-            <strong>Productos en tu carrito:</strong>
-            <div id="cotizacion-productos-lista" style={{ marginTop: '0.5rem', fontSize: '0.9rem' }}>
-              {cart.map(i => (
-                <div key={i.codigo}>• [{i.codigo}] {i.nombre.substring(0, 50)}{i.nombre.length > 50 ? '…' : ''} × {i.cantidad}</div>
-              ))}
+        <div className="form-header">
+          <h2>Solicitar <span>cotización</span></h2>
+          <p>Todos los campos marcados con * son obligatorios</p>
+        </div>
+
+        <div className="form-body">
+
+          {/* Resumen carrito */}
+          {cart.length > 0 && (
+            <div style={{
+              marginBottom: '1.2rem',
+              padding: '0.8rem 1rem',
+              background: 'rgba(132,189,0,0.08)',
+              border: '1.5px solid var(--verde)',
+              borderRadius: 'var(--radio)',
+              fontSize: '0.85rem',
+              color: 'var(--azul)',
+            }}>
+              🛒 <strong>Productos del carrito incluidos:</strong>
+              <div style={{ marginTop: '0.4rem', color: 'var(--gris-texto)' }}>
+                {cart.map(i => (
+                  <div key={i.codigo}>• [{i.codigo}] {i.nombre.substring(0, 50)}{i.nombre.length > 50 ? '…' : ''} × {i.cantidad}</div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {exito && (
-          <div id="success-contacto" className="success-msg show">
-            ✅ ¡Cotización enviada! Nos contactaremos contigo pronto.
-          </div>
-        )}
+          {exito && (
+            <div className="success-msg show">
+              ✅ ¡Cotización enviada! Nos contactaremos contigo pronto.
+            </div>
+          )}
 
-        <form id="form-contacto" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="nombre-c">Nombre *</label>
-            <input id="nombre-c" name="nombre" value={form.nombre} onChange={handleChange} />
-            {errors.nombre && <span id="err-nombre-c" className="error-msg show">{errors.nombre}</span>}
-          </div>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form-row two-col">
+              <div>
+                <label htmlFor="nombre-c">Nombre *</label>
+                <input id="nombre-c" name="nombre" placeholder="Tu nombre completo" value={form.nombre} onChange={handleChange} />
+                {errors.nombre && <div className="form-error show">{errors.nombre}</div>}
+              </div>
+              <div>
+                <label htmlFor="empresa-c">Empresa *</label>
+                <input id="empresa-c" name="empresa" placeholder="Nombre de la empresa" value={form.empresa} onChange={handleChange} />
+                {errors.empresa && <div className="form-error show">{errors.empresa}</div>}
+              </div>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="empresa-c">Empresa *</label>
-            <input id="empresa-c" name="empresa" value={form.empresa} onChange={handleChange} />
-            {errors.empresa && <span id="err-empresa-c" className="error-msg show">{errors.empresa}</span>}
-          </div>
+            <div className="form-row two-col">
+              <div>
+                <label htmlFor="correo-c">Correo electrónico *</label>
+                <input id="correo-c" name="correo" type="email" placeholder="correo@empresa.cl" value={form.correo} onChange={handleChange} />
+                {errors.correo && <div className="form-error show">{errors.correo}</div>}
+              </div>
+              <div>
+                <label htmlFor="tel-c">Teléfono *</label>
+                <input id="tel-c" name="telefono" placeholder="+56 9 XXXX XXXX" value={form.telefono} onChange={handleChange} />
+                {errors.telefono && <div className="form-error show">{errors.telefono}</div>}
+              </div>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="correo-c">Correo electrónico *</label>
-            <input id="correo-c" name="correo" type="email" value={form.correo} onChange={handleChange} />
-            {errors.correo && <span id="err-correo-c" className="error-msg show">{errors.correo}</span>}
-          </div>
+            <div className="form-row">
+              <label htmlFor="producto-interes">Producto de interés</label>
+              <input id="producto-interes" name="productoInteres" placeholder="Ej: Acetileno, Soldadora MIG..." value={form.productoInteres} onChange={handleChange} />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="tel-c">Teléfono *</label>
-            <input id="tel-c" name="telefono" value={form.telefono} onChange={handleChange} />
-            {errors.telefono && <span id="err-tel-c" className="error-msg show">{errors.telefono}</span>}
-          </div>
+            <div className="form-row">
+              <label htmlFor="mensaje-c">Mensaje *</label>
+              <textarea id="mensaje-c" name="mensaje" placeholder="Describe tu consulta o solicitud..." value={form.mensaje} onChange={handleChange} />
+              {errors.mensaje && <div className="form-error show">{errors.mensaje}</div>}
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="producto-interes">Producto de interés</label>
-            <input id="producto-interes" name="productoInteres" value={form.productoInteres} onChange={handleChange} />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="mensaje-c">Mensaje *</label>
-            <textarea id="mensaje-c" name="mensaje" rows={4} value={form.mensaje} onChange={handleChange} />
-            {errors.mensaje && <span id="err-mensaje-c" className="error-msg show">{errors.mensaje}</span>}
-          </div>
-
-          <button type="submit" className="btn-primary" disabled={loading} style={{ width: '100%' }}>
-            {loading ? 'Enviando...' : 'Enviar solicitud'}
-          </button>
-        </form>
+            <button type="submit" className="btn-submit" disabled={loading}>
+              {loading ? 'Enviando...' : '📋 Enviar solicitud'}
+            </button>
+          </form>
+        </div>
       </div>
-    </section>
+    </div>
   )
 }
