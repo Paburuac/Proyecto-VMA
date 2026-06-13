@@ -31,8 +31,7 @@ export default function Header({ onOpenCart }) {
       {/* Navbar */}
       <nav className="navbar">
         <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-          <div className="logo-box">VMA</div>
-          <div className="logo-text"><strong>VMA</strong><br /><em>Industrial</em></div>
+          <img src="/logo-vma.png" alt="VMA Retail Industrial" style={{ height: '48px', width: 'auto', display: 'block' }} />
         </div>
 
         {/* Links desktop */}
