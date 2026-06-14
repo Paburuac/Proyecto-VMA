@@ -12,6 +12,7 @@ import com.example.vmaindustrial.model.ProductoCarritoSimplificado
 import com.example.vmaindustrial.repository.AuthRepository
 import com.example.vmaindustrial.repository.CarritoRepository
 import com.example.vmaindustrial.repository.CotizacionRepository
+    import com.example.vmaindustrial.repository.TransbankRepository
 import com.example.vmaindustrial.data.remote.SupabaseClient
 import io.github.jan.supabase.gotrue.auth
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ class CarritoViewModel : ViewModel() {
     private val carritoRepository = CarritoRepository()
     private val authRepository = AuthRepository()
     private val cotizacionRepository = CotizacionRepository()
+    private val transbankRepository = TransbankRepository()
 
     var items by mutableStateOf<List<CarritoItemConProducto>>(emptyList())
         private set
@@ -28,6 +30,9 @@ class CarritoViewModel : ViewModel() {
         private set
 
     var mensaje by mutableStateOf<String?>(null)
+
+    var paymentUrl by mutableStateOf<String?>(null)
+    var paymentToken by mutableStateOf<String?>(null)
 
     fun cargarCarrito() {
         viewModelScope.launch {
@@ -137,6 +142,52 @@ class CarritoViewModel : ViewModel() {
                 println("DEBUG: Error al insertar cotización: $errorMsg")
                 mensaje = "Error al procesar la compra: $errorMsg"
             }
+            isLoading = false
+        }
+    }
+
+    fun pagarConTransbank() {
+        viewModelScope.launch {
+            isLoading = true
+            val perfil = authRepository.getUserProfile()
+            if (perfil == null || items.isEmpty()) {
+                mensaje = "Debes iniciar sesión y tener productos en el carrito"
+                isLoading = false
+                return@launch
+            }
+
+            val total = items.sumOf { (it.producto.precio ?: 0.0) * it.cantidad }
+            val buyOrder = "VMA-${System.currentTimeMillis()}"
+
+            val response = transbankRepository.iniciarPago(total, buyOrder)
+            if (response != null) {
+                paymentUrl = response.url
+                paymentToken = response.token
+            } else {
+                mensaje = "Error al conectar con Transbank (Verifica el monto)"
+            }
+            isLoading = false
+        }
+    }
+
+    fun finalizarPagoExitoso(token: String) {
+        viewModelScope.launch {
+            isLoading = true
+            // Confirmar la transacción con Transbank
+            val commitResponse = transbankRepository.confirmarPago(token)
+            
+            if (commitResponse != null && commitResponse.responseCode.toInt() == 0 && commitResponse.status == "AUTHORIZED") {
+                val perfil = authRepository.getUserProfile()
+                if (perfil != null) {
+                    realizarCompra() // Genera la cotización/orden y vacía el carrito
+                    mensaje = "¡Pago aprobado y orden generada!"
+                }
+            } else {
+                mensaje = "El pago no pudo ser confirmado o fue rechazado"
+            }
+            
+            paymentUrl = null
+            paymentToken = null
             isLoading = false
         }
     }

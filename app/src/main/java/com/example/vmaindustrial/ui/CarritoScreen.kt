@@ -7,8 +7,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingCartCheckout
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,6 +22,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.vmaindustrial.model.CarritoItemConProducto
@@ -34,6 +40,73 @@ fun CarritoScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val brandBlue = Color(0xFF002E4F)
     val brandGreen = Color(0xFF7CB342)
+
+    val total = remember(viewModel.items) {
+        viewModel.items.sumOf { (it.producto.precio ?: 0.0) * it.cantidad }
+    }
+
+    // Estado para mostrar el WebView de Transbank
+    var showWebpay by remember { mutableStateOf(false) }
+    // Estado para el diálogo de selección de acción
+    var showActionDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel.paymentUrl) {
+        if (viewModel.paymentUrl != null) {
+            showWebpay = true
+        }
+    }
+
+    if (showActionDialog) {
+        AlertDialog(
+            onDismissRequest = { showActionDialog = false },
+            title = { Text("Finalizar Pedido", fontWeight = FontWeight.Bold) },
+            text = { 
+                if (total > 0) {
+                    Text("¿Deseas pagar ahora con Webpay o generar solo una cotización para revisión?")
+                } else {
+                    Text("El total es $0.0. Solo puedes generar una cotización para revisión de precios.")
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showActionDialog = false
+                        viewModel.pagarConTransbank()
+                    },
+                    enabled = total > 0,
+                    colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
+                ) {
+                    Text("Pagar con Webpay")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showActionDialog = false
+                        viewModel.realizarCompra()
+                    }
+                ) {
+                    Text("Solo Cotizar", color = brandBlue)
+                }
+            }
+        )
+    }
+
+    if (showWebpay && viewModel.paymentUrl != null && viewModel.paymentToken != null) {
+        WebpayView(
+            url = viewModel.paymentUrl!!,
+            token = viewModel.paymentToken!!,
+            onClose = { 
+                showWebpay = false 
+                viewModel.paymentUrl = null
+                viewModel.paymentToken = null
+            },
+            onSuccess = { token ->
+                showWebpay = false
+                viewModel.finalizarPagoExitoso(token)
+            }
+        )
+    }
 
     LaunchedEffect(Unit) {
         viewModel.cargarCarrito()
@@ -110,7 +183,6 @@ fun CarritoScreen(
                         elevation = CardDefaults.cardElevation(8.dp)
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
-                            val total = viewModel.items.sumOf { (it.producto.precio ?: 0.0) * it.cantidad }
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween
@@ -124,19 +196,85 @@ fun CarritoScreen(
                                 )
                             }
                             Spacer(modifier = Modifier.height(16.dp))
+                            
+                            // Botón único para Finalizar Pedido
                             Button(
-                                onClick = { viewModel.realizarCompra() },
+                                onClick = { showActionDialog = true },
                                 modifier = Modifier.fillMaxWidth(),
                                 enabled = !viewModel.isLoading && viewModel.items.isNotEmpty(),
                                 colors = ButtonDefaults.buttonColors(containerColor = brandBlue)
                             ) {
                                 Icon(Icons.Default.ShoppingCartCheckout, contentDescription = null)
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text("Realizar Compra / Cotización")
+                                Text("Finalizar Pedido")
                             }
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun WebpayView(
+    url: String,
+    token: String,
+    onClose: () -> Unit,
+    onSuccess: (String) -> Unit
+) {
+    androidx.compose.ui.window.Dialog(
+        onDismissRequest = onClose,
+        properties = androidx.compose.ui.window.DialogProperties(
+            usePlatformDefaultWidth = false,
+            dismissOnBackPress = true,
+            dismissOnClickOutside = false
+        )
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = Color.White
+        ) {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Header del Dialog
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("Pago Seguro Webpay", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    IconButton(onClick = onClose) {
+                        Icon(Icons.Default.Close, contentDescription = "Cerrar")
+                    }
+                }
+
+                // WebView con el formulario de Transbank
+                AndroidView(
+                    factory = { context ->
+                        WebView(context).apply {
+                            settings.javaScriptEnabled = true
+                            settings.domStorageEnabled = true
+                            webViewClient = object : WebViewClient() {
+                                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                                    if (url != null && url.contains("vmaindustrial.cl/webpay/return")) {
+                                        val uri = android.net.Uri.parse(url)
+                                        val responseToken = uri.getQueryParameter("token_ws") ?: token
+                                        onSuccess(responseToken)
+                                        return true
+                                    }
+                                    return false
+                                }
+                            }
+                            
+                            // Transbank requiere un POST con el token_ws
+                            val postData = "token_ws=$token"
+                            postUrl(url, postData.toByteArray())
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }

@@ -58,6 +58,8 @@ dependencies {
     implementation("io.github.jan-tennert.supabase:realtime-kt:2.5.4")
     implementation("io.ktor:ktor-client-android:2.3.12")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    // Transbank
+    implementation("com.github.transbankdevelopers:transbank-sdk-java:6.2.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
