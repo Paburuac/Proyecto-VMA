@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { login, logout, getSession, cargarPerfil, registrarCliente } from '../services/authService.js'
+import { login, logout, getSession, cargarPerfil, registrarCliente, solicitarResetPassword, actualizarPassword } from '../services/authService.js'
 import { supabase } from '../services/supabase.js'
 
 const AuthContext = createContext(null)
@@ -11,6 +11,7 @@ export function AuthProvider({ children }) {
     perfil: null,
     rol: null,
     loading: true,
+    recoveryMode: false,
   })
 
   const isAdmin      = () => authState.rol === 'admin'
@@ -49,7 +50,24 @@ export function AuthProvider({ children }) {
   }
 
   async function handleRegistro(datos) {
-    return registrarCliente(datos)
+    const result = await registrarCliente(datos)
+    return result
+  }
+
+  async function handleSolicitarReset(email) {
+    return solicitarResetPassword(email)
+  }
+
+  async function handleActualizarPassword(nuevaPassword) {
+    const result = await actualizarPassword(nuevaPassword)
+    if (!result.error) {
+      setAuthState(s => ({ ...s, recoveryMode: false }))
+    }
+    return result
+  }
+
+  function handleSalirRecovery() {
+    setAuthState(s => ({ ...s, recoveryMode: false }))
   }
 
   useEffect(() => {
@@ -61,9 +79,11 @@ export function AuthProvider({ children }) {
       manejarSesion(data.session.user, [])
     })
 
-    const { data: listener } = supabase.auth.onAuthStateChange(async (event) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT') {
-        setAuthState({ loggedIn: false, user: null, perfil: null, rol: null, loading: false })
+        setAuthState({ loggedIn: false, user: null, perfil: null, rol: null, loading: false, recoveryMode: false })
+      } else if (event === 'PASSWORD_RECOVERY') {
+        setAuthState(s => ({ ...s, recoveryMode: true, loading: false }))
       }
     })
 
@@ -71,7 +91,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ authState, isAdmin, isTrabajador, isCliente, handleLogin, handleLogout, handleRegistro }}>
+    <AuthContext.Provider value={{ authState, isAdmin, isTrabajador, isCliente, handleLogin, handleLogout, handleRegistro, handleSolicitarReset, handleActualizarPassword, handleSalirRecovery }}>
       {children}
     </AuthContext.Provider>
   )

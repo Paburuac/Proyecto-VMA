@@ -183,6 +183,30 @@ export async function actualizarProducto(id, campos) {
 
     if (error) { console.error('[VMA Admin] actualizarProducto error:', error.message); return { error } }
     console.log('[VMA Admin] producto actualizado:', id)
+
+    // Notificar si el stock quedó en nivel bajo (≤ 5 unidades)
+    const nuevoStock = typeof campos.stock !== 'undefined' ? parseInt(campos.stock) : undefined
+    if (nuevoStock !== undefined && nuevoStock <= 5) {
+      const { data: prod } = await supabase
+        .from('producto')
+        .select('codigo, descripcion, stock')
+        .eq('id_producto', id)
+        .single()
+
+      if (prod) {
+        fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/notificar-stock-bajo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productoId:   id,
+            codigo:       prod.codigo,
+            descripcion:  prod.descripcion,
+            stock:        nuevoStock,
+          }),
+        }).catch(err => console.warn('[VMA Email] No se pudo notificar stock bajo:', err))
+      }
+    }
+
     return { error: null }
   } catch (err) {
     return { error: err }

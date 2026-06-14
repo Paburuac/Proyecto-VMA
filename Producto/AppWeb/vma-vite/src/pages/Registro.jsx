@@ -54,7 +54,7 @@ export default function Registro() {
     setLoading(true)
     setRegistroError('')
 
-    const { error } = await handleRegistro({
+    const { data, error } = await handleRegistro({
       nombre:   form.nombre.trim(),
       telefono: form.telefono.trim(),
       email:    form.correo.trim(),
@@ -69,7 +69,11 @@ export default function Registro() {
     }
 
     setExito(true)
-    setTimeout(() => navigate('/login'), 2500)
+    // Si hay sesión activa → confirmación desactivada, redirigir al login
+    // Si no hay sesión → confirmación por email activada, mostrar mensaje y NO redirigir
+    if (data?.session) {
+      setTimeout(() => navigate('/login'), 2500)
+    }
   }
 
   return (
@@ -83,7 +87,7 @@ export default function Registro() {
         <div className="form-body">
           {exito && (
             <div className="success-msg show">
-              ✅ ¡Cuenta creada! Redirigiendo al inicio de sesión...
+              ✅ ¡Cuenta creada! Revisa tu correo electrónico para confirmar tu cuenta antes de iniciar sesión. Si no lo ves, revisa la carpeta de spam.
             </div>
           )}
 

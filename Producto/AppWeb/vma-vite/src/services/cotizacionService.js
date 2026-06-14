@@ -143,6 +143,12 @@ export async function obtenerTodasCotizaciones() {
 ───────────────────────────────────────────── */
 export async function actualizarConPrecioFinal(id, precioFinal) {
   try {
+    const { data: cot } = await supabase
+      .from('cotizaciones')
+      .select('nombre, email, empresa, productos_solicitados')
+      .eq('id', id)
+      .single()
+
     const { error } = await supabase
       .from('cotizaciones')
       .update({
@@ -155,6 +161,21 @@ export async function actualizarConPrecioFinal(id, precioFinal) {
     if (error) {
       console.error('[VMA Cotizacion] actualizarConPrecioFinal error:', error.message)
       return { error }
+    }
+
+    if (cot?.email) {
+      fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/notificar-respuesta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cotizacionId:  id,
+          clienteNombre: cot.nombre,
+          clienteEmail:  cot.email,
+          empresa:       cot.empresa,
+          precioFinal,
+          productos:     cot.productos_solicitados,
+        }),
+      }).catch(err => console.warn('[VMA Email] No se pudo notificar respuesta:', err))
     }
 
     console.log('[VMA Cotizacion] cotización respondida con precio – id:', id, 'precio:', precioFinal)
@@ -173,6 +194,12 @@ export async function actualizarConPrecioFinal(id, precioFinal) {
 ───────────────────────────────────────────── */
 export async function responderCotizacion(id, productosConPrecios, precioFinal) {
   try {
+    const { data: cot, error: fetchError } = await supabase
+      .from('cotizaciones')
+      .select('nombre, email, empresa')
+      .eq('id', id)
+      .single()
+
     const { error } = await supabase
       .from('cotizaciones')
       .update({
@@ -186,6 +213,21 @@ export async function responderCotizacion(id, productosConPrecios, precioFinal) 
     if (error) {
       console.error('[VMA Cotizacion] responderCotizacion error:', error.message)
       return { error }
+    }
+
+    if (!fetchError && cot?.email) {
+      fetch('https://hlyjfkybecuicgtefooj.supabase.co/functions/v1/notificar-respuesta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cotizacionId:    id,
+          clienteNombre:   cot.nombre,
+          clienteEmail:    cot.email,
+          empresa:         cot.empresa,
+          precioFinal,
+          productos:       productosConPrecios,
+        }),
+      }).catch(err => console.warn('[VMA Email] No se pudo notificar respuesta:', err))
     }
 
     return { error: null }

@@ -146,6 +146,47 @@ export async function cargarPerfil(userId) {
 
    Retorna { data, error }
 ───────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   solicitarResetPassword(email)
+   Envía un correo con enlace para restablecer la
+   contraseña. Supabase gestiona el envío y el token.
+───────────────────────────────────────────── */
+export async function solicitarResetPassword(email) {
+  try {
+    const redirectTo = `${window.location.origin}${window.location.pathname}`
+    const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo })
+    if (error) {
+      console.error('[VMA Auth] solicitarResetPassword error:', error.message)
+      return { error }
+    }
+    console.log('[VMA Auth] correo de recuperación enviado a:', email)
+    return { error: null }
+  } catch (err) {
+    console.error('[VMA Auth] solicitarResetPassword excepción:', err)
+    return { error: err }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   actualizarPassword(nuevaPassword)
+   Actualiza la contraseña del usuario autenticado
+   (usado tras hacer clic en el enlace de recuperación).
+───────────────────────────────────────────── */
+export async function actualizarPassword(nuevaPassword) {
+  try {
+    const { error } = await supabase.auth.updateUser({ password: nuevaPassword })
+    if (error) {
+      console.error('[VMA Auth] actualizarPassword error:', error.message)
+      return { error }
+    }
+    console.log('[VMA Auth] contraseña actualizada correctamente')
+    return { error: null }
+  } catch (err) {
+    console.error('[VMA Auth] actualizarPassword excepción:', err)
+    return { error: err }
+  }
+}
+
 export async function registrarCliente({ nombre, telefono, email, password }) {
   try {
     // 1. Crear usuario en Supabase Auth

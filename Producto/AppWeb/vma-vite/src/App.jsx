@@ -13,9 +13,11 @@ import PagoResultado     from './pages/PagoResultado.jsx'
 import Nosotros          from './pages/Nosotros.jsx'
 import Contacto          from './pages/Contacto.jsx'
 import Inicio            from './pages/Inicio.jsx'
-import Privacidad        from './pages/Privacidad.jsx'
-import Terminos          from './pages/Terminos.jsx'
-import NotFound          from './pages/NotFound.jsx'
+import Privacidad          from './pages/Privacidad.jsx'
+import Terminos            from './pages/Terminos.jsx'
+import NotFound            from './pages/NotFound.jsx'
+import RecuperarPassword   from './pages/RecuperarPassword.jsx'
+import NuevaPassword       from './pages/NuevaPassword.jsx'
 
 function RutaProtegida({ children, check }) {
   const { authState } = useAuth()
@@ -31,6 +33,17 @@ export default function App() {
       <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--gris-texto)' }}>
         <p>Cargando...</p>
       </div>
+    )
+  }
+
+  // Modo recuperación de contraseña — Supabase detectó el token en la URL
+  if (authState.recoveryMode) {
+    return (
+      <HashRouter>
+        <Layout>
+          <NuevaPassword />
+        </Layout>
+      </HashRouter>
     )
   }
 
@@ -61,9 +74,10 @@ export default function App() {
             </RutaProtegida>
           } />
           <Route path="/pago-resultado"    element={<PagoResultado />} />
-          <Route path="/privacidad"        element={<Privacidad />} />
-          <Route path="/terminos"          element={<Terminos />} />
-          <Route path="*"                  element={<NotFound />} />
+          <Route path="/privacidad"          element={<Privacidad />} />
+          <Route path="/terminos"           element={<Terminos />} />
+          <Route path="/recuperar-password" element={<RecuperarPassword />} />
+          <Route path="*"                   element={<NotFound />} />
         </Routes>
       </Layout>
     </HashRouter>

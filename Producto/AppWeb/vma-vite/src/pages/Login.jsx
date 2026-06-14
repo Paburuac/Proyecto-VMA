@@ -103,7 +103,10 @@ export default function Login() {
             </button>
           </form>
 
-          <p style={{ textAlign: 'center', marginTop: '1.2rem', fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
+          <p style={{ textAlign: 'center', marginTop: '0.8rem', fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
+            <Link to="/recuperar-password" style={{ color: 'var(--gris-texto)' }}>¿Olvidaste tu contraseña?</Link>
+          </p>
+          <p style={{ textAlign: 'center', marginTop: '0.5rem', fontSize: '0.9rem', color: 'var(--gris-texto)' }}>
             ¿No tienes cuenta? <Link to="/registro" style={{ color: 'var(--verde)', fontWeight: 600 }}>Regístrate aquí</Link>
           </p>
         </div>
