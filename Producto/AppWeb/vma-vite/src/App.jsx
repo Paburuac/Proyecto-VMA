@@ -25,6 +25,17 @@ function RutaProtegida({ children, check }) {
   return check() ? children : <Navigate to="/" replace />
 }
 
+// Transbank redirige a /?token_ws=XXX#/ — el hash router carga "/" en vez de /pago-resultado.
+// Interceptamos el token antes de que el router arranque, lo guardamos y reescribimos el hash.
+;(function interceptTransbankToken() {
+  const params = new URLSearchParams(window.location.search)
+  const token = params.get('token_ws')
+  if (token) {
+    sessionStorage.setItem('transbank_token_ws', token)
+    window.location.replace('/#/pago-resultado')
+  }
+})()
+
 export default function App() {
   const { authState, isAdmin, isTrabajador, isCliente } = useAuth()
 
